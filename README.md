@@ -2,7 +2,6 @@
 
 ### Minimum Gereksinimler
 
-- WHMCS 7.8 veya üstü
 - PHP7.4 veya daha üstü (Önerilen 8.1) 
 - PHP SOAPClient eklentisi aktif olmalıdır.
 
