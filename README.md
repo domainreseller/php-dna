@@ -61,7 +61,7 @@ $childns = $dna->AddChildNameServer('domainadi.com','ns1','1.2.3.4');
 Domaine aitContact kaydetmek için
 ```php
 
-$contact = array(
+$contact = [
     "FirstName"        => 'Bunyamin',
     "LastName"         => 'Mutlu',
     "Company"          => '',
@@ -78,7 +78,7 @@ $contact = array(
     "Type"             => 'Contact',
     "ZipCode"          => '41829',
     "State"            => 'GEBZE'
-);
+];
 
 $childns = $dna->SaveContacts('domainadi.com','ns1','1.2.3.4');
 
@@ -112,9 +112,27 @@ $reseller = $dna->GetResellerDetails();
 
 Domain Kayıt işlemleri için
 ```php
+$contact = [
+    "FirstName"        => 'Bunyamin',
+    "LastName"         => 'Mutlu',
+    "Company"          => '',
+    "EMail"            => 'bun.mutlu@gmail.com',
+    "AddressLine1"     => 'adres 1 adres 1 adres 1 ',
+    "AddressLine2"     => 'test test',
+    "AddressLine3"     => '',
+    "City"             => 'Kocaeli',
+    "Country"          => 'TR',
+    "Fax"              => '2626060026',
+    "FaxCountryCode"   => '90',
+    "Phone"            => '5555555555',
+    "PhoneCountryCode" => 90,
+    "Type"             => 'Contact',
+    "ZipCode"          => '41829',
+    "State"            => 'GEBZE'
+];
 
 $info = $a->RegisterWithContactInfo(
-    'bunyamin060.com.tr',
+    'domainadi.com.tr',
     1,
     [
         'Administrative' => $contact,
