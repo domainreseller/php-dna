@@ -1601,7 +1601,7 @@ class DomainNameAPI_PHPLibrary {
         } catch (\SoapFault $ex) {
             $result["result"] = "ERROR";
             $result["error"]  = $this->setError('INVALID_RESPONSE','Invalid Response occured',$ex->getMessage());
-        } catch (\DomainNameApi\Exception $ex) {
+        } catch (Exception $ex) {
             $result["result"] = "ERROR";
             $result["error"]  = $this->parseError($this->objectToArray($ex));
         }
