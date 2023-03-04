@@ -5,8 +5,8 @@
     "php": ">=7.4.0"
   },
   "autoload": {
-    "psr-4": {
-      "DomainNameApi\\": "src"
+    "psr-0": {
+      "DomainNameApi": "src"
     }
   },
   "authors": [
