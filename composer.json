@@ -1,0 +1,15 @@
+{
+    "name": "domainreseller/php-dna",
+    "autoload": {
+        "psr-4": {
+            "Domainreseller\\PhpDna\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bünyamin AKÇAY",
+            "email": "bakcay@live.com"
+        }
+    ],
+    "require": {}
+}
