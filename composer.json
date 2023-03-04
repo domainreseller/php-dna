@@ -2,7 +2,7 @@
     "name": "domainreseller/php-dna",
     "autoload": {
         "psr-4": {
-            "Domainreseller\\PhpDna\\": "src/"
+            "Domainreseller\\DomainNameAPI_PHPLibrary\\": "src/"
         }
     },
     "authors": [
