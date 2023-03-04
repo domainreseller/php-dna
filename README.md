@@ -7,7 +7,7 @@
 
 ## Kullanım
 
-Dosyaları indirin
+Dosyaları indirin [examples](examples) klasörünün içindeki örnekleri inceleyin.
 
 ```php
 require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
@@ -15,16 +15,6 @@ require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ```
 
-Veya Composer ile kurun
-```php
-composer require domainreseller/php-dna dev-main
-```
-
-```php
-require_once __DIR__.'/vendor/autoload.php';
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
-
-```
 
 
 Domain listesi için
