@@ -63,7 +63,7 @@ $lock = $dna->DisableTheftProtectionLock('domainadi.com');
 
 Domaine ChildNS ekleme için
 ```php
-$childns = $dna->AddChildNameServer('domainadi.com','ns1','1.2.3.4');
+$childns = $dna->AddChildNameServer('domainadi.com','ns1.domainadi.com','1.2.3.4');
 ```
 
 Domaine aitContact kaydetmek için
