@@ -8,6 +8,7 @@
 ## Kullanım
 
 Dosyaları indirin
+
 ```php
 require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
 
@@ -18,6 +19,7 @@ Veya Composer ile kurun
 ```php
 composer require domainreseller/php-dna dev-main
 ```
+
 ```php
 require_once __DIR__.'/vendor/autoload.php';
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');

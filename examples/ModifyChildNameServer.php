@@ -6,7 +6,7 @@
  * 4.03.2023 14:41
  * Bünyamin AKÇAY <bunyamin@bunyam.in>
  */
-require_once __DIR__.'/../src/dna.php';
+require_once __DIR__.'/../src/DomainNameApi/DomainNameAPI_PHPLibrary.php';
 
 $username = 'test1.dna@apiname.com';
 $password = 'FsUvpJMzQ69scpqE';

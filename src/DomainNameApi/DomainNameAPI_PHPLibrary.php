@@ -1047,7 +1047,7 @@ class DomainNameAPI_PHPLibrary {
     private function objectToArray($_obj) {
         try {
             $_obj = json_decode(json_encode($_obj), true);
-        } catch (Exception $ex) {
+        } catch (\DomainNameApi\Exception $ex) {
         }
         return $_obj;
     }
@@ -1601,7 +1601,7 @@ class DomainNameAPI_PHPLibrary {
         } catch (\SoapFault $ex) {
             $result["result"] = "ERROR";
             $result["error"]  = $this->setError('INVALID_RESPONSE','Invalid Response occured',$ex->getMessage());
-        } catch (Exception $ex) {
+        } catch (\DomainNameApi\Exception $ex) {
             $result["result"] = "ERROR";
             $result["error"]  = $this->parseError($this->objectToArray($ex));
         }

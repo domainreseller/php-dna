@@ -9,7 +9,7 @@
 
 
 
-require_once __DIR__.'/../src/dna.php';
+require_once __DIR__.'/../src/DomainNameApi/DomainNameAPI_PHPLibrary.php';
 
 $username = 'test1.dna@apiname.com';
 $password = 'FsUvpJMzQ69scpqE';
