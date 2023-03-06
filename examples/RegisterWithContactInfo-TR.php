@@ -33,6 +33,24 @@ $contact = array(
     "State"            => 'GEBZE'
 );
 
+$invidual = [
+        'TRABISDOMAINCATEGORY' => 1,
+        'TRABISCITIZIENID'     => '11111111111111',
+        'TRABISNAMESURNAME'    => 'Bünyamin Mutlu',
+        'TRABISCOUNTRYID'      => '215',
+        'TRABISCITIYID'        => '41'
+    ];
+
+$commercial = [
+    'TRABISDOMAINCATEGORY' => 1,
+    'TRABISORGANIZATION'   => 'Bunyamin LTD. STI.',
+    'TRABISTAXOFFICE'      => 'GEBZE VD',
+    'TRABISTAXNUMBER'      => '10223334445'
+];
+
+// For Individual owner set 7th parameter as $invidual
+// For Company owner set 7th parameter as $commercial
+
 /**
  * Register domain with contact information
  * @param string $DomainName
@@ -52,13 +70,9 @@ $info = $dna->RegisterWithContactInfo('bunyamin083.com.tr', 1, [
     ], [
         "tr.atakdomain.com",
         "eu.atakdomain.com"
-    ], true, false, [
-        'TRABISDOMAINCATEGORY' => 1,
-        'TRABISCITIZIENID'     => '11111111111111',
-        'TRABISNAMESURNAME'    => 'Bünyamin Mutlu',
-        'TRABISCOUNTRYID'      => '215',
-        'TRABISCITIYID'        => '41'
-    ]);
+    ], true, false,
+    $invidual
+);
 
 print_r($info);
 
