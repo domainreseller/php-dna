@@ -42,7 +42,7 @@ $invidual = [
     ];
 
 $commercial = [
-    'TRABISDOMAINCATEGORY' => 1,
+    'TRABISDOMAINCATEGORY' => 0,
     'TRABISORGANIZATION'   => 'Bunyamin LTD. STI.',
     'TRABISTAXOFFICE'      => 'GEBZE VD',
     'TRABISTAXNUMBER'      => '10223334445'
