@@ -38,7 +38,7 @@ $invidual = [
         'TRABISCITIZIENID'     => '11111111111111',
         'TRABISNAMESURNAME'    => 'Bünyamin Mutlu',
         'TRABISCOUNTRYID'      => '215',
-        'TRABISCITIYID'        => '41'
+        'TRABISCITYID'        => '41'
     ];
 
 $commercial = [

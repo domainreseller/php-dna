@@ -146,7 +146,7 @@ $info = $a->RegisterWithContactInfo(
         'TRABISCITIZIENID'     => '1112221111111',
         'TRABISNAMESURNAME'    => 'Bunyamin Mutlu',
         'TRABISCOUNTRYID'      => '215',
-        'TRABISCITIYID'        => '41'
+        'TRABISCITYID'        => '41'
     ]);
 ```
 
