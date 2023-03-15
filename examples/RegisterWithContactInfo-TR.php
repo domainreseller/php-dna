@@ -34,25 +34,34 @@ $contact = array(
 );
 
 $invidual = [
-        'TRABISDOMAINCATEGORY' => 1,
-        'TRABISCITIZIENID'     => '11111111111111',
-        'TRABISNAMESURNAME'    => 'Bünyamin Mutlu',
-        'TRABISCOUNTRYID'      => '215',
-        'TRABISCITYID'        => '41'
-    ];
+    'TRABISDOMAINCATEGORY' => 1,
+    'TRABISCITIZIENID'     => '11111111111111',
+    'TRABISNAMESURNAME'    => 'Bünyamin Mutlu',
+    'TRABISCOUNTRYID'      => '215',
+    'TRABISCITYID'         => '41',
+    'TRABISCOUNTRYNAME'    => 'Türkiye',
+    'TRABISCITYNAME'       => 'Kocaeli',
+];
 
 $commercial = [
     'TRABISDOMAINCATEGORY' => 0,
     'TRABISORGANIZATION'   => 'Bunyamin LTD. STI.',
     'TRABISTAXOFFICE'      => 'GEBZE VD',
-    'TRABISTAXNUMBER'      => '10223334445'
+    'TRABISTAXNUMBER'      => '10223334445',
+    'TRABISCOUNTRYID'      => '215',
+    'TRABISCITYID'         => '41',
+    'TRABISCOUNTRYNAME'    => 'Türkiye',
+    'TRABISCITYNAME'       => 'Kocaeli',
 ];
 
-// For Individual owner set 7th parameter as $invidual
-// For Company owner set 7th parameter as $commercial
 
 /**
- * Register domain with contact information
+ * Register domain with contact information,
+ * For Individual owner set 7th parameter as $invidual
+ * For Company owner set 7th parameter as $commercial
+ * Country And City IDs (TRABISCOUNTRYID , TRABISCITYID) can be found from  https://trabis.domainnameapi.com/#countryList
+ * if there is no country or city id, you can use country and city name (TRABISCOUNTRYNAME , TRABISCITYNAME)
+ * country id , city id  parameters are optional for country name , city name parameters
  * @param string $DomainName
  * @param int $Period
  * @param array $Contacts

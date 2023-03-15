@@ -35,6 +35,7 @@ $contact = array(
 );
 
 /**
+ * !!!! THIS EXAMPLE IS NOT WORKING WITH .TR DOMAIN REGISTRATION, CHECK RegisterWithContactInfo-TR.php FILE
  * Register domain with contact information
  * @param string $DomainName
  * @param int $Period
