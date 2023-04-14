@@ -19,7 +19,7 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 
 Domain listesi için
 ```php
-$list = $dna->GetList();
+$list = $dna->GetList(['OrderColumn'=>'Id', 'OrderDirection'=>'ASC', 'PageNumber'=>0,'PageSize'=>1000]);
 ```
 
 TLD Listesini almak için

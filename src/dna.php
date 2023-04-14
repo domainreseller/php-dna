@@ -247,13 +247,19 @@ class DomainNameAPI_PHPLibrary {
      * Get Domain List 0f your account
      * @return array
      */
-    public function GetList() {
+    public function GetList($extra_parameters=[]) {
+
         $parameters = [
             "request" => [
                 "Password" => $this->_USERDATA_PASSWORD,
                 "UserName" => $this->_USERDATA_USERNAME,
             ]
         ];
+
+        foreach ($extra_parameters as $k => $v) {
+            $parameters['request'][$k] = $v;
+        }
+
 
 
         //self::setRequestData($parameters);
@@ -282,6 +288,7 @@ class DomainNameAPI_PHPLibrary {
                 }
 
                 $result["result"] = "OK";
+                $result["TotalCount"] = $data["TotalCount"];
 
             } else {
                 // Set error
