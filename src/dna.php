@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.0.7
+ * @version 2.0.9
  */
 namespace DomainNameApi;
 
@@ -827,6 +827,77 @@ class DomainNameAPI_PHPLibrary {
      * @param string $DomainName
      */
     public function CancelTransfer($DomainName) {
+        $parameters = [
+            "request" => [
+                "Password"   => $this->_USERDATA_PASSWORD,
+                "UserName"   => $this->_USERDATA_USERNAME,
+                "DomainName" => $DomainName
+            ]
+        ];
+
+        // Log last request and response
+        //self::setRequestData($parameters);
+
+        $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
+
+
+
+            //self::setResponseData($response);
+
+             $data = $response[key($response)];
+
+            return [
+                'result'=>$data['OperationResult']=='SUCCESS'?'OK':'ERROR',
+                'data'=>[
+                    'DomainName'=>$parameters["request"]["DomainName"]
+                ]
+            ];
+        });
+
+        return $response;
+    }
+
+
+    /**
+     * Approve Outgoing transfer
+     * @param $DomainName
+     * @return mixed|string[]
+     */
+    public function ApproveTransfer($DomainName) {
+        $parameters = [
+            "request" => [
+                "Password"   => $this->_USERDATA_PASSWORD,
+                "UserName"   => $this->_USERDATA_USERNAME,
+                "DomainName" => $DomainName
+            ]
+        ];
+
+        // Log last request and response
+        //self::setRequestData($parameters);
+
+        $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
+
+
+            //self::setResponseData($response);
+
+             $data = $response[key($response)];
+
+            return [
+                'result'=>$data['OperationResult']=='SUCCESS'?'OK':'ERROR',
+                'data'=>[
+                    'DomainName'=>$parameters["request"]["DomainName"]
+                ]
+            ];
+        });
+
+        return $response;
+    }
+    /**
+     * Reject Outgoing transfer
+     * @param $DomainName
+     * @return mixed|string[]
+     */
+    public function RejectTransfer($DomainName) {
         $parameters = [
             "request" => [
                 "Password"   => $this->_USERDATA_PASSWORD,
