@@ -442,9 +442,11 @@ class DomainNameAPI_PHPLibrary {
                 "Password"       => $this->_USERDATA_PASSWORD,
                 "UserName"       => $this->_USERDATA_USERNAME,
                 "DomainName"     => $DomainName,
-                "NameServerList" => $NameServers
+                "NameServerList" => array_values($NameServers)
             ]
         ];
+
+
 
 
         // Log last request and response
@@ -1653,6 +1655,9 @@ class DomainNameAPI_PHPLibrary {
         ];
 
         try {
+
+
+
 
             // SOAP method which is same as current function name called
             $_response = $this->service->__soapCall($fn, [$parameters]);
