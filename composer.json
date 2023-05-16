@@ -2,7 +2,9 @@
   "name": "domainreseller/php-dna",
   "type": "library",
   "require": {
-    "php": ">=7.4.0"
+    "php": ">=7.4.0",
+    "ext-soap": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-0": {
@@ -15,6 +17,5 @@
       "email": "bakcay@live.com"
     }
   ],
-  "require": {},
   "minimum-stability": "dev"
 }
