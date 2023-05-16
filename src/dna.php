@@ -117,7 +117,7 @@ class DomainNameAPI_PHPLibrary {
             "request" => [
                 "Password"       => $this->_USERDATA_PASSWORD,
                 "UserName"       => $this->_USERDATA_USERNAME,
-                'CurrencyId'=>2
+                'CurrencyId'=>2 // 1: TRY, 2: USD
             ]
         ];
 
@@ -181,11 +181,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) {
-
-            //self::setResponseData($response);
 
             return $response['GetCurrentBalanceResult'];
 
@@ -193,8 +190,6 @@ class DomainNameAPI_PHPLibrary {
 
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         return $response;
     }
@@ -221,12 +216,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-
-        //self::setRequestData($parameters);
-
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) {
 
-            //self::setResponseData($response);
 
 
             //return $response;
@@ -342,13 +333,9 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        //self::setRequestData($parameters);
-
-
 
         $result = self::parseCall(__FUNCTION__,$parameters, function ($response) {
 
-            //self::setResponseData($response);
 
 
              $data = $response[key($response)];
@@ -419,13 +406,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) {
-
-            //self::setResponseData($response);
-
 
             $data = $response[key($response)];
 
@@ -469,11 +451,7 @@ class DomainNameAPI_PHPLibrary {
 
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
-
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-            //self::setResponseData($parameters);
 
 
             $data = $response[key($response)];
@@ -504,13 +482,8 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-
-        // Log last request and response
-        //self::setRequestData($parameters);
-
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response)  {
 
-            //self::setResponseData($response);
 
             return [
                 'data'   => [
@@ -543,11 +516,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response)  {
 
-            //self::setResponseData($response);
 
             return [
                 'data'   => [
@@ -582,11 +552,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
-
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use($parameters)  {
-            //self::setResponseData($response);
+
             return [
                 'data'   => [
                     'NameServer' => $parameters["request"]["ChildNameServer"],
@@ -616,12 +583,9 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use($parameters)  {
 
-            //self::setResponseData($response);
 
             return [
                 'data'   => [
@@ -656,11 +620,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use($parameters)  {
 
-            //self::setResponseData($response);
 
             return [
                 'data'   => [
@@ -693,11 +654,10 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-            //self::setResponseData($response);
+
+
             $data = $response[key($response)];
 
             $result = [];
@@ -754,11 +714,8 @@ class DomainNameAPI_PHPLibrary {
         ];
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
 
-            //self::setResponseData($response);
 
             $data = $response[key($response)];
 
@@ -811,10 +768,8 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
+
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-            //self::setResponseData($response);
 
             $result = [];
             $data = $response[key($response)];
@@ -857,14 +812,10 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
 
 
-
-            //self::setResponseData($response);
 
              $data = $response[key($response)];
 
@@ -894,13 +845,8 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-
-
-            //self::setResponseData($response);
 
              $data = $response[key($response)];
 
@@ -928,14 +874,9 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
 
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
 
-
-
-            //self::setResponseData($response);
 
              $data = $response[key($response)];
 
@@ -967,11 +908,7 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-
-            //self::setResponseData($response);
 
             $data = $response[key($response)];
 
@@ -1024,10 +961,7 @@ class DomainNameAPI_PHPLibrary {
         }
 
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-        //self::setResponseData($response);
 
             $result = [];
             $data   = $response[key($response)];
@@ -1083,10 +1017,8 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-        //self::setResponseData($response);
+
             return [
                 'data'=>[
                     'PrivacyProtectionStatus'=>$parameters["request"]["ProtectPrivacy"]
@@ -1115,10 +1047,7 @@ class DomainNameAPI_PHPLibrary {
             ]
         ];
 
-        // Log last request and response
-        //self::setRequestData($parameters);
         $response = self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
-            //self::setResponseData($response);
 
             $result = [];
             $data   = $response[key($response)];
@@ -1675,8 +1604,6 @@ class DomainNameAPI_PHPLibrary {
         ];
 
         try {
-
-
 
 
             // SOAP method which is same as current function name called
