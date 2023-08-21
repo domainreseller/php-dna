@@ -99,9 +99,13 @@ Registry üzerinden sync yapmak için
 $lock=$dna->SyncFromRegistry('domainadi.com');
 ```
 
-Bakiye sorgulamak için
+Bakiye sorgulamak için (Parametreler içinde 1=TL, 2=USD yazabilir yada direkt USD TRY TL ibaresi kullanabilirsiniz)
 ```php
-$balance = $dna->GetCurrentBalance();
+$balance_usd = $dna->GetCurrentBalance(); //Varsayılan USD
+$balance_usd = $dna->GetCurrentBalance('USD');
+$balance_try = $dna->GetCurrentBalance('TRY');
+$balance_usd = $dna->GetCurrentBalance(1); // 1=TRY/TL
+$balance_try = $dna->GetCurrentBalance(2); // 2=USD
 ```
 
 Reseller bilgilerini almak için
