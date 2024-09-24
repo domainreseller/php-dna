@@ -4,7 +4,8 @@
   "require": {
     "php": ">=7.4.0",
     "ext-soap": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-0": {
