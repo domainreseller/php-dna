@@ -1,3 +1,5 @@
 /test1.php
-
 /vendor/
+.idea
+DomainNameApi/ip_addr.cache
+
