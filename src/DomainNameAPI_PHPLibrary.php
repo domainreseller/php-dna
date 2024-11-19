@@ -28,6 +28,17 @@ class DomainNameAPI_PHPLibrary
      */
     const VERSION = '2.0.24';
 
+    const DEFAULT_NAMESERVERS = [
+        'ns1.domainnameapi.com',
+        'ns2.domainnameapi.com',
+    ];
+
+    const DEFAULT_IGNORED_ERRORS=[
+            'Domain not found',
+            'ERR_DOMAIN_NOT_FOUND',
+            'Reseller not found'
+        ];
+
     /**
      * Error reporting enabled
      */
@@ -220,11 +231,7 @@ class DomainNameAPI_PHPLibrary
             return;
         }
 
-        $skipped_errors = [
-            'Domain not found',
-            'ERR_DOMAIN_NOT_FOUND',
-            'Reseller not found'
-        ];
+        $skipped_errors = self::DEFAULT_IGNORED_ERRORS;
 
         foreach ($skipped_errors as $ek => $ev) {
             if(strpos($e->getMessage(),$ev) !== false){
@@ -1541,7 +1548,7 @@ class DomainNameAPI_PHPLibrary
      *     @type array "Technical"      Similar structure as Administrative
      *     @type array "Registrant"     Similar structure as Administrative
      * }
-     * @param array  $nameServers       Array of nameservers (default: ["dns.domainnameapi.com", "web.domainnameapi.com"])
+     * @param array $nameServers       Array of nameservers (default: ["dns.domainnameapi.com", "web.domainnameapi.com"])
      * @param bool   $eppLock           Whether to enable EPP lock (default: true)
      * @param bool   $privacyLock       Whether to enable privacy protection (default: false)
      * @param array  $addionalAttributes Optional additional attributes for specific TLDs
@@ -1574,7 +1581,7 @@ class DomainNameAPI_PHPLibrary
         $domainName,
         $period,
         $contacts,
-        $nameServers = ["dns.domainnameapi.com", "web.domainnameapi.com"],
+        $nameServers = self::DEFAULT_NAMESERVERS,
         $eppLock = true,
         $privacyLock = false,
         $addionalAttributes = []
