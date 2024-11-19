@@ -1950,6 +1950,7 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "Auth":
 
                     if (is_string($attrValue) && !is_null($attrValue)) {
@@ -1958,16 +1959,19 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "StartDate":
 
                     $result["Dates"]["Start"] = $attrValue;
                     break;
 
 
+
                 case "ExpirationDate":
 
                     $result["Dates"]["Expiration"] = $attrValue;
                     break;
+
 
 
                 case "LockStatus":
@@ -1978,12 +1982,14 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "PrivacyProtectionStatus":
 
                     if (is_bool($attrValue)) {
                         $result["PrivacyProtectionStatus"] = var_export($attrValue, true);
                     }
                     break;
+
 
 
                 case "IsChildNameServer":
@@ -1994,12 +2000,14 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "RemainingDay":
 
                     if (is_numeric($attrValue)) {
                         $result["Dates"]["RemainingDays"] = $attrValue;
                     }
                     break;
+
 
 
                 case "NameServerList":
@@ -2010,6 +2018,7 @@ class DomainNameAPI_PHPLibrary
                         }
                     }
                     break;
+
 
 
                 case "AdditionalAttributes":
