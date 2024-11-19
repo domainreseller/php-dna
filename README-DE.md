@@ -5,16 +5,16 @@
   <a href="README-SA.md"> | SA <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/SA.png" alt="AR" height="20" /></a>  
 </div>
 
-## Installation and Integration Guide
+## Installations- und Integrationsanleitung
 
-### Minimum Requirements
+### Mindestanforderungen
 
-- PHP7.4 or higher (Recommended 8.1)
-- PHP SOAPClient extension must be active.
+- PHP7.4 oder höher (Empfohlen 8.1)
+- PHP SOAPClient-Erweiterung muss aktiviert sein.
 
-### A) Manual Usage
+### A) Manuelle Verwendung
 
-Download the files and examine the examples in the [examples](examples) folder.
+Laden Sie die Dateien herunter und prüfen Sie die Beispiele im [examples](examples) Ordner.
 
 ```php
 require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
@@ -22,8 +22,7 @@ require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ```
 
-
-### B) Composer ile entegrasyon için
+### B) Integration mit Composer
 
 ```bash
 composer require atakdomain/domainnameapi-php
@@ -35,14 +34,11 @@ require_once __DIR__.'/vendor/autoload.php';
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ```
 
+### Verwendung
 
-### Usage
+#### Für Domain-Registrierungen
 
-
-
-#### Domain Registration Operations
-
-Note: Additional parameters are required for .tr domains. The Additional parameter is used for domain names that require extra information like .tr.
+Hinweis: Für .tr Domains werden zusätzliche Parameter benötigt. Bei Domains wie .tr, die zusätzliche Informationen benötigen, wird der Additional-Parameter verwendet.
 
 ```php
 $contact = [
@@ -87,7 +83,7 @@ $a->RegisterWithContactInfo(
 ```
 
 <details>
-<summary>Sample Output for Domain Registration</summary>
+<summary>Domain Kayıt işlemleri için Örnek Çıktı</summary>
 
 ```php
 Array
@@ -156,13 +152,13 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Renewal
+#### Domain Yenileme
 
 ```php
 $dna->Renew('example.com', 1);
 ```
 <details>
-<summary>Sample Output for Domain Renewal</summary>
+<summary>Domain Yenileme Örnek Çıktı</summary>
 
 ```php
 Array
@@ -189,7 +185,7 @@ $dna->Transfer('example.com', 'Xy9#mK2$', 3);
 ```
 
 <details>
-<summary>Sample Output for Domain Transfer</summary>
+<summary>Domain Transfer Örnek Çıktı</summary>
 
 ```php
 Array
@@ -204,13 +200,15 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain List
+
+
+#### Domain-Namen-Liste
 
 ```php
 $dna->GetList(['OrderColumn'=>'Id', 'OrderDirection'=>'ASC', 'PageNumber'=>0,'PageSize'=>1000]);
 ```
 <details>
-<summary>Sample Output for Domain List</summary>
+<summary>Domain-Namen-Liste Örnek Çıktı</summary>
 
 ```php
 Array
@@ -292,14 +290,14 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### TLD List
+#### TLD-Liste
 
 ```php
 $dna->GetTldList(100);
 ```
 <details>
 
-<summary>Sample Output for TLD List</summary>
+<summary>TLD-Liste Örnek Çıktı</summary>
 
 ```php
 
@@ -429,14 +427,15 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Availability Check
+
+#### Domain-Name-Verfügbarkeit-Kontrol
 
 ```php
 $dna->CheckAvailability('example.com',1,'create');
 ```
 
 <details>
-<summary>Sample Output for Domain Availability Check</summary>
+<summary>Domain-Name-Verfügbarkeit-Kontrol Örnek Çıktı</summary>
 
 ```php
  *Array
@@ -499,14 +498,14 @@ $dna->CheckAvailability('example.com',1,'create');
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Details
+#### Domain-Details
 
 ```php
 $dna->GetDetails('example.com');
 ```
 
 <details>
-<summary>Sample Output for Domain Details</summary>
+<summary>Domain-Details Örnek Çıktı</summary>
 
 ```php
 
@@ -592,7 +591,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Nameserver Modification
+#### Nameserver-Änderung
 
 ```php
 $dna->ModifyNameServer('example.com', [
@@ -602,7 +601,7 @@ $dna->ModifyNameServer('example.com', [
 ```
 
 <details>
-<summary>Sample Output for Nameserver Modification</summary>
+<summary>Nameserver-Änderung Örnek Çıktı</summary>
 
 ```php
 
@@ -628,7 +627,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Enable Domain Lock
+
+#### Domain-Sperrung-Aktivierung
 
 ```php
     
@@ -636,7 +636,7 @@ $lock = $dna->EnableTheftProtectionLock('example.com');
 ``` 
 
 <details>
-<summary>Sample Output for Enable Domain Lock</summary>
+<summary>Domain-Sperrung-Aktivierung Örnek Çıktı</summary>
 
 ```php
 
@@ -656,14 +656,16 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Disable Domain Lock
+
+
+#### Domain-Sperrung-Löschen
 
 ```php
 $lock = $dna->DisableTheftProtectionLock('example.com');
 ```
 
 <details>
-<summary>Sample Output for Disable Domain Lock</summary>
+<summary>Domain-Sperrung-Löschen Örnek Çıktı</summary>
 
 ```php
 
@@ -683,7 +685,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Add Child Nameserver
+
+#### Domaine ChildNS hinzufügen
 
 ```php
 $dna->AddChildNameServer('example.com', 'ns1.example.com', '1.2.3.4');
@@ -691,7 +694,7 @@ $dna->AddChildNameServer('example.com', 'ns1.example.com', '1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Add Child Nameserver</summary>
+<summary>Domaine ChildNS hinzufügen Örnek Çıktı</summary>
 
 ```php
 
@@ -717,7 +720,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Delete Child Nameserver
+
+#### Domaine ChildNS löschen
 
 ```php
 $dna->DeleteChildNameServer('example.com', 'test5.example.com');
@@ -725,7 +729,7 @@ $dna->DeleteChildNameServer('example.com', 'test5.example.com');
 ```
 
 <details>
-<summary>Sample Output for Delete Child Nameserver</summary>
+<summary>Domaine ChildNS löschen Örnek Çıktı</summary>
 
 ```php
 Array
@@ -739,14 +743,14 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Update Child Nameserver
+#### Child NS-Aktualisierung
 
 ```php
  $dna->ModifyChildNameServer('example.com', 'test5.example.com', '1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Update Child Nameserver</summary>
+<summary>Child NS-Aktualisierung Örnek Çıktı</summary>
 
 ```php
 Array
@@ -769,7 +773,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Modify Domain Privacy
+#### Domain-Privatsphäre-Änderung
 
 ```php
 $lock = $dna->ModifyPrivacyProtectionStatus('example.com', true, 'owners optional comment');
@@ -777,7 +781,7 @@ $lock = $dna->ModifyPrivacyProtectionStatus('example.com', true, 'owners optiona
 
 <details>
 
-<summary>Sample Output for Modify Domain Privacy</summary>
+<summary>Domain-Privatsphäre-Änderung Örnek Çıktı</summary>
 
 ```php
 Array
@@ -794,7 +798,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Save Domain Contact
+#### Domain-Kontakt-Speichern
 
 ```php
 
@@ -822,7 +826,7 @@ $dna->SaveContacts('example.com','ns1','1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Save Domain Contact</summary>
+<summary>Domain-Kontakt-Speichern Örnek Çıktı</summary>
 
 ```php
 Array
@@ -835,14 +839,16 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Get Reseller Details
+
+
+#### Reseller-Details abrufen
 
 ```php
 $dna->GetResellerDetails();
 ```
 
 <details>
-<summary>Sample Output for Get Reseller Details</summary>
+<summary>Reseller-Details abrufen Örnek Çıktı</summary>
 
 ```php
 Array
@@ -879,18 +885,20 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-## Return and Error Codes with Descriptions
 
-| Code  | Description                                           | Detail                                                            |
-|-------|-------------------------------------------------------|------------------------------------------------------------------|
-| 1000  | Command completed successfully                         | Operation successful.                                             |
-| 1001  | Command completed successfully; action pending         | Operation successful. However, the operation is currently queued for completion. |
-| 2003  | Required parameter missing                            | Parameter missing error. For example, no phone entry in contact information. |
-| 2105  | Object is not eligible for renewal                    | Domain status is not suitable for renewal, locked for update operations. Status should not be "clientupdateprohibited". May be due to other status conditions. |
-| 2200  | Authentication error                                  | Authorization error, security code is incorrect or domain is registered with another registrar. |
-| 2302  | Object exists                                        | Domain name or nameserver information already exists in database. Cannot be registered. |
-| 2303  | Object does not exist                                | Domain name or nameserver information does not exist in database. New registration required. |
-| 2304  | Object status prohibits operation                    | Domain status is not suitable for updates, locked for update operations. Status should not be "clientupdateprohibited". May be due to other status conditions. |
+
+## Rückgabe- und Fehlercodes mit Erklärungen
+
+| Code  | Beschreibung                                          | Details                                                           |
+|-------|------------------------------------------------------|-------------------------------------------------------------------|
+| 1000  | Befehl erfolgreich abgeschlossen                     | Operation erfolgreich.                                             |
+| 1001  | Befehl erfolgreich abgeschlossen; Aktion ausstehend  | Operation erfolgreich. Der Vorgang wurde jedoch in die Warteschlange eingereiht. |
+| 2003  | Erforderlicher Parameter fehlt                        | Parameterfehler. Zum Beispiel: Keine Telefonnummer in Kontaktinformationen angegeben. |
+| 2105  | Objekt ist nicht für Verlängerung geeignet           | Domain-Status erlaubt keine Verlängerung, ist für Updates gesperrt. Status darf nicht "clientupdateprohibited" sein. Kann auch an anderen Statusbedingungen liegen. |
+| 2200  | Authentifizierungsfehler                             | Berechtigungsfehler, Sicherheitscode falsch oder Domain bei anderem Registrar. |
+| 2302  | Objekt existiert bereits                             | Domain-Name oder Nameserver-Information existiert bereits in der Datenbank. Kann nicht registriert werden. |
+| 2303  | Objekt existiert nicht                               | Domain-Name oder Nameserver-Information existiert nicht in der Datenbank. Muss neu erstellt werden. |
+| 2304  | Objektstatus verhindert Operation                    | Domain-Status erlaubt keine Aktualisierung, ist für Updates gesperrt. Status darf nicht "clientupdateprohibited" sein. Kann auch an anderen Statusbedingungen liegen. |
 
 
 

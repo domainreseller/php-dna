@@ -5,16 +5,16 @@
   <a href="README-SA.md"> | SA <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/SA.png" alt="AR" height="20" /></a>  
 </div>
 
-## Installation and Integration Guide
+## دليل التثبيت والتكامل
 
-### Minimum Requirements
+### الحد الأدنى من المتطلبات
 
-- PHP7.4 or higher (Recommended 8.1)
-- PHP SOAPClient extension must be active.
+- PHP7.4 أو أعلى (يوصى بـ 8.1)
+- يجب تفعيل إضافة PHP SOAPClient
 
-### A) Manual Usage
+### أ) الاستخدام اليدوي
 
-Download the files and examine the examples in the [examples](examples) folder.
+قم بتنزيل الملفات وراجع الأمثلة في مجلد [examples](examples).
 
 ```php
 require_once __DIR__.'/src/DomainNameAPI_PHPLibrary.php';
@@ -23,7 +23,7 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ```
 
 
-### B) Composer ile entegrasyon için
+### ب) للتكامل باستخدام Composer
 
 ```bash
 composer require atakdomain/domainnameapi-php
@@ -36,13 +36,13 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ```
 
 
-### Usage
+### الاستخدام
 
 
 
-#### Domain Registration Operations
+#### لعمليات تسجيل النطاق
 
-Note: Additional parameters are required for .tr domains. The Additional parameter is used for domain names that require extra information like .tr.
+ملاحظة: تتطلب نطاقات .tr معلمات إضافية. يتم استخدام معلمة Additional للنطاقات التي تتطلب معلومات إضافية مثل .tr.
 
 ```php
 $contact = [
@@ -87,7 +87,7 @@ $a->RegisterWithContactInfo(
 ```
 
 <details>
-<summary>Sample Output for Domain Registration</summary>
+<summary>مثال على مخرجات عمليات تسجيل النطاق</summary>
 
 ```php
 Array
@@ -156,13 +156,13 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Renewal
+#### تجديد النطاق
 
 ```php
 $dna->Renew('example.com', 1);
 ```
 <details>
-<summary>Sample Output for Domain Renewal</summary>
+<summary>مثال على مخرجات تجديد النطاق</summary>
 
 ```php
 Array
@@ -182,14 +182,14 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Transfer
+#### نقل النطاق
 
 ```php
 $dna->Transfer('example.com', 'Xy9#mK2$', 3);
 ```
 
 <details>
-<summary>Sample Output for Domain Transfer</summary>
+<summary>مثال على مخرجات نقل النطاق</summary>
 
 ```php
 Array
@@ -204,13 +204,15 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain List
+
+
+#### قائمة النطاقات
 
 ```php
 $dna->GetList(['OrderColumn'=>'Id', 'OrderDirection'=>'ASC', 'PageNumber'=>0,'PageSize'=>1000]);
 ```
 <details>
-<summary>Sample Output for Domain List</summary>
+<summary>مثال على مخرجات قائمة النطاقات</summary>
 
 ```php
 Array
@@ -292,14 +294,14 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### TLD List
+#### قائمة امتدادات النطاقات
 
 ```php
 $dna->GetTldList(100);
 ```
 <details>
 
-<summary>Sample Output for TLD List</summary>
+<summary>مثال على مخرجات قائمة امتدادات النطاقات</summary>
 
 ```php
 
@@ -429,14 +431,15 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Availability Check
+
+#### التحقق من توفر النطاق
 
 ```php
 $dna->CheckAvailability('example.com',1,'create');
 ```
 
 <details>
-<summary>Sample Output for Domain Availability Check</summary>
+<summary>مثال على مخرجات التحقق من توفر النطاق</summary>
 
 ```php
  *Array
@@ -499,14 +502,14 @@ $dna->CheckAvailability('example.com',1,'create');
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Domain Details
+#### تفاصيل النطاق
 
 ```php
 $dna->GetDetails('example.com');
 ```
 
 <details>
-<summary>Sample Output for Domain Details</summary>
+<summary>مثال على مخرجات تفاصيل النطاق</summary>
 
 ```php
 
@@ -592,7 +595,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Nameserver Modification
+#### تعديل خوادم الأسماء
 
 ```php
 $dna->ModifyNameServer('example.com', [
@@ -602,7 +605,7 @@ $dna->ModifyNameServer('example.com', [
 ```
 
 <details>
-<summary>Sample Output for Nameserver Modification</summary>
+<summary>مثال على مخرجات تعديل خوادم الأسماء</summary>
 
 ```php
 
@@ -628,7 +631,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Enable Domain Lock
+
+#### تفعيل قفل النطاق
 
 ```php
     
@@ -636,7 +640,7 @@ $lock = $dna->EnableTheftProtectionLock('example.com');
 ``` 
 
 <details>
-<summary>Sample Output for Enable Domain Lock</summary>
+<summary>مثال على مخرجات تفعيل قفل النطاق</summary>
 
 ```php
 
@@ -656,14 +660,16 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Disable Domain Lock
+
+
+#### إلغاء قفل النطاق
 
 ```php
 $lock = $dna->DisableTheftProtectionLock('example.com');
 ```
 
 <details>
-<summary>Sample Output for Disable Domain Lock</summary>
+<summary>مثال على مخرجات إلغاء قفل النطاق</summary>
 
 ```php
 
@@ -683,7 +689,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Add Child Nameserver
+
+#### إضافة خادم أسماء فرعي للنطاق
 
 ```php
 $dna->AddChildNameServer('example.com', 'ns1.example.com', '1.2.3.4');
@@ -691,7 +698,7 @@ $dna->AddChildNameServer('example.com', 'ns1.example.com', '1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Add Child Nameserver</summary>
+<summary>مثال على مخرجات إضافة خادم أسماء فرعي</summary>
 
 ```php
 
@@ -717,7 +724,8 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Delete Child Nameserver
+
+#### حذف خادم أسماء فرعي من النطاق
 
 ```php
 $dna->DeleteChildNameServer('example.com', 'test5.example.com');
@@ -725,7 +733,7 @@ $dna->DeleteChildNameServer('example.com', 'test5.example.com');
 ```
 
 <details>
-<summary>Sample Output for Delete Child Nameserver</summary>
+<summary>مثال على مخرجات حذف خادم أسماء فرعي</summary>
 
 ```php
 Array
@@ -739,14 +747,14 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Update Child Nameserver
+#### تحديث خادم الأسماء الفرعي
 
 ```php
  $dna->ModifyChildNameServer('example.com', 'test5.example.com', '1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Update Child Nameserver</summary>
+<summary>مثال على مخرجات تحديث خادم الأسماء الفرعي</summary>
 
 ```php
 Array
@@ -769,7 +777,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Modify Domain Privacy
+#### تعديل حالة حماية الخصوصية
 
 ```php
 $lock = $dna->ModifyPrivacyProtectionStatus('example.com', true, 'owners optional comment');
@@ -777,7 +785,7 @@ $lock = $dna->ModifyPrivacyProtectionStatus('example.com', true, 'owners optiona
 
 <details>
 
-<summary>Sample Output for Modify Domain Privacy</summary>
+<summary>مثال على مخرجات تعديل حالة حماية الخصوصية</summary>
 
 ```php
 Array
@@ -794,7 +802,7 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Save Domain Contact
+#### حفظ معلومات الاتصال للنطاق
 
 ```php
 
@@ -822,7 +830,7 @@ $dna->SaveContacts('example.com','ns1','1.2.3.4');
 ```
 
 <details>
-<summary>Sample Output for Save Domain Contact</summary>
+<summary>مثال على مخرجات حفظ معلومات الاتصال</summary>
 
 ```php
 Array
@@ -835,14 +843,16 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-#### Get Reseller Details
+
+
+#### للحصول على معلومات الوكيل
 
 ```php
 $dna->GetResellerDetails();
 ```
 
 <details>
-<summary>Sample Output for Get Reseller Details</summary>
+<summary>مثال على مخرجات معلومات الوكيل</summary>
 
 ```php
 Array
@@ -879,18 +889,20 @@ Array
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 
-## Return and Error Codes with Descriptions
 
-| Code  | Description                                           | Detail                                                            |
-|-------|-------------------------------------------------------|------------------------------------------------------------------|
-| 1000  | Command completed successfully                         | Operation successful.                                             |
-| 1001  | Command completed successfully; action pending         | Operation successful. However, the operation is currently queued for completion. |
-| 2003  | Required parameter missing                            | Parameter missing error. For example, no phone entry in contact information. |
-| 2105  | Object is not eligible for renewal                    | Domain status is not suitable for renewal, locked for update operations. Status should not be "clientupdateprohibited". May be due to other status conditions. |
-| 2200  | Authentication error                                  | Authorization error, security code is incorrect or domain is registered with another registrar. |
-| 2302  | Object exists                                        | Domain name or nameserver information already exists in database. Cannot be registered. |
-| 2303  | Object does not exist                                | Domain name or nameserver information does not exist in database. New registration required. |
-| 2304  | Object status prohibits operation                    | Domain status is not suitable for updates, locked for update operations. Status should not be "clientupdateprohibited". May be due to other status conditions. |
+
+## رموز العودة والأخطاء مع تفسيراتها
+
+| الرمز | الوصف | التفاصيل |
+|-------|--------|-----------|
+| 1000 | تم تنفيذ الأمر بنجاح | العملية ناجحة |
+| 1001 | تم تنفيذ الأمر بنجاح؛ الإجراء معلق | العملية ناجحة ولكنها في قائمة الانتظار للإكمال |
+| 2003 | معلمة مطلوبة مفقودة | خطأ في المعلمات، مثل عدم إدخال رقم الهاتف في معلومات الاتصال |
+| 2105 | الكائن غير مؤهل للتجديد | حالة النطاق غير مناسبة للتجديد، مقفلة للتحديثات |
+| 2200 | خطأ في المصادقة | خطأ في التفويض، رمز الأمان خاطئ أو النطاق مسجل لدى شركة تسجيل أخرى |
+| 2302 | الكائن موجود | اسم النطاق أو معلومات خادم الأسماء موجودة في قاعدة البيانات، لا يمكن التسجيل |
+| 2303 | الكائن غير موجود | اسم النطاق أو معلومات خادم الأسماء غير موجودة في قاعدة البيانات، يجب إنشاء تسجيل جديد |
+| 2304 | حالة الكائن تمنع العملية | حالة النطاق غير مناسبة للتحديث، مقفلة للتحديثات |
 
 
 
