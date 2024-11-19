@@ -23,7 +23,8 @@
   "require-dev": {
     "phpunit/phpunit": "^9.0"
   },
-  "minimum-stability": "stable",
+   "minimum-stability": "dev",
+    "prefer-stable": true,
   "repositories": [
     {
       "type": "vcs",
