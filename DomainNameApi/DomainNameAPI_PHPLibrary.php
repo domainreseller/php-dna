@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.0.22
+ * @version 2.0.24
  */
 
 
@@ -26,7 +26,7 @@ class DomainNameAPI_PHPLibrary
     /**
      * Version of the library
      */
-    const VERSION = '2.0.22';
+    const VERSION = '2.0.24';
 
     /**
      * Error reporting enabled
