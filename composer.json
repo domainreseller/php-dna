@@ -1,5 +1,5 @@
 {
-  "name": "domainnameapi/php-library",
+  "name": "domainreseller/php-dna",
   "description": "DomainNameAPI PHP Library for Domain Management",
   "type": "library",
   "license": "MIT",
