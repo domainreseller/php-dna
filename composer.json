@@ -5,7 +5,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "DomainNameApi\\": "src/"
+      "DomainNameApi\\": "DomainNameApi/"
     }
   },
   "authors": [
@@ -23,10 +23,10 @@
   "require-dev": {
     "phpunit/phpunit": "^9.0"
   },
-   "minimum-stability": "dev",
+  "minimum-stability": "dev",
   "repositories": [
     {
-      "type": "git",
+      "type": "vcs",
       "url": "https://github.com/domainreseller/php-dna"
     }
   ]
