@@ -39,6 +39,10 @@ class DomainNameAPI_PHPLibrary
             'Reseller not found'
         ];
 
+    const DEFAULT_CACHE_TTL = 512;
+    const DEFAULT_TIMEOUT = 20;
+    const DEFAULT_REASON = 'Owner request';
+
     /**
      * Error reporting enabled
      */
@@ -338,7 +342,7 @@ class DomainNameAPI_PHPLibrary
     {
         $cache_ttl    = 512; // Cache süresi 512 saniye
         $cache_key    = 'external_ip';
-        $cache_file   = __DIR__ . '/ip_addr.cache';
+        $cache_file = __DIR__ . '/ip_addr.cache';
         $current_time = time();
 
         if (function_exists('apcu_fetch')) {
@@ -370,9 +374,9 @@ class DomainNameAPI_PHPLibrary
                 file_put_contents($cache_file, $external_ip);
             }
 
-            return $external_ip;
+                return $external_ip;
         } catch (Exception $e) {
-            return 'unknown';
+        return 'unknown';
         }
     }
 
@@ -384,8 +388,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 'CurrencyId' => 2 // 1: TRY, 2: USD
             ]
         ];
@@ -448,8 +450,6 @@ class DomainNameAPI_PHPLibrary
 
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 'CurrencyId' => $currencyId
             ]
         ];
@@ -488,8 +488,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"       => $this->servicePassword,
-                "UserName"       => $this->serviceUsername,
                 "DomainNameList" => $domains,
                 "TldList"        => $extensions,
                 "Period"         => $period,
@@ -574,8 +572,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password" => $this->servicePassword,
-                "UserName" => $this->serviceUsername,
             ]
         ];
 
@@ -652,8 +648,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"                => $this->servicePassword,
-                "UserName"                => $this->serviceUsername,
                 'IncludePriceDefinitions' => 1,
                 'PageSize'                => $count
             ]
@@ -748,8 +742,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -802,8 +794,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"       => $this->servicePassword,
-                "UserName"       => $this->serviceUsername,
                 "DomainName"     => $domainName,
                 "NameServerList" => array_values($nameServers)
             ]
@@ -848,8 +838,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -891,8 +879,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -938,8 +924,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"        => $this->servicePassword,
-                "UserName"        => $this->serviceUsername,
                 "DomainName"      => $domainName,
                 "ChildNameServer" => $nameServer,
                 "IpAddressList"   => [$ipAddress]
@@ -985,8 +969,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"        => $this->servicePassword,
-                "UserName"        => $this->serviceUsername,
                 "DomainName"      => $domainName,
                 "ChildNameServer" => $nameServer
             ]
@@ -1032,8 +1014,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"        => $this->servicePassword,
-                "UserName"        => $this->serviceUsername,
                 "DomainName"      => $domainName,
                 "ChildNameServer" => $nameServer,
                 "IpAddressList"   => [$ipAddress]
@@ -1111,8 +1091,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -1205,8 +1183,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"              => $this->servicePassword,
-                "UserName"              => $this->serviceUsername,
                 "DomainName"            => $domainName,
                 "AdministrativeContact" => $contacts["Administrative"],
                 "BillingContact"        => $contacts["Billing"],
@@ -1280,8 +1256,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"             => $this->servicePassword,
-                "UserName"             => $this->serviceUsername,
                 "DomainName"           => $domainName,
                 "AuthCode"             => $eppCode,
                 'AdditionalAttributes' => [
@@ -1347,8 +1321,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -1392,8 +1364,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -1436,8 +1406,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -1482,8 +1450,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName,
                 "Period"     => $period
             ]
@@ -1588,8 +1554,6 @@ class DomainNameAPI_PHPLibrary
     ) {
         $parameters = [
             "request" => [
-                "Password"                => $this->servicePassword,
-                "UserName"                => $this->serviceUsername,
                 "DomainName"              => $domainName,
                 "Period"                  => $period,
                 "NameServerList"          => $nameServers,
@@ -1645,7 +1609,7 @@ class DomainNameAPI_PHPLibrary
      * 
      * @param string $domainName The domain name to modify privacy protection for
      * @param bool   $status     New privacy protection status (true to enable, false to disable)
-     * @param string $Reason     Reason for the modification (default: "Owner request")
+     * @param string $reason     Reason for the modification (default: "Owner request")
      * 
      * @return array {
      *     @type string "result"  Operation result ('OK' or 'ERROR')
@@ -1661,32 +1625,24 @@ class DomainNameAPI_PHPLibrary
      * 
      * @throws Exception When domain name is invalid, status change is not allowed, or operation fails
      */
-    public function ModifyPrivacyProtectionStatus($domainName, $status, $Reason = "Owner request")
+    public function ModifyPrivacyProtectionStatus($domainName, $status, $reason = self::DEFAULT_REASON)
     {
-        if (trim($Reason) == "") {
-            $Reason = "Owner request";
-        }
-
         $parameters = [
             "request" => [
-                "Password"       => $this->servicePassword,
-                "UserName"       => $this->serviceUsername,
-                "DomainName"     => $domainName,
+                "DomainName" => $domainName,
                 "ProtectPrivacy" => $status,
-                "Reason"         => $Reason
+                "Reason" => trim($reason) ?: self::DEFAULT_REASON
             ]
         ];
 
-        return  self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
+        return self::parseCall(__FUNCTION__, $parameters, function ($response) use ($parameters) {
             return [
-                'data'   => [
+                'data' => [
                     'PrivacyProtectionStatus' => $parameters["request"]["ProtectPrivacy"]
                 ],
                 'result' => 'OK'
             ];
         });
-
-
     }
 
 
@@ -1733,8 +1689,6 @@ class DomainNameAPI_PHPLibrary
     {
         $parameters = [
             "request" => [
-                "Password"   => $this->servicePassword,
-                "UserName"   => $this->serviceUsername,
                 "DomainName" => $domainName
             ]
         ];
@@ -1933,12 +1887,14 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "BillingContactId":
 
                     if (is_numeric($attrValue)) {
                         $result["Contacts"]["Billing"]["ID"] = $attrValue;
                     }
                     break;
+
 
 
                 case "TechnicalContactId":
@@ -1949,12 +1905,14 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
+
                 case "RegistrantContactId":
 
                     if (is_numeric($attrValue)) {
                         $result["Contacts"]["Registrant"]["ID"] = $attrValue;
                     }
                     break;
+
 
 
 
@@ -1967,6 +1925,7 @@ class DomainNameAPI_PHPLibrary
 
 
 
+
                 case "StartDate":
 
                     $result["Dates"]["Start"] = $attrValue;
@@ -1974,10 +1933,12 @@ class DomainNameAPI_PHPLibrary
 
 
 
+
                 case "ExpirationDate":
 
                     $result["Dates"]["Expiration"] = $attrValue;
                     break;
+
 
 
 
@@ -1990,12 +1951,14 @@ class DomainNameAPI_PHPLibrary
 
 
 
+
                 case "PrivacyProtectionStatus":
 
                     if (is_bool($attrValue)) {
                         $result["PrivacyProtectionStatus"] = var_export($attrValue, true);
                     }
                     break;
+
 
 
 
@@ -2165,6 +2128,8 @@ class DomainNameAPI_PHPLibrary
         ];
 
         try {
+            $parameters["request"]["UserName"] = $this->serviceUsername;
+            $parameters["request"]["Password"] = $this->servicePassword;
             // SOAP method which is same as current function name called
             $_response = $this->service->__soapCall($fn, [$parameters]);
 
