@@ -35,28 +35,30 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 
 #### Domain Kayıt işlemleri için
 
+Not: .tr domainler için ekstra parametreler gereklidir. .tr gibi ek bilgi gereken alan adlarında Additional parametresi kullanılır.
+
 ```php
 $contact = [
-    "FirstName"        => 'Bunyamin',
-    "LastName"         => 'Mutlu',
-    "Company"          => '',
-    "EMail"            => 'bun.mutlu@gmail.com',
-    "AddressLine1"     => 'adres 1 adres 1 adres 1 ',
-    "AddressLine2"     => 'test test',
+    "FirstName"        => 'John',
+    "LastName"         => 'Doe',
+    "Company"          => 'Example Corp',
+    "EMail"            => 'john.doe@example.com',
+    "AddressLine1"     => '123 Lorem Street',
+    "AddressLine2"     => 'Suite 456',
     "AddressLine3"     => '',
-    "City"             => 'Kocaeli',
-    "Country"          => 'TR',
-    "Fax"              => '2626060026',
-    "FaxCountryCode"   => '90',
-    "Phone"            => '5555555555',
-    "PhoneCountryCode" => 90,
+    "City"             => 'Springfield',
+    "Country"          => 'US',
+    "Fax"              => '1234567890',
+    "FaxCountryCode"   => '1',
+    "Phone"            => '9876543210',
+    "PhoneCountryCode" => 1,
     "Type"             => 'Contact',
-    "ZipCode"          => '41829',
-    "State"            => 'GEBZE'
+    "ZipCode"          => '12345',
+    "State"            => 'IL'
 ];
 
 $a->RegisterWithContactInfo(
-    'domainadi.com.tr',
+    'example.com',
     1,
     [
         'Administrative' => $contact,
@@ -64,13 +66,16 @@ $a->RegisterWithContactInfo(
         'Technical'      => $contact,
         'Registrant'     => $contact
     ],
-    ["tr.atakdomain.com", "eu.atakdomain.com"],true,false,
+    ["ns1.example.com", "ns2.example.com"],
+    true,
+    false,
+    //Addional attributes sadece .tr domainler için gereklidir.
     [
         'TRABISDOMAINCATEGORY' => 1,
-        'TRABISCITIZIENID'     => '1112221111111',
-        'TRABISNAMESURNAME'    => 'Bunyamin Mutlu',
-        'TRABISCOUNTRYID'      => '215',
-        'TRABISCITYID'        => '41'
+        'TRABISCITIZIENID'     => '12345678901',
+        'TRABISNAMESURNAME'    => 'John Doe',
+        'TRABISCOUNTRYID'      => '840',
+        'TRABISCITYID'        => '17'
     ]);
 ```
 
@@ -82,61 +87,58 @@ Array
 (
     [result] => OK
     [data] => Array
+    (
+        [ID] => 123456
+        [Status] => clientTransferProhibited
+        [DomainName] => example.com
+        [AuthCode] => Xy9#mK2$pL5@vN8
+        [LockStatus] => true
+        [PrivacyProtectionStatus] => false
+        [IsChildNameServer] => false
+        [Contacts] => Array
         (
-            [ID] => 0
-            [Status] => clientTransferProhibited
-            [DomainName] => testdomain859.com
-            [AuthCode] => E!m5b3}R6Qq=Wc/9
-            [LockStatus] => true
-            [PrivacyProtectionStatus] => false
-            [IsChildNameServer] => false
-            [Contacts] => Array
-                (
-                    [Billing] => Array
-                        (
-                            [ID] => 0
-                        )
-
-                    [Technical] => Array
-                        (
-                            [ID] => 0
-                        )
-
-                    [Administrative] => Array
-                        (
-                            [ID] => 0
-                        )
-
-                    [Registrant] => Array
-                        (
-                            [ID] => 0
-                        )
-
-                )
-
-            [Dates] => Array
-                (
-                    [Start] => 2023-03-04T15:45:33+03:00
-                    [Expiration] => 2024-03-04T15:45:33+03:00
-                    [RemainingDays] => 0
-                )
-
-            [NameServers] => Array
-                (
-                    [0] => tr.atakdomain.info
-                    [1] => eu.atakdomain.info
-                )
-
-            [Additional] => Array
-                (
-                )
-
-            [ChildNameServers] => Array
-                (
-                )
-
+            [Billing] => Array
+            (
+                [ID] => 987654
+            )
+            [Technical] => Array
+            (
+                [ID] => 987654
+            )
+            [Administrative] => Array
+            (
+                [ID] => 987654
+            )
+            [Registrant] => Array
+            (
+                [ID] => 987654
+            )
         )
-
+        [Dates] => Array
+        (
+            [Start] => 2024-03-15T10:00:00+03:00
+            [Expiration] => 2025-03-15T10:00:00+03:00
+            [RemainingDays] => 365
+        )
+        [NameServers] => Array
+        (
+            [0] => ns1.example.com
+            [1] => ns2.example.com
+        )
+        [Additional] => Array
+        (
+            [TRABISDOMAINCATEGORY] => 1
+            [TRABISCITIZIENID] => 98765432109
+            [TRABISNAMESURNAME] => Jane Smith
+            [TRABISCOUNTRYID] => 840
+            [TRABISCITYID] => 34
+        )
+        [ChildNameServers] => Array
+        (
+                )
+          
+        )
+    )
 )
 
 
@@ -150,21 +152,22 @@ Array
 #### Domain Yenileme
 
 ```php
-$dna->Renew('domainadi.com',1);
+$dna->Renew('example.com', 1);
 ```
 <details>
 <summary>Domain Yenileme Örnek Çıktı</summary>
 
 ```php
- Array
+Array
 (
     [result] => OK
-    [data] => => Array
-        (
-            [ExpirationDate] =>2025-03-04 00:00:00
-   )
-
+    [data] => Array
+    (
+        [ExpirationDate] => 2025-03-15T10:00:00+03:00
+    )
 )
+
+
 ```
 
 </details>
@@ -175,7 +178,7 @@ $dna->Renew('domainadi.com',1);
 #### Domain Transfer
 
 ```php
-$dna->Transfer('testdomain859.com', '5b3}R6Qq',3);
+$dna->Transfer('example.com', 'Xy9#mK2$', 3);
 ```
 
 <details>
@@ -186,6 +189,8 @@ Array
 (
     [result] => OK
 )
+
+
 ```
 
 </details>
@@ -202,90 +207,80 @@ $dna->GetList(['OrderColumn'=>'Id', 'OrderDirection'=>'ASC', 'PageNumber'=>0,'Pa
 <details>
 <summary>Alan adları listesi Örnek Çıktı</summary>
 
- ```php
+```php
 Array
 (
     [data] => Array
+    (
+        [Domains] => Array
         (
-            [Domains] => Array
+            [0] => Array
+            (
+                [ID] => 564346
+                [Status] => Active
+                [DomainName] => example.com
+                [AuthCode] => DHQ!K52
+                [LockStatus] => false
+                [PrivacyProtectionStatus] => false
+                [IsChildNameServer] => false
+                [Contacts] => Array
+                (
+                    [Billing] => Array
+                    (
+                        [ID] => 11854114
+                    )
+                    [Technical] => Array
+                    (
+                        [ID] => 11854114
+                    )
+                    [Administrative] => Array
+                    (
+                        [ID] => 11854114
+                    )
+                    [Registrant] => Array
+                    (
+                        [ID] => 11854114
+                    )
+                )
+                [Dates] => Array
+                (
+                    [Start] => 2024-03-15T10:00:00+03:00
+                    [Expiration] => 2025-03-15T10:00:00+03:00
+                    [RemainingDays] => 365
+                )
+                [NameServers] => Array
+                (
+                    [0] => ns1.example.com
+                    [1] => ns2.example.com
+                )
+                [Additional] => Array
+                (
+                    [TRABISDOMAINCATEGORY] => 1
+                    [TRABISCITIZIENID] => 98765432109
+                    [TRABISNAMESURNAME] => Jane Smith
+                    [TRABISCOUNTRYID] => 215
+                    [TRABISCITYID] => 34
+                )
+                [ChildNameServers] => Array
                 (
                     [0] => Array
-                        (
-                            [ID] => 564346
-                            [Status] => Active
-                            [DomainName] => domain001.com
-                            [AuthCode] => DHQ!K52
-                            [LockStatus] => false
-                            [PrivacyProtectionStatus] => false
-                            [IsChildNameServer] => false
-                            [Contacts] => Array
-                                (
-                                    [Billing] => Array
-                                        (
-                                            [ID] => 11854114
-                                        )
-
-                                    [Technical] => Array
-                                        (
-                                            [ID] => 11854114
-                                        )
-
-                                    [Administrative] => Array
-                                        (
-                                            [ID] => 11854114
-                                        )
-
-                                    [Registrant] => Array
-                                        (
-                                            [ID] => 11854114
-                                        )
-
-                                )
-                            [Dates] => Array
-                                (
-                                    [Start] => 2025-05-26T16:08:37
-                                    [Expiration] => 2027-05-26T16:08:37
-                                    [RemainingDays] => 449
-                                )
-
-                            [NameServers] => Array
-                                (
-                                    "ns1.google.com",
-                                    "ns2.google.com"
-                                    
-                                )
-
-                            [Additional] => Array
-                                (
-                                    [TRABISDOMAINCATEGORY] => 1
-                                    [TRABISCITIZIENID] => 1112221111111
-                                    [TRABISNAMESURNAME] => "Bunyamin Mutlu"
-                                    [TRABISCOUNTRYID] => 215
-                                    [TRABISCITYID] => 41
-                                )
-
-                            [ChildNameServers] => Array
-                                (
-                                    Array
-                                        (
-                                            [Name] => 'ns1.domainadi.com'
-                                            [IP] =>'8.8.8.8'
-                                         )
-                                    Array
-                                        (
-                                            [Name] => 'ns2.domainadi.com'
-                                            [IP] =>'8.8.5.5'
-                                        )
-                                )
-
-                        )
-
+                    (
+                        [Name] => ns1.example.com
+                        [IP] => 1.2.3.4
+                    )
+                    [1] => Array
+                    (
+                        [Name] => ns2.example.com
+                        [IP] => 2.3.4.5
+                    )
                 )
-
+            )
         )
-
+    )
     [result] => OK
 )
+
+
 ```
 
 </details>
@@ -433,7 +428,7 @@ Array
 #### Alan adı uygunluğu kontrolü
 
 ```php
-$dna->CheckAvailability('domainadi.com',1,'create');
+$dna->CheckAvailability('example.com',1,'create');
 ```
 
 <details>
@@ -467,7 +462,6 @@ $dna->CheckAvailability('domainadi.com',1,'create');
             [Currency] => USD
             [Reason] =>
         )
-
     [2] => Array
         (
             [TLD] => net
@@ -504,7 +498,7 @@ $dna->CheckAvailability('domainadi.com',1,'create');
 #### Alan adı detayları
 
 ```php
-$dna->GetDetails('domainadi.com');
+$dna->GetDetails('example.com');
 ```
 
 <details>
@@ -518,7 +512,7 @@ Array
         (
             [ID] => 564346
             [Status] => Active
-            [DomainName] => domainadi.com
+            [DomainName] => example.com
             [AuthCode] => DHQ!K52
             [LockStatus] => false
             [PrivacyProtectionStatus] => false
@@ -556,8 +550,8 @@ Array
 
             [NameServers] => Array
                 (
-                    "ns1.google.com",
-                    "ns2.google.com"
+                    "ns1.example.com",
+                    "ns2.example.com"
                 )
 
             [Additional] => Array
@@ -573,12 +567,12 @@ Array
                 (
                     Array
                         (
-                            [Name] => 'ns1.domainadi.com'
+                            [Name] => 'ns1.example.com'
                             [IP] =>'1.2.3.4'
                             )
                     Array
                         (
-                            [Name] => 'ns2.domainadi.com'
+                            [Name] => 'ns2.example.com'
                             [IP] =>'2.3.4.5'
                         )
                 )
@@ -597,7 +591,10 @@ Array
 #### Nameserver Düzenlemesi
 
 ```php
-$dna->ModifyNameServer('domainhakkinda.com',['ns1'=>'ns1.domain.com','ns2'=>'ns2.domain.com']);
+$dna->ModifyNameServer('example.com', [
+    'ns1'=>'ns1.example.com',
+    'ns2'=>'ns2.example.com'
+]);
 ```
 
 <details>
@@ -611,8 +608,8 @@ Array
         (
             [NameServers] => Array
                 (
-                    [ns1] => ns1.domain.com
-                    [ns2] => ns2.domain.com
+                    [ns1] => ns1.example.com
+                    [ns2] => ns2.example.com
                 )
 
         )
@@ -632,7 +629,7 @@ Array
 
 ```php
     
-$lock = $dna->EnableTheftProtectionLock('domainhakkinda.com');
+$lock = $dna->EnableTheftProtectionLock('example.com');
 ``` 
 
 <details>
@@ -661,7 +658,7 @@ Array
 #### Domain Kilidi kaldırma
 
 ```php
-$lock = $dna->DisableTheftProtectionLock('domainadi.com');
+$lock = $dna->DisableTheftProtectionLock('example.com');
 ```
 
 <details>
@@ -689,7 +686,7 @@ Array
 #### Domaine ChildNS ekleme
 
 ```php
-$dna->AddChildNameServer('domainhakkinda.com','test5.domainhakkinda.com','1.2.3.4');
+$dna->AddChildNameServer('example.com', 'ns1.example.com', '1.2.3.4');
 
 ```
 
@@ -703,7 +700,7 @@ Array
 (
     [data] => Array
         (
-            [NameServer] => test5.domainhakkinda.com
+            [NameServer] => test5.example.com
             [IPAdresses] => Array
                 (
                     [0] => 1.2.3.4
@@ -724,7 +721,7 @@ Array
 #### Domaine ChildNS silme
 
 ```php
-$dna->DeleteChildNameServer('domainhakkinda.com', 'test5.domainhakkinda.com');
+$dna->DeleteChildNameServer('example.com', 'test5.example.com');
 
 ```
 
@@ -746,7 +743,7 @@ Array
 #### Child NS Güncelleme
 
 ```php
- $dna->ModifyChildNameServer('domainhakkinda.com', 'test5.domainhakkinda.com', '1.2.3.4');
+ $dna->ModifyChildNameServer('example.com', 'test5.example.com', '1.2.3.4');
 ```
 
 <details>
@@ -757,7 +754,7 @@ Array
 (
     [data] => Array
         (
-            [NameServer] => test5.domainhakkinda.com
+            [NameServer] => test5.example.com
             [IPAdresses] => Array
                 (
                     [0] => 1.2.3.4
@@ -776,7 +773,7 @@ Array
 #### Domain gizliliği değiştirme
 
 ```php
-$lock = $dna->ModifyPrivacyProtectionStatus('domainhakkinda.com', true, 'owners optional comment');
+$lock = $dna->ModifyPrivacyProtectionStatus('example.com', true, 'owners optional comment');
 ```
 
 <details>
@@ -821,7 +818,7 @@ $contact = [
     "State"            => 'GEBZE'
 ];
 
-$dna->SaveContacts('domainadi.com','ns1','1.2.3.4');
+$dna->SaveContacts('example.com','ns1','1.2.3.4');
 
 ```
 
@@ -899,6 +896,7 @@ Array
 | 2302  | Object exists                                      | Domain adı veya name server bilgisi veritabanında mevcut. Kayıt edilemez. |
 | 2303  | Object does not exist                              | Domain adı veya name server bilgisi veritabanında mevcut değil. Yeni kayıt oluşturulmalı. |
 | 2304  | Object status prohibits operation                  | Domain durumu güncellemeye müsait değildir, güncelleme işlemlerine kilitlenmiştir. Durum durumu "clientupdateprohibited" olmamalı. Diğer durum durumlarından kaynaklanabilir. |
+
 
 
 
