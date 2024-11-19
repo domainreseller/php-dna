@@ -15,7 +15,6 @@
     }
   ],
   "require": {
-    "domainnameapi/php-library": "dev-main",
     "php": ">=7.4",
     "ext-soap": "*",
     "ext-json": "*",
