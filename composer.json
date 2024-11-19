@@ -24,10 +24,9 @@
     "phpunit/phpunit": "^9.0"
   },
    "minimum-stability": "dev",
-    "prefer-stable": true,
   "repositories": [
     {
-      "type": "vcs",
+      "type": "git",
       "url": "https://github.com/domainreseller/php-dna"
     }
   ]
