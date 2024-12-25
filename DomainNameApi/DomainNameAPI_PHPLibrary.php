@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.1.1
+ * @version 2.1.2
  */
 
 
@@ -52,7 +52,7 @@ class DomainNameAPI_PHPLibrary
      * This request does not include sensitive informations, sensitive informations are filtered.
      * @var string $errorReportingDsn
      */
-    private string $errorReportingDsn = 'https://d4e2d61e4af2d4c68fb21ab93bf51ff2@o4507492369039360.ingest.de.sentry.io/4507492373954640';
+    private string $errorReportingDsn = 'https://0ea94fed70c09f95c17dfa211d43ac66@sentry.atakdomain.com/2';
 
     /**
      * Api Username
@@ -1831,7 +1831,7 @@ class DomainNameAPI_PHPLibrary
     }
 
     // Parse domain info
-   private function parseDomainInfo($data)
+    private function parseDomainInfo($data)
     {
         $result                                     = [];
         $result["ID"]                               = "";
@@ -1887,14 +1887,12 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
-
                 case "BillingContactId":
 
                     if (is_numeric($attrValue)) {
                         $result["Contacts"]["Billing"]["ID"] = $attrValue;
                     }
                     break;
-
 
 
                 case "TechnicalContactId":
@@ -1905,15 +1903,12 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
-
                 case "RegistrantContactId":
 
                     if (is_numeric($attrValue)) {
                         $result["Contacts"]["Registrant"]["ID"] = $attrValue;
                     }
                     break;
-
-
 
 
                 case "Auth":
@@ -1924,22 +1919,16 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
-
-
                 case "StartDate":
 
                     $result["Dates"]["Start"] = $attrValue;
                     break;
 
 
-
-
                 case "ExpirationDate":
 
                     $result["Dates"]["Expiration"] = $attrValue;
                     break;
-
-
 
 
                 case "LockStatus":
@@ -1950,16 +1939,12 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
-
-
                 case "PrivacyProtectionStatus":
 
                     if (is_bool($attrValue)) {
                         $result["PrivacyProtectionStatus"] = var_export($attrValue, true);
                     }
                     break;
-
-
 
 
                 case "IsChildNameServer":
@@ -1970,14 +1955,12 @@ class DomainNameAPI_PHPLibrary
                     break;
 
 
-
                 case "RemainingDay":
 
                     if (is_numeric($attrValue)) {
                         $result["Dates"]["RemainingDays"] = $attrValue;
                     }
                     break;
-
 
 
                 case "NameServerList":
@@ -1988,7 +1971,6 @@ class DomainNameAPI_PHPLibrary
                         }
                     }
                     break;
-
 
 
                 case "AdditionalAttributes":
@@ -2076,86 +2058,84 @@ class DomainNameAPI_PHPLibrary
  *   - array Additional
  */
     private function parseContactInfo($data)
-{
-    $result = [
-        "ID" => isset($data["Id"]) && is_numeric($data["Id"]) ? $data["Id"] : "",
-        "Status" => $data["Status"] ?? "",
-        "AuthCode" => $data["Auth"] ?? "",
-        "FirstName" => $data["FirstName"] ?? "",
-        "LastName" => $data["LastName"] ?? "",
-        "Company" => $data["Company"] ?? "",
-        "EMail" => $data["EMail"] ?? "",
-        "Type" => $data["Type"] ?? "",
-        "Address" => [
-            "Line1" => $data["AddressLine1"] ?? "",
-            "Line2" => $data["AddressLine2"] ?? "",
-            "Line3" => $data["AddressLine3"] ?? "",
-            "State" => $data["State"] ?? "",
-            "City" => $data["City"] ?? "",
-            "Country" => $data["Country"] ?? "",
-            "ZipCode" => $data["ZipCode"] ?? "",
-        ],
-        "Phone" => [
-            "Phone" => [
-                "Number" => $data["Phone"] ?? "",
-                "CountryCode" => $data["PhoneCountryCode"] ?? "",
+    {
+        $result = [
+            "ID"         => isset($data["Id"]) && is_numeric($data["Id"]) ? $data["Id"] : "",
+            "Status"     => $data["Status"] ?? "",
+            "AuthCode"   => $data["Auth"] ?? "",
+            "FirstName"  => $data["FirstName"] ?? "",
+            "LastName"   => $data["LastName"] ?? "",
+            "Company"    => $data["Company"] ?? "",
+            "EMail"      => $data["EMail"] ?? "",
+            "Type"       => $data["Type"] ?? "",
+            "Address"    => [
+                "Line1"   => $data["AddressLine1"] ?? "",
+                "Line2"   => $data["AddressLine2"] ?? "",
+                "Line3"   => $data["AddressLine3"] ?? "",
+                "State"   => $data["State"] ?? "",
+                "City"    => $data["City"] ?? "",
+                "Country" => $data["Country"] ?? "",
+                "ZipCode" => $data["ZipCode"] ?? "",
             ],
-            "Fax" => [
-                "Number" => $data["Fax"] ?? "",
-                "CountryCode" => $data["FaxCountryCode"] ?? "",
+            "Phone"      => [
+                "Phone" => [
+                    "Number"      => $data["Phone"] ?? "",
+                    "CountryCode" => $data["PhoneCountryCode"] ?? "",
+                ],
+                "Fax"   => [
+                    "Number"      => $data["Fax"] ?? "",
+                    "CountryCode" => $data["FaxCountryCode"] ?? "",
+                ],
             ],
-        ],
-        "Additional" => [],
-    ];
+            "Additional" => [],
+        ];
 
-    // AdditionalAttributes kontrolü
-    if (isset($data["AdditionalAttributes"]["KeyValueOfstringstring"]) && is_array($data["AdditionalAttributes"]["KeyValueOfstringstring"])) {
-        foreach ($data["AdditionalAttributes"]["KeyValueOfstringstring"] as $attribute) {
-            if (isset($attribute["Key"]) && isset($attribute["Value"])) {
-                $result["Additional"][$attribute["Key"]] = $attribute["Value"];
+        // AdditionalAttributes kontrolü
+        if (isset($data["AdditionalAttributes"]["KeyValueOfstringstring"]) && is_array($data["AdditionalAttributes"]["KeyValueOfstringstring"])) {
+            foreach ($data["AdditionalAttributes"]["KeyValueOfstringstring"] as $attribute) {
+                if (isset($attribute["Key"]) && isset($attribute["Value"])) {
+                    $result["Additional"][$attribute["Key"]] = $attribute["Value"];
+                }
             }
         }
-    }
 
-    return $result;
-}
+        return $result;
+    }
 
     private function parseCall($fn, $parameters, $_callback)
     {
         $result = [
             'result' => 'ERROR',
-            'error'  => 'Unknown Error Occured'
+            'error'  => 'Unknown Error Occurred'
         ];
 
         try {
             $parameters["request"]["UserName"] = $this->serviceUsername;
             $parameters["request"]["Password"] = $this->servicePassword;
-            // SOAP method which is same as current function name called
+            // Call the SOAP method with the same name as the current function
             $_response = $this->service->__soapCall($fn, [$parameters]);
 
+            // Get the last response
             $this->service->__getLastResponse();
 
-
-            // Serialize as array
+            // Convert response to array
             $_response = $this->objectToArray($_response);
 
+            // Set function, request, and response data
             $this->setLastFunction($fn);
             $this->setRequestData($parameters);
             $this->setResponseData($_response);
 
-
-            // Check is there any error?
+            // Check for errors in the response
             if (!$this->hasError($_response)) {
                 $result = $_callback($_response);
             } else {
-                // Hata mesajini dondura
                 $result["result"] = "ERROR";
                 $result["error"]  = $this->parseError($_response);
             }
-
         } catch (SoapFault $ex) {
             $result["result"] = "ERROR";
-            $result["error"]  = $this->setError('INVALID_RESPONSE', 'Invalid Response occured', $ex->getMessage());
+            $result["error"]  = $this->setError('INVALID_RESPONSE', 'Invalid response occurred', $ex->getMessage());
             $this->sendErrorToSentryAsync($ex);
         } catch (Exception $ex) {
             $result["result"] = "ERROR";
@@ -2163,6 +2143,7 @@ class DomainNameAPI_PHPLibrary
             $this->sendErrorToSentryAsync($ex);
         }
 
+        // Set parsed response data
         $this->setParsedResponseData($result);
 
 
