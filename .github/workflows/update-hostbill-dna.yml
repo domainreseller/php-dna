@@ -18,7 +18,11 @@ jobs:
       - name: Clone hostbill-dna repo
         run: |
           git clone https://github.com/domainreseller/hostbill-dna.git hostbill-dna
-
+      
+      - name: Debug php-dna repo structure
+        run: |
+          ls -R
+          
       # 3. php-dna içindeki dosyayı hostbill-dna içindeki hedef dizine taşı
       - name: Copy updated library file
         run: |
