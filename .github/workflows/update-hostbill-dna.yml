@@ -36,6 +36,6 @@ jobs:
           cd hostbill-dna
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add includes/modules/Domain/domainnameapi/lib/dna.php
+          git add includes/modules/Domain/domainnameapi/lib/dna1.php
           git commit -m "Update dna.php from php-dna repo"
           git push origin main
