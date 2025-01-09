@@ -6,24 +6,20 @@ on:
       - main
 
 jobs:
-  update-hostbill-dna:
+  update-all-dna:
     runs-on: ubuntu-24.04
 
     steps:
-      # 1. php-dna Repoyu Checkout Et
       - name: Checkout php-dna repo
         uses: actions/checkout@v3
 
-      # 2. hostbill-dna Repoyu Clone Et
-      - name: Clone all dna repo
+      - name: Clone all dna repos
         run: |
-          git clone https://github.com/domainreseller/hostbill-dna.git hostbill-dna
-          git clone https://github.com/domainreseller/whmcs-dna whmcs-dna
-          git clone https://github.com/domainreseller/wisecp-dna wisecp-dna
-          git clone https://github.com/domainreseller/blesta-dna blesta-dna
-      
+          git clone https://github.com/domainreseller/hostbill-dna.git
+          git clone https://github.com/domainreseller/whmcs-dna.git
+          git clone https://github.com/domainreseller/wisecp-dna.git
+          git clone https://github.com/domainreseller/blesta-dna.git
 
-      # 3. php-dna içindeki dosyayı hostbill-dna içindeki hedef dizine taşı
       - name: Copy updated library file
         run: |
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php hostbill-dna/includes/modules/Domain/domainnameapi/lib/dna.php
@@ -31,40 +27,17 @@ jobs:
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php whmcs-dna/modules/registrars/domainnameapi/lib/dna.php
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php wisecp-dna/coremio/modules/Registrars/DomainNameAPI/api.php
 
-      # 4. hostbill-dna Repoda Değişiklikleri Commit Et ve Push Et
       - name: Commit and push changes
         env:
           PAT: ${{ secrets.HOSTBILL_DNA_PAT }}
         run: |
-          cd hostbill-dna
-          git config user.name "DomainNameApi"
-          git config user.email "info@domainnameapi.com"
-          git remote set-url origin https://domainreseller:${PAT}@github.com/domainreseller/hostbill-dna.git
-          git add includes/modules/Domain/domainnameapi/lib/dna.php
-          git commit -m "Automatic Update Hostbill Library from php-dna repo"
-          git push origin master
-          cd ..
-          cd whmcs-dna
-          git config user.name "DomainNameApi"
-          git config user.email "info@domainnameapi.com"
-          git remote set-url origin https://domainreseller:${PAT}@github.com/domainreseller/whmcs-dna.git
-          git add whmcs-dna/modules/registrars/domainnameapi/lib/dna.php
-          git commit -m "Automatic Update Whmcs Library from php-dna repo"
-          git push origin main
-          cd ..
-          cd blesta-dna
-          git config user.name "DomainNameApi"
-          git config user.email "info@domainnameapi.com"
-          git remote set-url origin https://domainreseller:${PAT}@github.com/domainreseller/blesta-dna.git
-          git add blesta-dna/components/modules/domainnameapi/apis/api.php
-          git commit -m "Automatic Update blesta Library from php-dna repo"
-          git push origin main
-          cd ..
-          cd wisecp-dna
-          git config user.name "DomainNameApi"
-          git config user.email "info@domainnameapi.com"
-          git remote set-url origin https://domainreseller:${PAT}@github.com/domainreseller/wisecp-dna.git
-          git add wisecp-dna/coremio/modules/Registrars/DomainNameAPI/api.php
-          git commit -m "Automatic Update wisecp Library from php-dna repo"
-          git push origin master
-
+          for repo in hostbill-dna whmcs-dna blesta-dna wisecp-dna; do
+            cd $repo
+            git config user.name "DomainNameApi"
+            git config user.email "info@domainnameapi.com"
+            git remote set-url origin https://domainreseller:${PAT}@github.com/domainreseller/$repo.git
+            git add .
+            git commit -m "Automatic Update Library from php-dna repo" || echo "No changes to commit in $repo"
+            git push origin master || git push origin main
+            cd ..
+          done
