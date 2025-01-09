@@ -1,0 +1,37 @@
+name: Update hostbill-dna repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-hostbill-dna:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. php-dna Repoyu Checkout Et
+      - name: Checkout php-dna repo
+        uses: actions/checkout@v3
+
+      # 2. hostbill-dna Repoyu Clone Et
+      - name: Clone hostbill-dna repo
+        run: |
+          git clone https://github.com/domainreseller/hostbill-dna.git hostbill-dna
+
+      # 3. php-dna içindeki dosyayı hostbill-dna içindeki hedef dizine taşı
+      - name: Copy updated library file
+        run: |
+          cp php-dna/DomainNameApi/DomainNameAPI_PHPLibrary.php hostbill-dna/includes/modules/Domain/domainnameapi/lib/dna1.php
+
+      # 4. hostbill-dna Repoda Değişiklikleri Commit Et ve Push Et
+      - name: Commit and push changes
+        env:
+          PAT: ${{ secrets.HOSTBILL_DNA_PAT }}
+        run: |
+          cd hostbill-dna
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add includes/modules/Domain/domainnameapi/lib/dna.php
+          git commit -m "Update dna.php from php-dna repo"
+          git push origin main
