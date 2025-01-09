@@ -38,4 +38,4 @@ jobs:
           git config user.email "actions@github.com"
           git add includes/modules/Domain/domainnameapi/lib/dna1.php
           git commit -m "Update dna.php from php-dna repo1"
-          git push origin main
+          git push origin master
