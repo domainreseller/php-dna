@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.1.3
+ * @version 2.1.4
  */
 
 
@@ -26,7 +26,7 @@ class DomainNameAPI_PHPLibrary
     /**
      * Version of the library
      */
-    const VERSION = '2.1.3';
+    const VERSION = '2.1.4';
 
     const DEFAULT_NAMESERVERS = [
         'ns1.domainnameapi.com',
@@ -36,12 +36,37 @@ class DomainNameAPI_PHPLibrary
     const DEFAULT_IGNORED_ERRORS=[
             'Domain not found',
             'ERR_DOMAIN_NOT_FOUND',
-            'Reseller not found'
+            'Reseller not found',
+            'Domain is not in updateable status. It must be active',
+            'balance is not sufficient',
+            'Price definition not found',
         ];
 
     const DEFAULT_CACHE_TTL = 512;
     const DEFAULT_TIMEOUT = 20;
     const DEFAULT_REASON = 'Owner request';
+
+    const APPLICATION_WHMCS = 'WHMCS';
+    const APPLICATION_WISECP = 'WISECP';
+    const APPLICATION_HOSTBILL = 'HOSTBILL';
+    const APPLICATION_BLESTA = 'BLESTA';
+    const APPLICATION_ISPBILLMANAGER = 'ISPBILLMANAGER';
+    const APPLICATION_CLIENTEXEC = 'CLIENTEXEC';
+    const APPLICATION_HOSTFACT = 'HOSTFACT';
+    const APPLICATION_CORE = 'CORE';
+    const APPLICATION_NONE = 'NONE';
+
+    const APPLICATIONS=[
+      self::APPLICATION_WHMCS,
+      self::APPLICATION_WISECP,
+      self::APPLICATION_HOSTBILL,
+      self::APPLICATION_BLESTA,
+      self::APPLICATION_ISPBILLMANAGER,
+      self::APPLICATION_CLIENTEXEC,
+      self::APPLICATION_HOSTFACT,
+      self::APPLICATION_CORE,
+      self::APPLICATION_NONE,
+    ];
 
     /**
      * Error reporting enabled
@@ -53,6 +78,7 @@ class DomainNameAPI_PHPLibrary
      * @var string $errorReportingDsn
      */
     private string $errorReportingDsn = 'https://0ea94fed70c09f95c17dfa211d43ac66@sentry.atakdomain.com/2';
+    private string $errorReportingPath = '';
 
     /**
      * Api Username
@@ -72,6 +98,7 @@ class DomainNameAPI_PHPLibrary
      * @var string $serviceUrl
      */
     private string $serviceUrl         = "https://whmcs.domainnameapi.com/DomainApi.svc";
+    private string $application         = "CORE";
     public  array $lastRequest        = [];
     public  array $lastResponse       = [];
     public  array $lastParsedResponse = [];
@@ -87,11 +114,11 @@ class DomainNameAPI_PHPLibrary
      * @param bool $testMode
      * @throws Exception | SoapFault
      */
-    public function __construct($userName = "ownername", $password = "ownerpass", $testMode = false)
+    public function __construct($userName = "ownername", $password = "ownerpass", $application='CORE')
     {
         $this->startAt = microtime(true);
         self::setCredentials($userName, $password);
-        self::useTestMode($testMode);
+        self::setApplication($application);
 
         $context = stream_context_create(
             [
@@ -108,7 +135,7 @@ class DomainNameAPI_PHPLibrary
                 "encoding"           => "UTF-8",
                 'features'           => SOAP_SINGLE_ELEMENT_ARRAYS,
                 'exceptions'         => true,
-                'connection_timeout' => 20,
+                'connection_timeout' => self::DEFAULT_TIMEOUT,
                 'stream_context'     => $context
             ]);
         } catch (SoapFault $e) {
@@ -120,6 +147,55 @@ class DomainNameAPI_PHPLibrary
         }
     }
 
+    private function setApplication($application)
+    {
+        $this->application = $application;
+
+        if(!in_array( $this->application,self::APPLICATIONS)){
+             $this->application = 'CORE';
+        }
+        switch ( $this->application) {
+            case self::APPLICATION_WHMCS:
+                $this->errorReportingDsn = "https://cbaee35fa4d2836942641e10c2109cb6@sentry.atakdomain.com/9";
+                $this->errorReportingPath='/modules/registrars/domainnameapi/';
+                break;
+
+            case self::APPLICATION_WISECP:
+                $this->errorReportingDsn = "https://16578e3378f7d6c329ff95d9573bc6fa@sentry.atakdomain.com/8";
+                $this->errorReportingPath='/coremio/modules/Registrars/DomainNameAPI/';
+                break;
+
+            case self::APPLICATION_HOSTBILL:
+                $this->errorReportingDsn = "https://be47804b215cb479dbfc44db5c662549@sentry.atakdomain.com/11";
+                $this->errorReportingPath='/includes/modules/Domain/domainnameapi/';
+                break;
+
+            case self::APPLICATION_BLESTA:
+                $this->errorReportingDsn = "https://8f8ed6f84abaa93ff49b56f15d3c1f38@sentry.atakdomain.com/10";
+                $this->errorReportingPath='/components/modules/domainnameapi/';
+                break;
+
+            case self::APPLICATION_CORE:
+                $this->errorReportingDsn = "https://0ea94fed70c09f95c17dfa211d43ac66@sentry.atakdomain.com/2";
+                break;
+
+            case self::APPLICATION_ISPBILLMANAGER:
+                $this->errorReportingDsn = "https://dace28deb069996acecf619c9e397b15@sentry.atakdomain.com/12";
+                break;
+
+            case self::APPLICATION_CLIENTEXEC:
+                $this->errorReportingDsn = "https://033791219211d863fdb9c08b328ba058@sentry.atakdomain.com/13";
+                break;
+
+            case self::APPLICATION_HOSTFACT:
+                $this->errorReportingDsn = "https://58fe0a01a6704d9f1c2dbbc1a316f233@sentry.atakdomain.com/14";
+                break;
+            case self::APPLICATION_NONE:
+                $this->errorReportingEnabled = false;
+                break;
+        }
+
+    }
 
     /**
      * Deprecated
@@ -234,161 +310,7 @@ class DomainNameAPI_PHPLibrary
     }
 
 
-    /**
-     * This method sends anonymous error data to the Sentry server, if error reporting is enabled
-     *
-     * @return void
-     */
-    private function sendErrorToSentryAsync(Exception $e)
-    {
-        if (!$this->errorReportingEnabled) {
-            return;
-        }
 
-        $skipped_errors = self::DEFAULT_IGNORED_ERRORS;
-
-        foreach ($skipped_errors as $ek => $ev) {
-            if(strpos($e->getMessage(),$ev) !== false){
-                return ;
-            }
-        }
-
-        $elapsed_time = microtime(true) - $this->startAt;
-        $parsed_dsn = parse_url($this->errorReportingDsn);
-
-        // API URL'si
-        $host       = $parsed_dsn['host'];
-        $project_id = ltrim($parsed_dsn['path'], '/');
-        $public_key = $parsed_dsn['user'];
-        $secret_key = $parsed_dsn['pass'] ?? null;
-        $api_url    = "https://$host/api/$project_id/store/";
-
-        $external_ip = $this->getServerIp();
-
-
-
-        // Hata verisi
-        $errorData = [
-            'event_id'  => bin2hex(random_bytes(16)),
-            'timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
-            'level'     => 'error',
-            'logger'    => 'php',
-            'platform'  => 'php',
-            'culprit'   => __FILE__,
-            'message'   => [
-                'formatted' => $e->getMessage()
-            ],
-            'exception' => [
-                'values' => [
-                    [
-                        'type'       =>  str_replace(['DomainNameApi\DomainNameAPI_PHPLibrary'],['DNALib Exception'],self::class),
-                        'value'      => $e->getMessage(),
-                        'stacktrace' => [
-                            'frames' => [
-                                [
-                                    'filename' => $e->getFile(),
-                                    'lineno'   => $e->getLine(),
-                                    'function' => str_replace([dirname(__DIR__),'DomainNameApi\DomainNameAPI_PHPLibrary'],['.','Lib'],$e->getTraceAsString()),
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            'tags'      => [
-                'handled'         => 'yes',
-                'level'           => 'error',
-                'release'         => self::VERSION,
-                'environment'     => 'production',
-                'url'             => $_SERVER['REQUEST_URI'] ?? 'unknown',
-                'transaction'     => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
-                'status_code'     => http_response_code(),
-                'trace_id'        => bin2hex(random_bytes(8)), // Trace ID örneği
-                'runtime_name'    => 'PHP',
-                'runtime_version' => phpversion(),
-                'ip_address'      => $external_ip,
-                'elapsed_time'    => number_format($elapsed_time,4),
-
-            ],
-            'extra'     => [
-                'request_data'  => $this->getRequestData(),
-                'response_data' => $this->getResponseData(),
-            ]
-        ];
-
-        // Sentry başlığı
-        $sentry_auth = [
-            'sentry_version=7',
-            'sentry_client=phplib-php/' . self::VERSION,
-            "sentry_key=$public_key"
-        ];
-        if ($secret_key) {
-            $sentry_auth[] = "sentry_secret=$secret_key";
-        }
-        $sentry_auth_header = 'X-Sentry-Auth: Sentry ' . implode(', ', $sentry_auth);
-
-        if(function_exists('escapeshellarg') && function_exists('exec')){
-        $cmd = 'curl -X POST ' . escapeshellarg($api_url) . ' -H ' . escapeshellarg('Content-Type: application/json') . ' -H ' . escapeshellarg($sentry_auth_header) . ' -d ' . escapeshellarg(json_encode($errorData)) . ' > /dev/null 2>&1 &';
-        exec($cmd);
-        }else{
-             $jsonData = json_encode($errorData);
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $api_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                    'Content-Type: application/json',
-                    $sentry_auth_header
-                ]);
-                curl_exec($ch);
-                curl_close($ch);
-        }
-    }
-
-    private function getServerIp()
-    {
-        $cache_ttl    = 512; // Cache süresi 512 saniye
-        $cache_key    = 'external_ip';
-        $cache_file = __DIR__ . '/ip_addr.cache';
-        $current_time = time();
-
-        if (function_exists('apcu_fetch')) {
-            // APCu ile cache kontrolü
-            $external_ip = apcu_fetch($cache_key);
-            if ($external_ip !== false) {
-                return $external_ip;
-            }
-        } elseif (file_exists($cache_file) && ($current_time - filemtime($cache_file) < $cache_ttl)) {
-            // Dosya ile cache kontrolü
-            return file_get_contents($cache_file);
-        }
-
-        // IP adresini alma ve cacheleme
-        try {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, "http://ipecho.net/plain");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-            $external_ip = curl_exec($ch);
-            curl_close($ch);
-
-            if ($external_ip !== false) {
-                // APCu ile cachele
-                if (function_exists('apcu_store')) {
-                    apcu_store($cache_key, $external_ip, $cache_ttl);
-                }
-                // Dosya ile cachele
-                file_put_contents($cache_file, $external_ip);
-            }
-
-                return $external_ip;
-        } catch (Exception $e) {
-        return 'unknown';
-        }
-    }
 
 
     /**
@@ -2037,6 +1959,8 @@ class DomainNameAPI_PHPLibrary
 
         return $result;
     }
+
+
     /* Parses contact information from the provided data array.
  *
  * @param array $data The data array containing contact information.
@@ -2176,5 +2100,180 @@ class DomainNameAPI_PHPLibrary
         return isset($result[0]);
     }
 
+    /**
+     * This method sends anonymous error data to the Sentry server, if error reporting is enabled
+     *
+     * @return void
+     */
+    private function sendErrorToSentryAsync(Exception $e)
+    {
+        if (!$this->errorReportingEnabled) {
+            return;
+        }
+
+        $skipped_errors = self::DEFAULT_IGNORED_ERRORS;
+
+        foreach ($skipped_errors as $ek => $ev) {
+            if(strpos($e->getMessage(),$ev) !== false){
+                return ;
+            }
+        }
+
+        $elapsed_time = microtime(true) - $this->startAt;
+        $parsed_dsn = parse_url($this->errorReportingDsn);
+
+        // API URL'si
+        $host       = $parsed_dsn['host'];
+        $project_id = ltrim($parsed_dsn['path'], '/');
+        $public_key = $parsed_dsn['user'];
+        $secret_key = $parsed_dsn['pass'] ?? null;
+        $api_url    = "https://$host/api/$project_id/store/";
+
+        $external_ip = $this->getServerIp();
+
+
+        $knownPath = __FILE__;
+        $errFile=$e->getFile();
+        $vhostUser = '';
+
+
+        if (preg_match('/\/home\/([^\/]+)\//', $knownPath, $matches)) {
+            $vhostUser = $matches[1];
+        }
+        if($vhostUser==''){
+            $vhostUser = get_current_user();
+        }
+
+        if (strlen($this->errorReportingPath)>0) {
+            if (strpos($knownPath, $this->errorReportingPath) !== false) {
+                $knownPath = substr($knownPath, strpos($knownPath, $this->errorReportingPath) + strlen($this->errorReportingPath));
+                $errFile = substr($errFile, strpos($errFile, $this->errorReportingPath) + strlen($this->errorReportingPath));
+            }
+        }
+
+        // Hata verisi
+        $errorData = [
+            'event_id'  => bin2hex(random_bytes(16)),
+            'timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
+            'level'     => 'error',
+            'logger'    => 'php',
+            'platform'  => 'php',
+            'culprit'   => $knownPath,
+            'message'   => [
+                'formatted' => $e->getMessage()
+            ],
+            'exception' => [
+                'values' => [
+                    [
+                        'type'       =>  str_replace(['DomainNameApi\DomainNameAPI_PHPLibrary'],[$this->application.' Exception'],self::class),
+                        'value'      => $e->getMessage(),
+                        'stacktrace' => [
+                            'frames' => [
+                                [
+                                    'filename' => $errFile,
+                                    'lineno'   => $e->getLine(),
+                                    'function' => str_replace([dirname(__DIR__),'DomainNameApi\DomainNameAPI_PHPLibrary'],['.','Lib'],$e->getTraceAsString()),
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'tags'      => [
+                'handled'         => 'yes',
+                'level'           => 'error',
+                'release'         => self::VERSION,
+                'environment'     => 'production',
+                'url'             => $_SERVER['REQUEST_URI'] ?? 'unknown',
+                'transaction'     => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+                'status_code'     => http_response_code(),
+                'trace_id'        => bin2hex(random_bytes(8)), // Trace ID örneği
+                'runtime_name'    => 'PHP',
+                'runtime_version' => phpversion(),
+                'ip_address'      => $external_ip,
+                'elapsed_time'    => number_format($elapsed_time,4),
+                'vhost_user'      => $vhostUser,
+                'application'     => $this->application,
+
+            ],
+            'extra'     => [
+                'request_data'  => $this->getRequestData(),
+                'response_data' => $this->getResponseData(),
+            ]
+        ];
+
+        // Sentry başlığı
+        $sentry_auth = [
+            'sentry_version=7',
+            'sentry_client=phplib-php/' . self::VERSION,
+            "sentry_key=$public_key"
+        ];
+        if ($secret_key) {
+            $sentry_auth[] = "sentry_secret=$secret_key";
+        }
+        $sentry_auth_header = 'X-Sentry-Auth: Sentry ' . implode(', ', $sentry_auth);
+
+        if(function_exists('escapeshellarg') && function_exists('exec')){
+        $cmd = 'curl -X POST ' . escapeshellarg($api_url) . ' -H ' . escapeshellarg('Content-Type: application/json') . ' -H ' . escapeshellarg($sentry_auth_header) . ' -d ' . escapeshellarg(json_encode($errorData)) . ' > /dev/null 2>&1 &';
+        exec($cmd);
+        }else{
+             $jsonData = json_encode($errorData);
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $api_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    $sentry_auth_header
+                ]);
+                curl_exec($ch);
+                curl_close($ch);
+        }
+    }
+
+    private function getServerIp()
+    {
+        $cache_ttl    = self::DEFAULT_CACHE_TTL;
+        $cache_key    = 'external_ip';
+        $cache_file = __DIR__ . '/ip_addr.cache';
+        $current_time = time();
+
+        if (function_exists('apcu_fetch')) {
+            // APCu ile cache kontrolü
+            $external_ip = apcu_fetch($cache_key);
+            if ($external_ip !== false) {
+                return $external_ip;
+            }
+        } elseif (file_exists($cache_file) && ($current_time - filemtime($cache_file) < $cache_ttl)) {
+            // Dosya ile cache kontrolü
+            return file_get_contents($cache_file);
+        }
+
+        // IP adresini alma ve cacheleme
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "http://ipecho.net/plain");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+            $external_ip = curl_exec($ch);
+            curl_close($ch);
+
+            if ($external_ip !== false) {
+                // APCu ile cachele
+                if (function_exists('apcu_store')) {
+                    apcu_store($cache_key, $external_ip, $cache_ttl);
+                }
+                // Dosya ile cachele
+                file_put_contents($cache_file, $external_ip);
+            }
+
+                return $external_ip;
+        } catch (Exception $e) {
+        return 'unknown';
+        }
+    }
 
 }
