@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.1.4
+ * @version 2.1.5
  */
 
 
@@ -26,7 +26,7 @@ class DomainNameAPI_PHPLibrary
     /**
      * Version of the library
      */
-    const VERSION = '2.1.4';
+    const VERSION = '2.1.5';
 
     const DEFAULT_NAMESERVERS = [
         'ns1.domainnameapi.com',
