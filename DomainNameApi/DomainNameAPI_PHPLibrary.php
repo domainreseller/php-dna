@@ -1503,10 +1503,10 @@ class DomainNameAPI_PHPLibrary
                 "NameServerList"          => $nameServers,
                 "LockStatus"              => $eppLock,
                 "PrivacyProtectionStatus" => $privacyLock,
-                "AdministrativeContact"   => $contacts["Administrative"],
-                "BillingContact"          => $contacts["Billing"],
-                "TechnicalContact"        => $contacts["Technical"],
-                "RegistrantContact"       => $contacts["Registrant"]
+                "AdministrativeContact"   => $this->validateContact( $contacts["Administrative"]),
+                "BillingContact"          => $this->validateContact( $contacts["Billing"]),
+                "TechnicalContact"        => $this->validateContact( $contacts["Technical"]),
+                "RegistrantContact"       => $this->validateContact( $contacts["Registrant"])
             ]
         ];
 
@@ -2094,6 +2094,53 @@ class DomainNameAPI_PHPLibrary
 
 
         return $result;
+    }
+
+    public function validateContact($contact)
+    {
+        // BUG-5335 - Contact validation
+        if (strlen(trim($contact["FirstName"])) == 0) {
+            $contact["FirstName"] = 'Isimyok';
+        }
+        if (strlen(trim($contact["LastName"])) == 0) {
+            $contact["LastName"] = $contact["FirstName"];
+        }
+        if (strlen(trim($contact["AddressLine1"])) == 0) {
+            $contact["AddressLine1"] = 'Addres yok';
+        }
+        if (strlen(trim($contact["City"])) == 0) {
+            $contact["City"] = 'ISTANBUL';
+        }
+        if (strlen(trim($contact["Country"])) == 0) {
+            $contact["Country"] = 'TR';
+        }
+        if (strlen(trim($contact["ZipCode"])) == 0) {
+            $contact["ZipCode"] = '34000';
+        }
+
+        $tmpPhone = preg_replace('/[^0-9]/', '', $contact["Phone"]);
+        if (strlen($tmpPhone) == 10) {
+            $contact["PhoneCountryCode"] = '';
+            $contact["Phone"]            = $tmpPhone;
+        } elseif (strlen($tmpPhone) == 11 && substr($tmpPhone, 0, 1) == '9') {
+            $contact["PhoneCountryCode"] = substr($tmpPhone, 0, 2);
+            $contact["Phone"]            = substr($tmpPhone, 2);
+        } elseif (strlen($tmpPhone) == 12 && substr($tmpPhone, 0, 2) == '90') {
+            $contact["PhoneCountryCode"] = substr($tmpPhone, 0, 2);
+            $contact["Phone"]            = substr($tmpPhone, 2);
+        } else {
+            $contact["PhoneCountryCode"] = '90';
+            $contact["Phone"]            = $tmpPhone;
+        }
+
+        if (strlen(trim($contact["PhoneCountryCode"])) == 0) {
+            $contact["PhoneCountryCode"] = '90';
+        }
+        if (strlen(trim($contact["Phone"])) == 0) {
+            $contact["Phone"] = '5555555555';
+        }
+
+        return $contact;
     }
 
 
