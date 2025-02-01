@@ -1181,6 +1181,18 @@ class DomainNameAPI_PHPLibrary
         $privacyLock = false,
         $addionalAttributes = []
     ) {
+
+        // BUG-5337: Remove empty nameservers
+        foreach ($nameServers as $k => $v) {
+            if(strlen($v)<1){
+                unset($nameServers[$k]);
+            }
+        }
+        $nameServers = array_values($nameServers);
+
+
+
+
         $parameters = [
             "request" => [
                 "DomainName"              => $domainName,
