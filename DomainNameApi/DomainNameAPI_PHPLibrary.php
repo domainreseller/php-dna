@@ -25,7 +25,7 @@ class DomainNameAPI_PHPLibrary
     /**
      * Version of the library
      */
-    const VERSION = '2.1.5';
+    const VERSION = '2.1.6';
 
     const DEFAULT_NAMESERVERS = [
         'ns1.domainnameapi.com',
