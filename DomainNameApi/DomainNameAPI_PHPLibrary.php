@@ -10,7 +10,7 @@
 /**
  * Class DomainNameAPI_PHPLibrary
  * @package DomainNameApi
- * @version 2.1.5
+ * @version 2.1.6
  */
 
 
