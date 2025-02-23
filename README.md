@@ -26,7 +26,7 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ### B) Composer ile entegrasyon için
 
 ```bash
-composer require atakdomain/domainnameapi-php
+composer require domainreseller/php-dna 
 ```
 
 ```php
