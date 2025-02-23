@@ -26,7 +26,7 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
 ### ب) للتكامل باستخدام Composer
 
 ```bash
-composer require atakdomain/domainnameapi-php
+composer require domainreseller/php-dna
 ```
 
 ```php
