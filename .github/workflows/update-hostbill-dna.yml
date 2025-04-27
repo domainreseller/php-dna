@@ -21,6 +21,7 @@ jobs:
           git clone https://github.com/domainreseller/wisecp-dna.git
           git clone https://github.com/domainreseller/blesta-dna.git
           git clone https://github.com/domainreseller/clientexec-dna
+          git clone https://github.com/domainreseller/hostfact-dna
 
       - name: Copy updated library file
         run: |
@@ -29,13 +30,14 @@ jobs:
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php whmcs-dna/modules/registrars/domainnameapi/lib/dna.php
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php wisecp-dna/coremio/modules/Registrars/DomainNameAPI/api.php
           cp DomainNameApi/DomainNameAPI_PHPLibrary.php clientexec-dna/api.php
+          cp DomainNameApi/DomainNameAPI_PHPLibrary.php hostfact-dna/domainnameapi/library/DomainNameApi/DomainNameAPI_PHPLibrary.php
 
 
       - name: Commit and push changes
         env:
           PAT: ${{ secrets.HOSTBILL_DNA_PAT }}
         run: |
-          for repo in hostbill-dna whmcs-dna blesta-dna wisecp-dna clientexec-dna; do
+          for repo in hostbill-dna whmcs-dna blesta-dna wisecp-dna clientexec-dna hostfact-dna; do
             cd $repo
             git config user.name "DomainNameApi"
             git config user.email "info@domainnameapi.com"
