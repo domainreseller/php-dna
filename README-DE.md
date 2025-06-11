@@ -3,6 +3,11 @@
   <a href="README.md"> | EN <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/US.png" alt="EN" height="20" /></a>  
    <a href="README-DE.md"> | DE <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/DE.png" alt="DE" height="20" /></a>  
   <a href="README-SA.md"> | SA <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/SA.png" alt="AR" height="20" /></a>  
+  <a href="README-NL.md"> | NL <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/NL.png" alt="NL" height="20" /></a>  
+  <a href="README-AZ.md"> | AZ <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/AZ.png" alt="AZ" height="20" /></a>  
+  <a href="README-CN.md"> | CN <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/CN.png" alt="CN" height="20" /></a>  
+  <a href="README-FR.md"> | FR <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/FR.png" alt="FR" height="20" /></a>  
+  <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>  
 </div>
 
 ## Installations- und Integrationsanleitung
@@ -899,6 +904,91 @@ Array
 | 2302  | Objekt existiert bereits                             | Domain-Name oder Nameserver-Information existiert bereits in der Datenbank. Kann nicht registriert werden. |
 | 2303  | Objekt existiert nicht                               | Domain-Name oder Nameserver-Information existiert nicht in der Datenbank. Muss neu erstellt werden. |
 | 2304  | Objektstatus verhindert Operation                    | Domain-Status erlaubt keine Aktualisierung, ist für Updates gesperrt. Status darf nicht "clientupdateprohibited" sein. Kann auch an anderen Statusbedingungen liegen. |
+
+| CODE | DETAIL                                                                                                                               |
+|------|--------------------------------------------------------------------------------------------------------------------------------------|
+| 101  | Systemfehler detailliert für ({0})!                                                                                                  |
+| 102  | Mehrere Fehler detailliert für ({0})!                                                                                                |
+| 103  | Unbekannte Fehler detailliert für ({0})!                                                                                             |
+| 200  | API-Befehl nicht gefunden ({0})!                                                                                                     |
+| 210  | API-Service nicht gefunden ({0})!                                                                                                    |
+| 211  | API-Service-Provider nicht gesetzt!                                                                                                  |
+| 300  | Reseller nicht gefunden!                                                                                                             |
+| 301  | Ihre aktuelle IP-Adresse ist nicht für den Zugriff autorisiert. Stellen Sie sicher, dass Sie sich von einer autorisierten IP-Adresse verbinden und versuchen Sie es erneut |
+| 310  | TLD wird nicht unterstützt!                                                                                                          |
+| 320  | API nicht gefunden!                                                                                                                  |
+| 321  | Währung wird nicht unterstützt!                                                                                                      |
+| 330  | Erforderliche Parameter nicht gesetzt ({0}).                                                                                         |
+| –    | Stellen Sie sicher, dass Sie alle Kontaktobjekte vollständig senden                                                                  |
+| 340  | Preisdefinition nicht gefunden ({0}[{1}]-{2}{3}).                                                                                    |
+| 350  | Unzureichendes Reseller-Guthaben. (Reseller Id : {0} - Aktuelles Guthaben : {1} {2}).                                                |
+| 350  | Buchhaltungswährung stimmt nicht überein oder das Guthaben ist nicht ausreichend.                                                    |
+| 360  | Ungültige API-Anfrage für Feld ({0}).                                                                                                |
+| 360  | API-Quota überschritten!                                                                                                             |
+| 361  | Drosselungsfehler!                                                                                                                   |
+| 362  | Premium-Domain ist derzeit nicht für die Registrierung verfügbar.                                                                    |
+| 363  | Operation abgebrochen, da sich die Domain in der automatischen Verlängerungsperiode befindet                                        |
+| 364  | Diese Domain ist derzeit aufgrund eines Problems mit der Registry nicht für Transaktionen verfügbar                                  |
+
+| CODE | DETAIL                                                                                      |
+|------|---------------------------------------------------------------------------------------------|
+| 400  | Ungültiger Kontakt ({0}).                                                                   |
+| 401  | Kontaktinfo kann nicht synchronisiert werden.                                               |
+| 402  | Kein Zugriff auf Kontaktinformationen von der Registry.                                     |
+| 403  | DAS SYSTEM HAT FEHLENDE INFORMATIONEN. GEBEN SIE IHRE STANDARDINFORMATIONEN EIN ODER KONTAKTIEREN SIE DAS SUPPORT-TEAM. |
+| 404  | DOMAIN-KONTAKT KANN NICHT AKTUALISIERT WERDEN. BERECHTIGUNG VON DER REGISTRY.               |
+| 410  | Kontakt nicht gefunden.                                                                     |
+| 410  | Kontakt nicht gefunden ({0}).                                                               |
+| 420  | Ungültiger Api-Befehl für Kontakt {0}.                                                      |
+| 430  | Kontakt-API nicht gefunden.                                                                 |
+| 440  | Kontakt ist nicht synchronisiert.                                                           |
+| 450  | Zu viele Domain-Kontakte.. !                                                                |
+| 451  | Kontaktaktualisierung konnte nicht fortgesetzt werden.                                      |
+
+| CODE | DETAIL                                                                                                                               |
+|------|--------------------------------------------------------------------------------------------------------------------------------------|
+| 500  | Ungültige Domain-ID.                                                                                                                 |
+| 500  | Ungültige Domain-ID ({0}).                                                                                                           |
+| 501  | Domain konnte nicht synchronisiert werden({0})                                                                                       |
+| 502  | Interner Transfer fehlgeschlagen                                                                                                     |
+| 503  | Domain-Registrierung ist nicht verfügbar.                                                                                            |
+| 504  | Domain-Informationen stimmen nicht überein .. Vorher :{0}                                                                            |
+| 505  | Geben Sie die IP-Adresse ein.                                                                                                        |
+| 506  | Domain-Transfer wurde gestartet, aber Kontaktinfo konnte nicht gelesen werden ..                                                     |
+| 507  | Autorisierungsfehler.                                                                                                                |
+| 510  | Domain nicht gefunden.                                                                                                               |
+| 511  | Abgelaufene Domains können nicht gefunden werden.                                                                                    |
+| 512  | Domain ist nicht verlängerbar.                                                                                                       |
+| 513  | Domain ist nicht in aktualisierbarem Status. Sie muss aktiv sein, um aktualisiert zu werden                                         |
+| 514  | Rücknahmeperiode erwartet.                                                                                                           |
+| 520  | Ungültiger Api-Befehl für Domain "{0}".                                                                                              |
+| 530  | Ungültige Domain-Periode. Periode muss {0} bis {1} Jahre betragen. Angeforderte Periode ist {2} Jahre.                              |
+| 540  | Domain kann nicht über {0} Jahre vom aktuellen Datum hinaus verlängert werden.                                                       |
+| 550  | Ungültiger Domain-Name. Domain muss {0} bis {1} Zeichen lang sein. Angeforderter Domain-Name ist {2} Zeichen.                       |
+| 560  | Ungültige Nameserver-Anzahl. Domain muss {0} bis {1} Nameserver haben. Angeforderte Nameserver-Anzahl ist {2}.                      |
+| 561  | Keine Nameserver-Informationen in der eingehenden Anfrage gefunden                                                                   |
+| 570  | Idn nicht unterstützt für TLD "{0}".                                                                                                 |
+| 571  | Periode ungültig.                                                                                                                    |
+| 572  | Befehl ungültig.                                                                                                                     |
+| 573  | Domain-Namen nicht gefunden.                                                                                                         |
+| 574  | TLD-Namen nicht gefunden.                                                                                                            |
+| 575  | Domain ist nicht in aktualisierbarem Status. Sie muss aktiv sein, damit Nameserver aktualisiert werden können                       |
+| 576  | Domain kann in dem letzten Monat vor dem Ablaufdatum verlängert werden                                                               |
+| 580  | Transfer nicht unterstützt für TLD "{0}".                                                                                            |
+| 581  | Child-Nameserver nicht gefunden                                                                                                      |
+| 582  | Transfer von anderem Reseller gestartet.                                                                                             |
+| 583  | Transfer nicht initialisiert. Bitte kontaktieren Sie das Support-Team.                                                              |
+| 584  | Objektstatus verbietet Operation                                                                                                     |
+| 590  | Auth-Code ist für diesen Transfer erforderlich.                                                                                      |
+| 591  | Auth-Code ist nicht gültig.                                                                                                          |
+| 592  | Transfer-Sperre existiert auf Domain.                                                                                                |
+| 593  | Domain kann nicht transferiert werden, Statusinformationen und Transfer-Sperre müssen die erforderlichen Kriterien erfüllen. (Statusinformationen: #ok) |
+| 594  | Domain-Nameserver-Adresse konnte nicht aufgelöst werden ({0})                                                                        |
+| 595  | Kontaktinformationen können nicht gelesen werden (whois.registrar.tld) Stellen Sie sicher, dass der Datenschutzstatus offen ist     |
+| 596  | Kontaktinformationen konnten nicht verifiziert werden                                                                                |
+| 597  | TLD nicht gefunden                                                                                                                   |
+| 598  | Unbekannter Fehler aufgetreten                                                                                                       |
+| 599  | Domain-Weiterleitung nicht gefunden                                                                                                  |
 
 
 

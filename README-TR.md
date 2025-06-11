@@ -3,6 +3,11 @@
   <a href="README.md"> | EN <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/US.png" alt="EN" height="20" /></a>  
    <a href="README-DE.md"> | DE <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/DE.png" alt="DE" height="20" /></a>  
   <a href="README-SA.md"> | SA <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/SA.png" alt="AR" height="20" /></a>  
+  <a href="README-NL.md"> | NL <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/NL.png" alt="NL" height="20" /></a>  
+  <a href="README-AZ.md"> | AZ <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/AZ.png" alt="AZ" height="20" /></a>  
+  <a href="README-CN.md"> | CN <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/CN.png" alt="CN" height="20" /></a>  
+  <a href="README-FR.md"> | FR <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/FR.png" alt="FR" height="20" /></a>  
+  <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>  
 </div>
 
 ## Kurulum ve Entegrasyon rehberi
@@ -903,6 +908,91 @@ Array
 | 2302  | Object exists                                      | Domain adı veya name server bilgisi veritabanında mevcut. Kayıt edilemez. |
 | 2303  | Object does not exist                              | Domain adı veya name server bilgisi veritabanında mevcut değil. Yeni kayıt oluşturulmalı. |
 | 2304  | Object status prohibits operation                  | Domain durumu güncellemeye müsait değildir, güncelleme işlemlerine kilitlenmiştir. Durum durumu "clientupdateprohibited" olmamalı. Diğer durum durumlarından kaynaklanabilir. |
+
+| KOD | DETAY                                                                                                                               |
+|-----|-------------------------------------------------------------------------------------------------------------------------------------|
+| 101 | Sistem Hatası Detayları ({0}) İçin!                                                                                                |
+| 102 | Çoklu Hatalar Detayları ({0}) İçin!                                                                                                |
+| 103 | Bilinmeyen Hatalar Detayları ({0}) İçin!                                                                                           |
+| 200 | API komutu bulunamadı ({0})!                                                                                                       |
+| 210 | API servisi bulunamadı ({0})!                                                                                                      |
+| 211 | API servis sağlayıcısı ayarlanmamış!                                                                                               |
+| 300 | Bayi bulunamadı!                                                                                                                   |
+| 301 | Mevcut IP adresiniz erişim için yetkilendirilmemiş. Yetkili IP adresinden bağlandığınızdan emin olun ve tekrar deneyin            |
+| 310 | TLD desteklenmiyor!                                                                                                                |
+| 320 | API bulunamadı!                                                                                                                    |
+| 321 | Para birimi desteklenmiyor!                                                                                                        |
+| 330 | Gerekli parametre(ler) ayarlanmadı ({0}).                                                                                          |
+| –   | Tüm iletişim nesnelerini tam olarak gönderdiğinizden emin olun                                                                     |
+| 340 | Fiyat tanımı bulunamadı ({0}[{1}]-{2}{3}).                                                                                         |
+| 350 | Yetersiz bayi bakiyesi. (Bayi Id : {0} - Mevcut Bakiye : {1} {2}).                                                                 |
+| 350 | Muhasebe para birimi eşleşmiyor veya bakiye yetersiz.                                                                              |
+| 360 | Alan ({0}) için geçersiz API isteği.                                                                                               |
+| 360 | API kotası aşıldı!                                                                                                                 |
+| 361 | Azaltma hatası!                                                                                                                    |
+| 362 | Premium domain şu anda kayıt için kullanılamıyor.                                                                                  |
+| 363 | Domain otomatik yenileme döneminde olduğu için işlem iptal edildi                                                                  |
+| 364 | Bu domain şu anda kayıt defteri ile ilgili bir sorun nedeniyle işlem için kullanılamıyor                                          |
+
+| KOD | DETAY                                                                                       |
+|-----|---------------------------------------------------------------------------------------------|
+| 400 | Geçersiz iletişim ({0}).                                                                   |
+| 401 | İletişim bilgisi senkronize edilemiyor.                                                    |
+| 402 | Kayıt defterinden iletişim bilgilerine erişim yok.                                         |
+| 403 | SİSTEMDE EKSİK BİLGİ VAR. VARSAYILAN BİLGİLERİNİZİ GİRİN VEYA DESTEK EKIBI İLE İLETİŞİME GEÇİN. |
+| 404 | DOMAIN İLETİŞİMİ GÜNCELLENEMİYOR. KAYIT DEFTERİNDEN İZİN.                                  |
+| 410 | İletişim bulunamadı.                                                                       |
+| 410 | İletişim bulunamadı ({0}).                                                                 |
+| 420 | İletişim {0} için geçersiz Api komutu.                                                     |
+| 430 | İletişim api'si bulunamadı.                                                                |
+| 440 | İletişim senkronize edilmemiş.                                                             |
+| 450 | Çok fazla domain iletişimi.. !                                                             |
+| 451 | İletişim güncellemesi ile ilerlenemedi.                                                    |
+
+| KOD | DETAY                                                                                                                               |
+|-----|-------------------------------------------------------------------------------------------------------------------------------------|
+| 500 | Geçersiz domain id.                                                                                                                 |
+| 500 | Geçersiz domain id ({0}).                                                                                                           |
+| 501 | Domain senkronize edilemedi({0})                                                                                                   |
+| 502 | İç transfer başarısız                                                                                                              |
+| 503 | Domain kaydı kullanılamıyor.                                                                                                       |
+| 504 | Domain bilgisi eşleşmiyor .. Önce :{0}                                                                                             |
+| 505 | IP Adresini girin.                                                                                                                 |
+| 506 | Domain Transferi Başlatıldı Ancak İletişim Bilgisi Okunamadı ..                                                                    |
+| 507 | Yetkilendirme hatası.                                                                                                              |
+| 510 | Domain bulunamadı.                                                                                                                 |
+| 511 | Süresi dolmuş domainler bulunamıyor.                                                                                               |
+| 512 | Domain yenilenemez.                                                                                                                |
+| 513 | Domain güncellenebilir durumda değil. Güncellenebilmesi için aktif olmalı                                                          |
+| 514 | Geri Alım Süresi Bekleniyor.                                                                                                       |
+| 520 | Domain "{0}" için geçersiz Api komutu.                                                                                             |
+| 530 | Geçersiz domain süresi. Süre {0} ile {1} yıl arasında olmalı. İstenen süre {2} yıl.                                               |
+| 540 | Domain mevcut tarihten itibaren {0} yılın ötesine uzatılamaz.                                                                      |
+| 550 | Geçersiz domain adı. Domain {0} ile {1} karakter uzunluğunda olmalı. İstenen domain adı {2} karakter.                             |
+| 560 | Geçersiz name server sayısı. Domain {0} ile {1} name server'a sahip olmalı. İstenen name server sayısı {2}.                       |
+| 561 | Gelen istekte name server bilgisi bulunamadı                                                                                       |
+| 570 | Idn tld "{0}" için desteklenmiyor.                                                                                                 |
+| 571 | Süre geçersiz.                                                                                                                     |
+| 572 | Komut geçersiz.                                                                                                                    |
+| 573 | Domain adları bulunamadı.                                                                                                          |
+| 574 | TLD adları bulunamadı.                                                                                                             |
+| 575 | Domain güncellenebilir durumda değil. Name server'ların güncellenmesi için aktif olmalı                                            |
+| 576 | Domain son kullanma tarihinden önceki son 1 ay içinde yenilenebilir                                                                |
+| 580 | Transfer tld "{0}" için desteklenmiyor.                                                                                            |
+| 581 | Alt name server bulunamadı                                                                                                         |
+| 582 | Transfer başka bayi tarafından başlatıldı.                                                                                         |
+| 583 | Transfer başlatılmadı. Lütfen destek ekibi ile iletişime geçin.                                                                    |
+| 584 | Nesne durumu işlemi yasaklıyor                                                                                                     |
+| 590 | Bu transfer için auth kodu gerekli.                                                                                                |
+| 591 | Auth kodu geçerli değil.                                                                                                           |
+| 592 | Domain üzerinde transfer kilidi mevcut.                                                                                            |
+| 593 | Domain transfer edilemiyor, Durum Bilgisi ve Transfer Kilidi gerekli kriterlere uymalı. (Durum Bilgisi: #ok)                      |
+| 594 | Domain name server adresi çözümlenemedi ({0})                                                                                      |
+| 595 | İletişim bilgisi okunamıyor (whois.registrar.tld) Gizlilik koruma durumunun açık olduğundan emin olun                             |
+| 596 | İletişim bilgisi doğrulanamadı                                                                                                     |
+| 597 | Tld Bulunamadı                                                                                                                     |
+| 598 | Bilinmeyen hata oluştu                                                                                                             |
+| 599 | Domain Yönlendirmesi Bulunamadı                                                                                                    |
 
 
 
