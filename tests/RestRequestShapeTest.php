@@ -39,4 +39,50 @@ class RestRequestShapeTest extends TestCase
         $this->assertArrayHasKey('lockStatus', $req['payload']);
         $this->assertFalse($req['payload']['lockStatus']);
     }
+
+    public function testRegisterWithContactInfoUsesRegisterWithContactsEndpoint(): void
+    {
+        $contacts = [
+            'Registrant'     => $this->sampleContact(),
+            'Administrative' => $this->sampleContact(),
+            'Technical'      => $this->sampleContact(),
+            'Billing'        => $this->sampleContact(),
+        ];
+
+        $this->rest->registerWithContactInfo(
+            'example.com',
+            1,
+            $contacts,
+            ['ns1.example.com', 'ns2.example.com'],
+            true,
+            false,
+            []
+        );
+
+        $req = $this->rest->getRequestData();
+        $this->assertSame('POST', $req['method']);
+        $this->assertStringEndsWith('/domains/register-with-contacts', $req['url']);
+        $this->assertSame('example.com', $req['payload']['domainName']);
+        $this->assertSame(1, $req['payload']['period']);
+        $this->assertCount(4, $req['payload']['contacts']);
+        $this->assertArrayHasKey('isLocked', $req['payload']);
+        $this->assertArrayHasKey('privacyEnabled', $req['payload']);
+    }
+
+    private function sampleContact(): array
+    {
+        return [
+            'FirstName'        => 'Ada',
+            'LastName'         => 'Lovelace',
+            'Company'          => 'Analytical Engines',
+            'EMail'            => 'ada@example.com',
+            'AddressLine1'     => '1 Babbage Way',
+            'City'             => 'London',
+            'State'            => 'LDN',
+            'Country'          => 'GB',
+            'ZipCode'          => 'EC1A',
+            'PhoneCountryCode' => '44',
+            'Phone'            => '2071234567',
+        ];
+    }
 }

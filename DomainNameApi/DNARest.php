@@ -1113,7 +1113,7 @@ class DNARest
                 'additionalAttributes' => $additionalAttributes
             ];
 
-            $response = $this->request('POST', 'domains/register', $payload);
+            $response = $this->request('POST', 'domains/register-with-contacts', $payload);
 
             return $this->parseDomainInfo($response);
         } catch (Exception $e) {
