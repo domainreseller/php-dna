@@ -46,7 +46,10 @@ class DNARest
      * Api Service REST URL
      * @var string $serviceUrl
      */
-    private string $serviceUrl          = "https://rest-test.domainnameapi.com/api/v1";
+    public const URL_PROD = "https://api.domainresellerapi.com/api/v1";
+    public const URL_OTE  = "https://ote.domainresellerapi.com/api/v1";
+
+    private string $serviceUrl          = self::URL_PROD;
     private string $application         = "CORE";
     public array   $lastRequest         = [];
     public array   $lastResponse        = [];

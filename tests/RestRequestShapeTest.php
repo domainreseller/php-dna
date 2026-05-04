@@ -69,6 +69,14 @@ class RestRequestShapeTest extends TestCase
         $this->assertArrayHasKey('privacyEnabled', $req['payload']);
     }
 
+    public function testDefaultServiceUrlPointsToProductionGateway(): void
+    {
+        $rest = new DNARest('00000000-0000-0000-0000-000000000000', 'token');
+        $this->assertSame('https://api.domainresellerapi.com/api/v1', $rest->getServiceUrl());
+        $this->assertSame('https://api.domainresellerapi.com/api/v1', DNARest::URL_PROD);
+        $this->assertSame('https://ote.domainresellerapi.com/api/v1', DNARest::URL_OTE);
+    }
+
     private function sampleContact(): array
     {
         return [
