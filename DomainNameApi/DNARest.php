@@ -693,7 +693,7 @@ class DNARest
     public function enableTheftProtectionLock($domainName)
     {
         try {
-            $data     = ['domainName' => $domainName];
+            $data     = ['domainName' => $domainName, 'lockStatus' => true];
             $response = $this->request('POST', 'domains/lock', $data);
 
             return [

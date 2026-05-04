@@ -8,3 +8,4 @@ DomainNameApi/ip_addr.cache
 /tests/compare_responses.php
 /.phpunit.result.cache
 .env.test
+/docs/
