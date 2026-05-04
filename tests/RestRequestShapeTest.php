@@ -26,4 +26,17 @@ class RestRequestShapeTest extends TestCase
         $this->assertArrayHasKey('lockStatus', $req['payload']);
         $this->assertTrue($req['payload']['lockStatus']);
     }
+
+    public function testDisableTheftProtectionLockSendsLockStatusFalseToLockEndpoint(): void
+    {
+        $this->rest->disableTheftProtectionLock('example.com');
+
+        $req = $this->rest->getRequestData();
+        $this->assertSame('POST', $req['method']);
+        $this->assertStringEndsWith('/domains/lock', $req['url']);
+        $this->assertStringNotContainsString('/domains/unlock', $req['url']);
+        $this->assertSame('example.com', $req['payload']['domainName']);
+        $this->assertArrayHasKey('lockStatus', $req['payload']);
+        $this->assertFalse($req['payload']['lockStatus']);
+    }
 }

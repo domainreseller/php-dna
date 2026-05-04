@@ -719,8 +719,8 @@ class DNARest
     public function disableTheftProtectionLock($domainName)
     {
         try {
-            $data     = ['domainName' => $domainName];
-            $response = $this->request('POST', 'domains/unlock', $data);
+            $data     = ['domainName' => $domainName, 'lockStatus' => false];
+            $response = $this->request('POST', 'domains/lock', $data);
             return [
                 'result' => self::$RESULT_OK,
                 'data'   => [
