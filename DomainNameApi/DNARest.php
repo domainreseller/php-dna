@@ -72,8 +72,11 @@ class DNARest
      * @param string $token
      * @throws Exception
      */
-    public function __construct($resellerId, $token)
+    public function __construct($resellerId, $token,$testmode=false)
     {
+        if($testmode){
+            $this->serviceUrl = self::URL_OTE;
+        }
         $this->startAt = microtime(true);
         $this->_setApplication(__FILE__);
 
