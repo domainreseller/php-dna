@@ -9,3 +9,4 @@ DomainNameApi/ip_addr.cache
 /.phpunit.result.cache
 .env.test
 /docs/
+/composer.lock
