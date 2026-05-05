@@ -1346,17 +1346,53 @@ class DNARest
     }
 
     /**
-     * Check if domain transfer is possible
-     * Not supported in REST API mode.
+     * Check whether a domain can be transferred with the given auth code.
+     * Mirrors the SOAP contract: returns {result: OK|ERROR}; OK iff the
+     * registry reports the domain is currently transferable. The richer
+     * fields the REST gateway returns (authCodeIsValid, transferLock, etc.)
+     * are surfaced under `data` for callers that want them.
      *
      * @param string $domainName Domain name to check transfer for
-     * @param string $authcode Authorization/EPP code for transfer
+     * @param string $authcode   Authorization/EPP code for transfer
      * @return array
-     * @throws Exception
      */
     public function checkTransfer($domainName, $authcode)
     {
-        throw new Exception("checkTransfer is not supported in REST API");
+        try {
+            $payload  = ['domainName' => $domainName, 'authCode' => $authcode];
+            $response = $this->request('POST', 'domains/transfers/check', $payload);
+
+            $available = !empty($response['transferAvailabilityStatus']);
+            $envelope = [
+                'result' => $available ? self::$RESULT_OK : self::$RESULT_ERROR,
+                'data'   => [
+                    'TransferAvailabilityStatus' => $available,
+                    'AuthCodeIsRequired'         => !empty($response['authCodeIsRequired']),
+                    'AuthCodeIsValid'            => !empty($response['authCodeIsValid']),
+                    'UserTransferRequired'       => !empty($response['userTransferRequired']),
+                    'TransferLock'               => !empty($response['transferLock']),
+                    'Message'                    => (string)($response['message'] ?? ''),
+                    'MessageKey'                 => (string)($response['messageKey'] ?? ''),
+                    'Additional'                 => isset($response['additionalAttributes'])
+                        ? (array)$response['additionalAttributes']
+                        : [],
+                ],
+            ];
+            if (!$available) {
+                $envelope['error'] = $this->setError(
+                    'TRANSFER_NOT_AVAILABLE',
+                    $response['message'] ?? 'Domain is not transferable',
+                    $response['messageKey'] ?? ($response['message'] ?? '')
+                );
+            }
+            return $envelope;
+        } catch (Exception $e) {
+            return [
+                'result' => self::$RESULT_ERROR,
+                'error'  => $this->setError($this->formatErrorCode($e->getCode()) ?: 'CHECK_TRANSFER', $e->getMessage(),
+                    $this->lastParsedResponse['Details'] ?? ($this->lastResponse['raw_response'] ?? $e->getMessage()))
+            ];
+        }
     }
 
     /**
