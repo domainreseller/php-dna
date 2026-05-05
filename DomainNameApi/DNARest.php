@@ -222,7 +222,7 @@ class DNARest
     private function formatErrorCode($code): string
     {
         if (is_numeric($code)) {
-            return 'API_' . $code . '_ERROR';
+            return 'API_' . $code ;
         }
         return (string)$code;
     }
