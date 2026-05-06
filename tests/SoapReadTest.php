@@ -42,17 +42,19 @@ class SoapReadTest extends BaseComparisonTestCase
     {
         $result = self::$soap->CheckAvailability(['google'], ['com'], 1, 'create');
 
-        $this->assertArrayHasKey(0, $result);
-        $this->assertArrayNotHasKey('result', $result);
+        $msg = 'Unexpected response: ' . json_encode($result);
+        $this->assertArrayHasKey(0, $result, $msg);
+        $this->assertArrayNotHasKey('result', $result, $msg);
         $expectedKeys = ['TLD', 'DomainName', 'Status', 'Command', 'Period', 'IsFee', 'Price', 'Currency', 'Reason'];
-        $this->assertEquals($expectedKeys, array_keys($result[0]));
-        $this->assertEquals('notavailable', $result[0]['Status']);
+        $this->assertEquals($expectedKeys, array_keys($result[0]), $msg);
+        $this->assertEquals('notavailable', $result[0]['Status'], $msg);
     }
 
     public function testCheckAvailabilityAvailable(): void
     {
         $result = self::$soap->CheckAvailability(['xyznotexist999'], ['com'], 1, 'create');
-        $this->assertEquals('available', $result[0]['Status']);
+        $this->assertEquals('available', $result[0]['Status'] ?? null,
+            'Unexpected response: ' . json_encode($result));
     }
 
     public function testCheckAvailabilityEmptyReturnsError(): void
