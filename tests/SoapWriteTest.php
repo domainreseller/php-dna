@@ -70,4 +70,31 @@ class SoapWriteTest extends BaseComparisonTestCase
         $result = self::$soap->EnableTheftProtectionLock('nonexistent-xyz.com');
         $this->assertEquals('ERROR', $result['result']);
     }
+
+    public function testSaveContacts(): void
+    {
+        $contacts = self::sampleContacts();
+        $save = self::$soap->SaveContacts(self::$soapDomainContacts, $contacts);
+
+        // SOAP shape: only `result` on success (no data envelope).
+        $this->assertEquals('OK', $save['result']);
+
+        // Verify persistence via GetContacts roundtrip.
+        $get = self::$soap->GetContacts(self::$soapDomainContacts);
+        $this->assertEquals('OK', $get['result']);
+        foreach (['Administrative', 'Billing', 'Technical', 'Registrant'] as $type) {
+            $persisted = $get['data']['contacts'][$type];
+            $this->assertEquals($contacts[$type]['FirstName'], $persisted['FirstName'], "$type FirstName roundtrip");
+            $this->assertEquals($contacts[$type]['LastName'],  $persisted['LastName'],  "$type LastName roundtrip");
+            $this->assertEquals($contacts[$type]['EMail'],     $persisted['EMail'],     "$type EMail roundtrip");
+        }
+    }
+
+    public function testSaveContactsError(): void
+    {
+        $result = self::$soap->SaveContacts('nonexistent-' . bin2hex(random_bytes(4)) . '.com', self::sampleContacts());
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertArrayHasKey('error', $result);
+    }
 }

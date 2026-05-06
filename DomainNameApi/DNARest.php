@@ -616,17 +616,15 @@ class DNARest
                     }
 
                     $tldData[] = [
-                        'id'               => $idCounter++,
-                        'status'           => $tld['status'] ?? 'Active',
-                        'maxchar'          => $tld['constraints']['maxLenght'] ?? 63,
-                        'maxperiod'        => $tld['maxRegistrationPeriod'] ?? 10,
-                        'minchar'          => $tld['constraints']['minLength'] ?? 1,
-                        'minperiod'        => $tld['minRegistrationPeriod'] ?? 1,
-                        'tld'              => $tld['name'],
-                        'gracePeriod'      => $tld['addGracePeriod'] == 1,
-                        'redemptionPeriod' => $tld['failurePeriod'] == 1,
-                        'pricing'          => $pricing,
-                        'currencies'       => $currencies
+                        'id'         => $idCounter++,
+                        'status'     => $tld['status'] ?? 'Active',
+                        'maxchar'    => $tld['constraints']['maxLenght'] ?? 63,
+                        'maxperiod'  => $tld['maxRegistrationPeriod'] ?? 10,
+                        'minchar'    => $tld['constraints']['minLength'] ?? 1,
+                        'minperiod'  => $tld['minRegistrationPeriod'] ?? 1,
+                        'tld'        => $tld['name'],
+                        'pricing'    => $pricing,
+                        'currencies' => $currencies,
                     ];
                 }
             }

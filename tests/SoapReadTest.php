@@ -119,6 +119,42 @@ class SoapReadTest extends BaseComparisonTestCase
         }
     }
 
+    public function testGetTldList(): void
+    {
+        $result = self::$soap->GetTldList(5);
+
+        $this->assertEquals('OK', $result['result']);
+        $this->assertIsArray($result['data']);
+        $this->assertNotEmpty($result['data']);
+
+        // SOAP shape: no gracePeriod / redemptionPeriod
+        $expectedKeys = ['id', 'status', 'maxchar', 'maxperiod', 'minchar', 'minperiod',
+            'tld', 'pricing', 'currencies'];
+        $this->assertEquals($expectedKeys, array_keys($result['data'][0]));
+
+        $first = $result['data'][0];
+        $this->assertIsString($first['tld']);
+        $this->assertIsArray($first['pricing']);
+        $this->assertIsArray($first['currencies']);
+    }
+
+    public function testCheckTransferNonExistent(): void
+    {
+        $result = self::$soap->CheckTransfer('nonexistent-' . bin2hex(random_bytes(4)) . '.com', 'fakeAuthCode');
+
+        // SOAP shape: only `result` on either OK or ERROR
+        $this->assertArrayHasKey('result', $result);
+        $this->assertContains($result['result'], ['OK', 'ERROR']);
+    }
+
+    public function testCheckTransferInvalidAuthCode(): void
+    {
+        $result = self::$soap->CheckTransfer('google.com', 'fakeAuthCode');
+
+        $this->assertArrayHasKey('result', $result);
+        $this->assertContains($result['result'], ['OK', 'ERROR']);
+    }
+
     public function testWrongCredentials(): void
     {
         $bad = new \DomainNameApi\DomainNameAPI_PHPLibrary('wronguser', 'wrongpass');

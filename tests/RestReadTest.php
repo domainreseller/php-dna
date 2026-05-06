@@ -126,6 +126,45 @@ class RestReadTest extends BaseComparisonTestCase
         }
     }
 
+    public function testGetTldList(): void
+    {
+        $result = self::$rest->GetTldList(5);
+
+        $this->assertEquals('OK', $result['result']);
+        $this->assertIsArray($result['data']);
+        $this->assertNotEmpty($result['data']);
+
+        // Shape must match SOAP exactly so the facade is transport-transparent.
+        $expectedKeys = ['id', 'status', 'maxchar', 'maxperiod', 'minchar', 'minperiod',
+            'tld', 'pricing', 'currencies'];
+        $this->assertEquals($expectedKeys, array_keys($result['data'][0]));
+
+        $first = $result['data'][0];
+        $this->assertIsString($first['tld']);
+        $this->assertIsArray($first['pricing']);
+        $this->assertIsArray($first['currencies']);
+        $this->assertArrayHasKey('registration', $first['pricing']);
+    }
+
+    public function testCheckTransferNonExistent(): void
+    {
+        $result = self::$rest->CheckTransfer('nonexistent-' . bin2hex(random_bytes(4)) . '.com', 'fakeAuthCode');
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertEquals(['Code', 'Message', 'Details'], array_keys($result['error']));
+    }
+
+    public function testCheckTransferInvalidAuthCode(): void
+    {
+        // Registered domain not on this account + bogus auth code → gateway returns
+        // HTTP 4xx, library converts to error envelope (no data branch).
+        $result = self::$rest->CheckTransfer('google.com', 'fakeAuthCode');
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertEquals(['Code', 'Message', 'Details'], array_keys($result['error']));
+    }
+
     public function testWrongCredentials(): void
     {
         $bad = new \DomainNameApi\DomainNameAPI_PHPLibrary('fd2bea54-0000-0000-0000-000000000000', 'wrongtoken');
