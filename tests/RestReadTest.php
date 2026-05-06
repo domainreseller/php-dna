@@ -41,17 +41,19 @@ class RestReadTest extends BaseComparisonTestCase
     {
         $result = self::$rest->CheckAvailability(['google'], ['com'], 1, 'create');
 
-        $this->assertArrayHasKey(0, $result);
-        $this->assertArrayNotHasKey('result', $result);
+        $msg = 'Unexpected response: ' . json_encode($result);
+        $this->assertArrayHasKey(0, $result, $msg);
+        $this->assertArrayNotHasKey('result', $result, $msg);
         $expectedKeys = ['TLD', 'DomainName', 'Status', 'Command', 'Period', 'IsFee', 'Price', 'Currency', 'Reason'];
-        $this->assertEquals($expectedKeys, array_keys($result[0]));
-        $this->assertEquals('notavailable', $result[0]['Status']);
+        $this->assertEquals($expectedKeys, array_keys($result[0]), $msg);
+        $this->assertEquals('notavailable', $result[0]['Status'], $msg);
     }
 
     public function testCheckAvailabilityAvailable(): void
     {
         $result = self::$rest->CheckAvailability(['xyznotexist999'], ['com'], 1, 'create');
-        $this->assertEquals('available', $result[0]['Status']);
+        $this->assertEquals('available', $result[0]['Status'] ?? null,
+            'Unexpected response: ' . json_encode($result));
     }
 
     public function testCheckAvailabilityEmptyReturnsError(): void
@@ -124,6 +126,45 @@ class RestReadTest extends BaseComparisonTestCase
             $this->assertArrayHasKey('Phone', $result['data']['contacts'][$type]['Phone']);
             $this->assertArrayHasKey('Fax', $result['data']['contacts'][$type]['Phone']);
         }
+    }
+
+    public function testGetTldList(): void
+    {
+        $result = self::$rest->GetTldList(5);
+
+        $this->assertEquals('OK', $result['result']);
+        $this->assertIsArray($result['data']);
+        $this->assertNotEmpty($result['data']);
+
+        // Shape must match SOAP exactly so the facade is transport-transparent.
+        $expectedKeys = ['id', 'status', 'maxchar', 'maxperiod', 'minchar', 'minperiod',
+            'tld', 'pricing', 'currencies'];
+        $this->assertEquals($expectedKeys, array_keys($result['data'][0]));
+
+        $first = $result['data'][0];
+        $this->assertIsString($first['tld']);
+        $this->assertIsArray($first['pricing']);
+        $this->assertIsArray($first['currencies']);
+        $this->assertArrayHasKey('registration', $first['pricing']);
+    }
+
+    public function testCheckTransferNonExistent(): void
+    {
+        $result = self::$rest->CheckTransfer('nonexistent-' . bin2hex(random_bytes(4)) . '.com', 'fakeAuthCode');
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertArrayHasKey('error', $result);
+        $this->assertEquals(['Code', 'Message', 'Details'], array_keys($result['error']));
+    }
+
+    public function testCheckTransferInvalidAuthCode(): void
+    {
+        // Registered domain not on this account + bogus auth code → gateway returns
+        // HTTP 4xx, library converts to error envelope (no data branch).
+        $result = self::$rest->CheckTransfer('google.com', 'fakeAuthCode');
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertEquals(['Code', 'Message', 'Details'], array_keys($result['error']));
     }
 
     public function testWrongCredentials(): void

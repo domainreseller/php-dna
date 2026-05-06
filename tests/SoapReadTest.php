@@ -42,17 +42,19 @@ class SoapReadTest extends BaseComparisonTestCase
     {
         $result = self::$soap->CheckAvailability(['google'], ['com'], 1, 'create');
 
-        $this->assertArrayHasKey(0, $result);
-        $this->assertArrayNotHasKey('result', $result);
+        $msg = 'Unexpected response: ' . json_encode($result);
+        $this->assertArrayHasKey(0, $result, $msg);
+        $this->assertArrayNotHasKey('result', $result, $msg);
         $expectedKeys = ['TLD', 'DomainName', 'Status', 'Command', 'Period', 'IsFee', 'Price', 'Currency', 'Reason'];
-        $this->assertEquals($expectedKeys, array_keys($result[0]));
-        $this->assertEquals('notavailable', $result[0]['Status']);
+        $this->assertEquals($expectedKeys, array_keys($result[0]), $msg);
+        $this->assertEquals('notavailable', $result[0]['Status'], $msg);
     }
 
     public function testCheckAvailabilityAvailable(): void
     {
         $result = self::$soap->CheckAvailability(['xyznotexist999'], ['com'], 1, 'create');
-        $this->assertEquals('available', $result[0]['Status']);
+        $this->assertEquals('available', $result[0]['Status'] ?? null,
+            'Unexpected response: ' . json_encode($result));
     }
 
     public function testCheckAvailabilityEmptyReturnsError(): void
@@ -117,6 +119,42 @@ class SoapReadTest extends BaseComparisonTestCase
             $this->assertEquals(['Line1', 'Line2', 'Line3', 'State', 'City', 'Country', 'ZipCode'],
                 array_keys($result['data']['contacts'][$type]['Address']));
         }
+    }
+
+    public function testGetTldList(): void
+    {
+        $result = self::$soap->GetTldList(5);
+
+        $this->assertEquals('OK', $result['result']);
+        $this->assertIsArray($result['data']);
+        $this->assertNotEmpty($result['data']);
+
+        // SOAP shape: no gracePeriod / redemptionPeriod
+        $expectedKeys = ['id', 'status', 'maxchar', 'maxperiod', 'minchar', 'minperiod',
+            'tld', 'pricing', 'currencies'];
+        $this->assertEquals($expectedKeys, array_keys($result['data'][0]));
+
+        $first = $result['data'][0];
+        $this->assertIsString($first['tld']);
+        $this->assertIsArray($first['pricing']);
+        $this->assertIsArray($first['currencies']);
+    }
+
+    public function testCheckTransferNonExistent(): void
+    {
+        $result = self::$soap->CheckTransfer('nonexistent-' . bin2hex(random_bytes(4)) . '.com', 'fakeAuthCode');
+
+        // SOAP shape: only `result` on either OK or ERROR
+        $this->assertArrayHasKey('result', $result);
+        $this->assertContains($result['result'], ['OK', 'ERROR']);
+    }
+
+    public function testCheckTransferInvalidAuthCode(): void
+    {
+        $result = self::$soap->CheckTransfer('google.com', 'fakeAuthCode');
+
+        $this->assertArrayHasKey('result', $result);
+        $this->assertContains($result['result'], ['OK', 'ERROR']);
     }
 
     public function testWrongCredentials(): void

@@ -71,4 +71,35 @@ class RestWriteTest extends BaseComparisonTestCase
         $result = self::$rest->EnableTheftProtectionLock('nonexistent-xyz.com');
         $this->assertEquals('ERROR', $result['result']);
     }
+
+    public function testSaveContacts(): void
+    {
+        // Gateway returns an empty body on success per Swagger; verify the save
+        // actually persisted by reading the contacts back via GetContacts.
+        $contacts = self::sampleContacts();
+        $save = self::$rest->SaveContacts(self::$restDomainContacts, $contacts);
+
+        $this->assertEquals('OK', $save['result']);
+        $this->assertArrayHasKey('data', $save);
+        $this->assertArrayHasKey('contacts', $save['data']);
+        $this->assertIsArray($save['data']['contacts']);
+
+        $get = self::$rest->GetContacts(self::$restDomainContacts);
+        $this->assertEquals('OK', $get['result']);
+        foreach (['Administrative', 'Billing', 'Technical', 'Registrant'] as $type) {
+            $persisted = $get['data']['contacts'][$type];
+            $this->assertEquals($contacts[$type]['FirstName'], $persisted['FirstName'], "$type FirstName roundtrip");
+            $this->assertEquals($contacts[$type]['LastName'],  $persisted['LastName'],  "$type LastName roundtrip");
+            $this->assertEquals($contacts[$type]['EMail'],     $persisted['EMail'],     "$type EMail roundtrip");
+            $this->assertEquals($contacts[$type]['Country'],   $persisted['Address']['Country'], "$type Country roundtrip");
+        }
+    }
+
+    public function testSaveContactsError(): void
+    {
+        $result = self::$rest->SaveContacts('nonexistent-' . bin2hex(random_bytes(4)) . '.com', self::sampleContacts());
+
+        $this->assertEquals('ERROR', $result['result']);
+        $this->assertEquals(['Code', 'Message', 'Details'], array_keys($result['error']));
+    }
 }

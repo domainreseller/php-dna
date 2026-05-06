@@ -40,4 +40,29 @@ abstract class BaseComparisonTestCase extends TestCase
         self::$soapDomainContacts = getenv('SOAP_DOMAIN_CONTACTS');
         self::$restDomainContacts = getenv('REST_DOMAIN_CONTACTS');
     }
+
+    protected static function sampleContacts(): array
+    {
+        $contact = [
+            'FirstName'        => 'Bunyamin',
+            'LastName'         => 'Akcay',
+            'Company'          => 'Atak Domain',
+            'EMail'            => 'test@bunyam.in',
+            'AddressLine1'     => 'Yenisehir Mah. Arda Sk. No:36',
+            'City'             => 'Kocaeli',
+            'Country'          => 'TR',
+            'Phone'            => '5354792542',
+            'PhoneCountryCode' => '90',
+            'Fax'              => '5354792542',
+            'FaxCountryCode'   => '90',
+            'ZipCode'          => '41000',
+            'State'            => 'Izmit',
+        ];
+        return [
+            'Administrative' => $contact,
+            'Billing'        => $contact,
+            'Technical'      => $contact,
+            'Registrant'     => $contact,
+        ];
+    }
 }
