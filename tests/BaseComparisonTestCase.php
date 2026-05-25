@@ -35,6 +35,14 @@ abstract class BaseComparisonTestCase extends TestCase
 
         self::$soap = new DomainNameAPI_PHPLibrary(getenv('SOAP_USER'), getenv('SOAP_PASS'));
         self::$rest = new DomainNameAPI_PHPLibrary(getenv('REST_USER'), getenv('REST_PASS'));
+
+        // Tests deliberately probe the library with pathological inputs
+        // (testNoMethodEverThrows, edge cases). Letting those errors stream
+        // into the shared production Sentry project would pollute real
+        // signal with synthetic test noise.
+        self::$soap->setErrorReportingEnabled(false);
+        self::$rest->setErrorReportingEnabled(false);
+
         self::$soapDomain         = getenv('SOAP_DOMAIN');
         self::$restDomain         = getenv('REST_DOMAIN');
         self::$soapDomainContacts = getenv('SOAP_DOMAIN_CONTACTS');

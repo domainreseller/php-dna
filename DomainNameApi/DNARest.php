@@ -305,6 +305,7 @@ class DNARest
         if (curl_errno($ch)) {
             $error = new Exception('Curl error during request: ' . curl_error($ch));
             $this->sendErrorToSentryAsync($error);
+            curl_close($ch);
         } else {
             curl_close($ch);
 
@@ -405,36 +406,44 @@ class DNARest
      */
     public function getCurrentBalance($currencyId = 'USD')
     {
+        $currencyName = strtoupper($currencyId);
+
+        // SOAP uyumu: TRY → TL, currency ID'leri eşle
+        $currencyMap = [
+            'USD' => ['id' => 2, 'name' => 'USD', 'symbol' => '$'],
+            'TRY' => ['id' => 1, 'name' => 'TL',  'symbol' => 'TL'],
+            'EUR' => ['id' => 3, 'name' => 'EUR', 'symbol' => '€'],
+            'GBP' => ['id' => 4, 'name' => 'GBP', 'symbol' => '£'],
+        ];
+        $mapped = $currencyMap[$currencyName] ?? ['id' => 0, 'name' => $currencyName, 'symbol' => ''];
+
         try {
-            $response = $this->request('GET', 'deposit/accounts/me', ['currency' => strtoupper($currencyId)]);
+            $response = $this->request('GET', 'deposit/accounts/me', ['currency' => $currencyName]);
 
-            $balanceKey   = strtolower($currencyId) . 'Balance';
-            $currencyName = strtoupper($currencyId);
-
-            // SOAP uyumu: TRY → TL, currency ID'leri eşle
-            $currencyMap = [
-                'USD' => ['id' => 2, 'name' => 'USD', 'symbol' => '$'],
-                'TRY' => ['id' => 1, 'name' => 'TL',  'symbol' => 'TL'],
-                'EUR' => ['id' => 3, 'name' => 'EUR', 'symbol' => '€'],
-                'GBP' => ['id' => 4, 'name' => 'GBP', 'symbol' => '£'],
-            ];
-            $mapped = $currencyMap[$currencyName] ?? ['id' => 0, 'name' => $currencyName, 'symbol' => ''];
+            $balanceKey = strtolower($currencyId) . 'Balance';
 
             return [
                 'ErrorCode'        => 0,
                 'OperationMessage' => 'Command completed succesfully.',
                 'OperationResult'  => 'SUCCESS',
-                'Balance'          => number_format($response[$balanceKey] ?? 0, 2, '.', ''),
+                'Balance'          => number_format((float)($response[$balanceKey] ?? 0), 2, '.', ''),
                 'CurrencyId'       => $mapped['id'],
                 'CurrencyInfo'     => null,
                 'CurrencyName'     => $mapped['name'],
                 'CurrencySymbol'   => $mapped['symbol']
             ];
         } catch (Exception $e) {
+            // Keep the same envelope shape as the success path so callers can
+            // rely on a single schema (ErrorCode/OperationResult signal failure).
             return [
-                'result' => self::$RESULT_ERROR,
-                'error'  => $this->setError($this->formatErrorCode($e->getCode()) ?: 'BALANCE', $e->getMessage(),
-                    $this->lastParsedResponse['Details'] ?? ($this->lastResponse['raw_response'] ?? $e->getMessage()))
+                'ErrorCode'        => $this->formatErrorCode($e->getCode()) ?: 'BALANCE',
+                'OperationMessage' => $e->getMessage(),
+                'OperationResult'  => 'FAILED',
+                'Balance'          => '0.00',
+                'CurrencyId'       => $mapped['id'],
+                'CurrencyInfo'     => null,
+                'CurrencyName'     => $mapped['name'],
+                'CurrencySymbol'   => $mapped['symbol']
             ];
         }
     }
@@ -1107,14 +1116,20 @@ class DNARest
                 $payloadContacts[] = $this->parseContact($details, ucfirst(strtolower($type)));
             }
 
+            // Gateway schema uses `tldAttributes` (object/dict), not the
+            // legacy `additionalAttributes` (array). Always send as an object
+            // — `{}` when empty, not `[]` — so it matches the OpenAPI schema
+            // and the backend's own canonical example.
             $payload = [
-                'domainName'           => $domainName,
-                'period'               => $period,
-                'nameServers'          => empty($nameServers) ? self::$DEFAULT_NAMESERVERS : $nameServers,
-                'isLocked'             => $eppLock,
-                'privacyEnabled'       => $privacyLock,
-                'contacts'             => $payloadContacts,
-                'additionalAttributes' => $additionalAttributes
+                'domainName'    => $domainName,
+                'period'        => $period,
+                'nameServers'   => empty($nameServers) ? self::$DEFAULT_NAMESERVERS : $nameServers,
+                'isLocked'      => $eppLock,
+                'privacyEnabled'=> $privacyLock,
+                'contacts'      => $payloadContacts,
+                'tldAttributes' => empty($additionalAttributes)
+                    ? new \stdClass()
+                    : (object) $additionalAttributes,
             ];
 
             $response = $this->request('POST', 'domains/register-with-contacts', $payload);
@@ -1330,6 +1345,10 @@ class DNARest
             'phone'            => (string)$phone,
             'faxCountryCode'   => (string)$faxCc,
             'fax'              => (string)$fax,
+            // Required non-nullable bool in the gateway ContactLiteDto. The
+            // backend's own example payload includes it; omitting causes
+            // ModelState validation to reject the whole registration.
+            'isHidden'         => (bool)($contact['IsHidden'] ?? false),
         ];
     }
 

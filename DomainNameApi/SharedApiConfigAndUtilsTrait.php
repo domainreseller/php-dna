@@ -198,6 +198,19 @@ trait SharedApiConfigAndUtilsTrait
         }
     }
 
+    /**
+     * Enable or disable Sentry telemetry at runtime. Useful for tests that
+     * deliberately probe the library with pathological inputs and would
+     * otherwise pollute the shared Sentry project with synthetic errors.
+     *
+     * @param bool $enabled
+     * @return void
+     */
+    public function setErrorReportingEnabled(bool $enabled): void
+    {
+        $this->errorReportingEnabled = $enabled;
+    }
+
     private function setError($code, $message = '', $details = ''): array
     {
         $result = [];
@@ -270,21 +283,27 @@ trait SharedApiConfigAndUtilsTrait
         }
         $culpritClass = get_class($this);
 
+        // Stable classification: normalised message, volatile data as tags,
+        // explicit fingerprint. Without this Sentry groups on the variable
+        // backend message (IP, reseller id, domain) and shatters one logical
+        // error into hundreds of issues.
+        $classification = $this->buildSentryClassification($e);
+
         $errorData = [
             'event_id'  => bin2hex(random_bytes(16)),
             'timestamp' => gmdate('Y-m-d\TH:i:s\Z'),
             'level'     => 'error',
             'logger'    => 'php',
             'platform'  => 'php',
-            'culprit'   => $culpritClass . ' via ' . $knownPath, 
+            'culprit'   => $culpritClass . ' via ' . $knownPath,
             'message'   => [
-                'formatted' => $e->getMessage()
+                'formatted' => $classification['value']
             ],
             'exception' => [
                 'values' => [
                     [
                         'type'       => str_replace(['DomainNameApi\\DNARest', 'DomainNameApi\\DNASoap', 'DomainNameApi\\DomainNameAPI_PHPLibrary'], [$this->application . ' Exception', $this->application . ' Exception', $this->application . ' Exception'], $culpritClass),
-                        'value'      => $e->getMessage(),
+                        'value'      => $classification['value'],
                         'stacktrace' => [
                             'frames' => [
                                 [
@@ -326,6 +345,13 @@ trait SharedApiConfigAndUtilsTrait
             ]
         ];
 
+        // Volatile data (reseller, domain, IP, api_code, operation) lives as
+        // tags so it's filterable; the raw backend message is preserved in
+        // extra.original_message so no detail is lost.
+        $errorData['tags']                    = array_merge($errorData['tags'], $classification['tags']);
+        $errorData['extra']['original_message'] = $e->getMessage();
+        $errorData['fingerprint']             = $classification['fingerprint'];
+
         $sentry_auth = [
             'sentry_version=7',
             'sentry_client=phplib-php/' . self::$VERSION,
@@ -337,6 +363,114 @@ trait SharedApiConfigAndUtilsTrait
         $sentry_auth_header = 'X-Sentry-Auth: Sentry ' . implode(', ', $sentry_auth);
 
         $this->fireAndForgetPost($api_url, json_encode($errorData), $sentry_auth_header);
+    }
+
+    /**
+     * Build a stable Sentry classification from an exception.
+     *
+     * Returns:
+     *  - 'value'       : a normalised message — IP/domain/numbers/quoted
+     *                    strings replaced with placeholders so the same
+     *                    underlying error always renders the same title.
+     *  - 'tags'        : volatile data extracted into transport-agnostic
+     *                    tags (reseller, domain, operation, api_code, ip_value)
+     *                    so they remain filterable in Sentry.
+     *  - 'fingerprint' : ['dna', application, operation, normalised value] —
+     *                    explicit grouping key. Reseller is intentionally
+     *                    NOT in the fingerprint (would re-shatter groups).
+     *
+     * The raw backend message is preserved unchanged in
+     * extra.original_message at the call-site so no detail is lost.
+     *
+     * @param Exception $e
+     * @return array{value:string,tags:array<string,string>,fingerprint:array<int,string>}
+     */
+    private function buildSentryClassification(Exception $e): array
+    {
+        $msg  = (string) $e->getMessage();
+        $tags = [];
+
+        // Tenant identifier — REST has resellerId (UUID), SOAP has
+        // serviceUsername. Same concept, unified under a single tag so a
+        // Sentry filter "reseller=X" works regardless of transport.
+        if (property_exists($this, 'resellerId') && !empty($this->resellerId)) {
+            $tags['reseller'] = (string) $this->resellerId;
+        } elseif (property_exists($this, 'serviceUsername') && !empty($this->serviceUsername)) {
+            $tags['reseller'] = (string) $this->serviceUsername;
+        }
+
+        // Domain from the recorded request — REST stores it under
+        // payload.domainName, SOAP under request.DomainName.
+        $lr = (property_exists($this, 'lastRequest') && is_array($this->lastRequest))
+            ? $this->lastRequest : [];
+        $domain = $lr['payload']['domainName']
+               ?? $lr['request']['DomainName']
+               ?? null;
+        if (!empty($domain) && is_string($domain)) {
+            $tags['domain'] = $domain;
+        }
+
+        if (property_exists($this, 'lastFunction') && !empty($this->lastFunction)) {
+            $tags['operation'] = (string) $this->lastFunction;
+        }
+
+        // API/response code — prefer the symbolic form embedded in the
+        // message; fall back to the exception's own numeric code so REST
+        // HTTP statuses (500, 400, 404…) and SOAP numeric codes land under
+        // the same filterable tag.
+        if (preg_match('/API_(-?\d+)_ERROR/', $msg, $m)) {
+            $tags['api_code'] = 'API_' . $m[1];
+        } else {
+            $code = $e->getCode();
+            if (is_numeric($code) && (int) $code !== 0) {
+                $tags['api_code'] = 'API_' . (int) $code;
+            }
+        }
+        if (preg_match('/\b(\d{1,3}(?:\.\d{1,3}){3})\b/', $msg, $m)) {
+            $tags['ip_value'] = $m[1];
+        }
+
+        // Normalise the message: strip the variable bits so identical
+        // underlying errors render an identical title.
+        $apiCode = $tags['api_code'] ?? null;
+        $n = $msg;
+        $n = preg_replace('/^\[API_ERROR\]:\s*/i', '', $n);
+        $n = preg_replace('/API_-?\d+_ERROR\s*-\s*Failed\s*-\s*/i', '', $n);
+        $n = preg_replace('/\s*\(Reseller Id[^)]*\)\s*/i', '', $n);
+        $n = preg_replace('/\b\d{1,3}(?:\.\d{1,3}){3}\b/', '{ip}', $n);
+        $n = preg_replace("/'[^']{0,80}'|\"[^\"]{0,80}\"/", '{v}', $n);
+        // Replace runs of 2+ digits (single digits often carry meaning,
+        // e.g. "v4", "All 4 contact types required").
+        $n = preg_replace('/\b\d{2,}\b/', '{n}', $n);
+        $n = trim((string) preg_replace('/\s+/', ' ', (string) $n));
+
+        if ($n === '') {
+            // Empty backend message (e.g. HTTP 4xx/5xx with empty body):
+            // prefer the api_code alone as a clean, stable title; otherwise
+            // fall back to the exception class so the title is still useful.
+            if ($apiCode) {
+                $n = $apiCode;
+            } else {
+                $parts = explode('\\', get_class($e));
+                $n     = end($parts) ?: 'Exception';
+            }
+        } elseif ($apiCode && strpos($n, $apiCode) !== 0) {
+            $n = $apiCode . ': ' . $n;
+        }
+        if (strlen($n) > 160) {
+            $n = substr($n, 0, 157) . '...';
+        }
+
+        return [
+            'value'       => $n,
+            'tags'        => $tags,
+            'fingerprint' => [
+                'dna',
+                $this->application ?? 'CORE',
+                $tags['operation'] ?? 'unknown',
+                $n,
+            ],
+        ];
     }
 
     private function sendPerformanceMetricsToSentry(array $metrics): void

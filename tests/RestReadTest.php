@@ -101,6 +101,55 @@ class RestReadTest extends BaseComparisonTestCase
         }
     }
 
+    /**
+     * Regression guard for the NameServers key-casing inconsistency:
+     *   - getList()        reads $item['nameServers'] (camelCase)
+     *   - parseDomainInfo() reads $data['nameservers'] (lowercase s)
+     * At most one matches the gateway JSON, so the other silently returns [].
+     * A registered domain always has nameservers, so GetDetails must expose
+     * them, and the two read paths must agree for the same domain.
+     */
+    public function testNameServersPopulatedAndConsistent(): void
+    {
+        $details = self::$rest->GetDetails(self::$restDomain);
+        $this->assertEquals('OK', $details['result'], 'Unexpected: ' . json_encode($details));
+
+        $detailsNs = $details['data']['NameServers'];
+        $this->assertIsArray($detailsNs);
+        $this->assertNotEmpty(
+            $detailsNs,
+            'GetDetails returned empty NameServers for a registered domain — '
+            . 'parseDomainInfo() is likely reading the wrong JSON key casing'
+        );
+        foreach ($detailsNs as $ns) {
+            $this->assertIsString($ns);
+        }
+
+        // The same domain in the account list must report the same nameservers.
+        $list = self::$rest->GetList();
+        $this->assertEquals('OK', $list['result'] ?? null);
+
+        $listNs = null;
+        foreach ($list['data']['Domains'] as $domain) {
+            if (strcasecmp($domain['DomainName'] ?? '', self::$restDomain) === 0) {
+                $listNs = $domain['NameServers'];
+                break;
+            }
+        }
+
+        if ($listNs !== null) {
+            sort($detailsNs);
+            $listNs = array_map('strval', $listNs);
+            sort($listNs);
+            $this->assertEquals(
+                $detailsNs,
+                $listNs,
+                'GetList and GetDetails disagree on NameServers for the same '
+                . 'domain — key-casing mismatch between getList() and parseDomainInfo()'
+            );
+        }
+    }
+
     public function testGetDetailsError(): void
     {
         $result = self::$rest->GetDetails('nonexistent-domain-xyz.com');
