@@ -313,17 +313,7 @@ class DNARest
             if ($response_status >= 200 && $response_status <= 299) {
                 $parsedResponse           = json_decode($response_body, true);
                 $this->lastParsedResponse = $parsedResponse;
-
-                if (method_exists($this, 'sendPerformanceMetricsToSentry')) {
-                    $duration = (microtime(true) - $this->startAt) * 1000;
-                    $this->sendPerformanceMetricsToSentry([
-                        'operation'       => $this->lastFunction,
-                        'duration'        => floatval($duration),
-                        'success'         => true,
-                        'timestamp'       => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
-                        'start_timestamp' => gmdate('Y-m-d\TH:i:s.', (int)$this->startAt) . sprintf('%03d',  round(fmod($this->startAt, 1) * 1000)) . 'Z'
-                    ]);
-                }
+                $isSuccess                = true;
             } else {
                 $parsedResponse           = json_decode($response_body, true);
 
@@ -337,7 +327,30 @@ class DNARest
                 $errorDetails             = $parsedResponse['details'] ?? ($parsedResponse['error']['details'] ?? $response_body);
                 $this->lastParsedResponse = $this->setError($errorCode, $errorMessage, $errorDetails);
                 $error                    = new Exception($errorMessage, $response_status);
+                $isSuccess                = false;
+            }
 
+            // Smart sampling for performance metrics — always sample slow
+            // calls (>1s) and failures, otherwise the configured random rate.
+            // Capturing failures as transactions lets Sentry correlate
+            // error events with the matching perf entry.
+            if (method_exists($this, 'sendPerformanceMetricsToSentry')) {
+                $duration = (microtime(true) - $this->startAt) * 1000;
+                $shouldSample = (!$isSuccess)
+                    || $duration > 1000
+                    || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE);
+                if ($shouldSample) {
+                    $this->sendPerformanceMetricsToSentry([
+                        'operation'       => $this->lastFunction,
+                        'duration'        => floatval($duration),
+                        'success'         => $isSuccess,
+                        'timestamp'       => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
+                        'start_timestamp' => gmdate('Y-m-d\TH:i:s.', (int)$this->startAt) . sprintf('%03d', round(fmod($this->startAt, 1) * 1000)) . 'Z'
+                    ]);
+                }
+            }
+
+            if (!$isSuccess) {
                 $this->sendErrorToSentryAsync($error);
                 throw $error;
             }
@@ -1236,7 +1249,15 @@ class DNARest
                 'Dates'                   => [
                     'Start'         => isset($data['startDate']) ? date('Y-m-d\TH:i:s', strtotime($data['startDate'])) : '',
                     'Expiration'    => isset($data['expirationDate']) ? date('Y-m-d\TH:i:s', strtotime($data['expirationDate'])) : '',
-                    'RemainingDays' => (int)($data['remainingDay'] ?? 0)
+                    // The register endpoint returns expirationDate but no
+                    // remainingDay; derive it from expirationDate so callers
+                    // still get a sane day count. getDetails (which does send
+                    // remainingDay) keeps using the server value.
+                    'RemainingDays' => isset($data['remainingDay'])
+                        ? (int)$data['remainingDay']
+                        : (isset($data['expirationDate'])
+                            ? max(0, (int)ceil((strtotime($data['expirationDate']) - time()) / 86400))
+                            : 0)
                 ],
                 'NameServers'             => isset($data['nameservers']) ? array_map('strval',
                     $data['nameservers']) : [],

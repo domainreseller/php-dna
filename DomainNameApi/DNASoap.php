@@ -1674,9 +1674,6 @@ class DNASoap
         ];
 
         try {
-            // Sample performance metrics with 2.5% rate
-            $shouldSamplePerformance = (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE);
-
             $parameters["request"]["UserName"] = $this->serviceUsername;
             $parameters["request"]["Password"] = $this->servicePassword;
 
@@ -1702,17 +1699,23 @@ class DNASoap
                 $result["error"]  = $this->parseError($_response);
             }
 
-            // Send performance metrics to Sentry
-            if ($shouldSamplePerformance) {
-                $duration = (microtime(true) - $this->startAt) * 1000;
+            // Smart sampling for performance metrics:
+            // - ALWAYS sample slow calls (>1s) — outliers are the signal
+            // - ALWAYS sample failures — perf↔error correlation needs them
+            // - Otherwise random sample at PERFORMANCE_SAMPLE_RATE
+            // Callbacks may return a bare data structure (e.g. checkAvailability
+            // returns a plain list) with no 'result' key — guard the access.
+            $duration = (microtime(true) - $this->startAt) * 1000;
+            $success  = (is_array($result) && ($result['result'] ?? null) === self::$RESULT_OK);
+            $shouldSample = (!$success)
+                || $duration > 1000
+                || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE);
+            if ($shouldSample) {
                 $this->sendPerformanceMetricsToSentry([
-                    'operation' => $fn,
-                    'duration'  => floatval($duration),
-                    // Callbacks may return a bare data structure (e.g.
-                    // checkAvailability returns a plain list) with no 'result'
-                    // key — guard the access to avoid an undefined-key warning.
-                    'success'   => (is_array($result) && ($result['result'] ?? null) === self::$RESULT_OK),
-                    'timestamp' => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
+                    'operation'       => $fn,
+                    'duration'        => floatval($duration),
+                    'success'         => $success,
+                    'timestamp'       => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
                     'start_timestamp' => gmdate('Y-m-d\TH:i:s.', (int)$this->startAt) . sprintf('%03d', round(fmod($this->startAt, 1) * 1000)) . 'Z'
                 ]);
             }
