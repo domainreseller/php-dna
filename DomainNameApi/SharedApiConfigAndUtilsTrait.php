@@ -227,7 +227,21 @@ trait SharedApiConfigAndUtilsTrait
         return $result;
     }
 
+    /**
+     * Public entry point. Telemetry must NEVER throw into the host billing
+     * application (and it runs while the host is already handling an error),
+     * so the whole body is guarded against any Throwable, not just Exception.
+     */
     private function sendErrorToSentryAsync(Exception $e): void
+    {
+        try {
+            $this->doSendErrorToSentryAsync($e);
+        } catch (\Throwable $t) {
+            // Swallow — a telemetry failure must not surface in the host app.
+        }
+    }
+
+    private function doSendErrorToSentryAsync(Exception $e): void
     {
         if (!$this->errorReportingEnabled) {
             return;
@@ -370,17 +384,48 @@ trait SharedApiConfigAndUtilsTrait
         }
         $sentry_auth_header = 'X-Sentry-Auth: Sentry ' . implode(', ', $sentry_auth);
 
-        $this->fireAndForgetPost($api_url, json_encode($errorData), $sentry_auth_header);
+        $payload = $this->encodeSentryPayload($errorData);
+        if ($payload === '') {
+            return; // unencodable even after sanitising — drop rather than POST empty
+        }
+        $this->fireAndForgetPost($api_url, $payload, $sentry_auth_header);
     }
 
     /**
-     * Per-process trace id so multiple library calls in the same PHP request
-     * share a single Sentry trace (instead of each emitting its own root).
-     * Reset per process — fresh on every CLI invocation / HTTP request.
+     * JSON-encode a Sentry event payload defensively. request_data /
+     * response_data / original_message can carry invalid UTF-8 (a real
+     * failure mode — e.g. a binary SOAP body), which makes a plain
+     * json_encode() return false and silently drop the whole event exactly
+     * when an error occurred. Substitute bad bytes and tolerate partial
+     * output so the event still ships.
+     *
+     * @param array $data
+     * @return string JSON, or '' if it could not be encoded at all.
+     */
+    private function encodeSentryPayload(array $data): string
+    {
+        $flags = 0;
+        if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+            $flags |= JSON_INVALID_UTF8_SUBSTITUTE; // PHP 7.2+
+        }
+        if (defined('JSON_PARTIAL_OUTPUT_ON_ERROR')) {
+            $flags |= JSON_PARTIAL_OUTPUT_ON_ERROR; // PHP 5.5+
+        }
+        $json = json_encode($data, $flags);
+        return is_string($json) ? $json : '';
+    }
+
+    /**
+     * Trace id shared by all telemetry this *client instance* emits, so the
+     * calls made through one client (e.g. check → register → sync) stitch
+     * into one Sentry trace. Deliberately instance-scoped, NOT static: a
+     * process-global would merge unrelated tenants/requests into a single
+     * trace under long-running workers (swoole/roadrunner/queue) or a CLI
+     * cron looping over many domains with separate client instances.
      *
      * @var string|null
      */
-    private static ?string $sessionTraceId = null;
+    private ?string $sessionTraceId = null;
 
     /**
      * Volatile data shared by both error events and transaction events:
@@ -476,17 +521,17 @@ trait SharedApiConfigAndUtilsTrait
     }
 
     /**
-     * Lazily generate (once per PHP process) and return a trace id used by
-     * every transaction this library emits in the same request. Lets Sentry
-     * stitch `check → register → sync` into one waterfall instead of three
-     * disconnected transactions.
+     * Lazily generate (once per client instance) the trace id used by every
+     * transaction this client emits. Lets Sentry stitch this client's
+     * `check → register → sync` into one waterfall, without merging other
+     * clients/tenants/requests that live in the same long-running process.
      */
     private function getSessionTraceId(): string
     {
-        if (self::$sessionTraceId === null) {
-            self::$sessionTraceId = bin2hex(random_bytes(16));
+        if ($this->sessionTraceId === null) {
+            $this->sessionTraceId = bin2hex(random_bytes(16));
         }
-        return self::$sessionTraceId;
+        return $this->sessionTraceId;
     }
 
     /**
@@ -696,9 +741,9 @@ trait SharedApiConfigAndUtilsTrait
             }
             $sentry_auth_header = 'X-Sentry-Auth: Sentry ' . implode(', ', $sentry_auth);
 
-            $this->fireAndForgetPost($api_url, json_encode($performanceData), $sentry_auth_header);
-        } catch (Exception $e) {
-            // Fail silently
+            $this->fireAndForgetPost($api_url, $this->encodeSentryPayload($performanceData), $sentry_auth_header);
+        } catch (\Throwable $e) {
+            // Fail silently — telemetry must never throw into the host app.
         }
     }
 

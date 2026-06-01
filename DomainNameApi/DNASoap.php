@@ -1699,22 +1699,21 @@ class DNASoap
                 $result["error"]  = $this->parseError($_response);
             }
 
-            // Smart sampling for performance metrics:
-            // - ALWAYS sample slow calls (>1s) — outliers are the signal
-            // - ALWAYS sample failures — perf↔error correlation needs them
-            // - Otherwise random sample at PERFORMANCE_SAMPLE_RATE
-            // Callbacks may return a bare data structure (e.g. checkAvailability
-            // returns a plain list) with no 'result' key — guard the access.
+            // Smart sampling for performance metrics. Only SUCCESSFUL calls
+            // are sampled here: a failed call already ships an error event via
+            // parseError()/the catch blocks, so emitting a perf transaction
+            // too would double the POSTs and the Sentry ingest — and would
+            // leak telemetry for ignored errors the error channel suppresses.
+            // Slow successful calls (>1s) are always sampled, otherwise the
+            // configured random rate. (Callbacks may return a bare list with
+            // no 'result' key — guard the access.)
             $duration = (microtime(true) - $this->startAt) * 1000;
             $success  = (is_array($result) && ($result['result'] ?? null) === self::$RESULT_OK);
-            $shouldSample = (!$success)
-                || $duration > 1000
-                || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE);
-            if ($shouldSample) {
+            if ($success && ($duration > 1000 || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE))) {
                 $this->sendPerformanceMetricsToSentry([
                     'operation'       => $fn,
                     'duration'        => floatval($duration),
-                    'success'         => $success,
+                    'success'         => true,
                     'timestamp'       => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
                     'start_timestamp' => gmdate('Y-m-d\TH:i:s.', (int)$this->startAt) . sprintf('%03d', round(fmod($this->startAt, 1) * 1000)) . 'Z'
                 ]);

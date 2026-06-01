@@ -330,20 +330,20 @@ class DNARest
                 $isSuccess                = false;
             }
 
-            // Smart sampling for performance metrics — always sample slow
-            // calls (>1s) and failures, otherwise the configured random rate.
-            // Capturing failures as transactions lets Sentry correlate
-            // error events with the matching perf entry.
-            if (method_exists($this, 'sendPerformanceMetricsToSentry')) {
+            // Smart sampling for performance metrics. Only SUCCESSFUL calls
+            // are sampled here: a failure already ships an error event (with
+            // the same operation/duration context), so emitting a perf
+            // transaction too would double the POSTs and the Sentry ingest —
+            // and would leak telemetry for ignored errors that the error
+            // channel deliberately suppresses. Slow successful calls (>1s)
+            // are always sampled, otherwise the configured random rate.
+            if ($isSuccess && method_exists($this, 'sendPerformanceMetricsToSentry')) {
                 $duration = (microtime(true) - $this->startAt) * 1000;
-                $shouldSample = (!$isSuccess)
-                    || $duration > 1000
-                    || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE);
-                if ($shouldSample) {
+                if ($duration > 1000 || (mt_rand(1, 1000) <= self::$PERFORMANCE_SAMPLE_RATE)) {
                     $this->sendPerformanceMetricsToSentry([
                         'operation'       => $this->lastFunction,
                         'duration'        => floatval($duration),
-                        'success'         => $isSuccess,
+                        'success'         => true,
                         'timestamp'       => gmdate('Y-m-d\TH:i:s.', time()) . sprintf('%03d', round(fmod(microtime(true), 1) * 1000)) . 'Z',
                         'start_timestamp' => gmdate('Y-m-d\TH:i:s.', (int)$this->startAt) . sprintf('%03d', round(fmod($this->startAt, 1) * 1000)) . 'Z'
                     ]);
