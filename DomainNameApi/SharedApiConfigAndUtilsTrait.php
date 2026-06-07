@@ -686,6 +686,41 @@ trait SharedApiConfigAndUtilsTrait
                 $commonTags['status_code'] = (string) (int) $this->lastResponseHeaders['http_code'];
             }
 
+            // Outbound-call span attributes. Sentry's "Outbound API Requests"
+            // module attributes a call to a domain by parsing the span
+            // description ("METHOD https://host") and reads the status from
+            // span.data — without these the dashboard shows "Unknown Domain"
+            // and "(no value)" response codes.
+            $httpMethod = $isSoap ? 'POST' : 'GET';
+            if (property_exists($this, 'lastRequest') && is_array($this->lastRequest)
+                && !empty($this->lastRequest['method'])) {
+                $httpMethod = (string) $this->lastRequest['method'];
+            }
+            $callHost = '';
+            $callUrl  = '';
+            if (property_exists($this, 'lastRequest') && is_array($this->lastRequest)
+                && !empty($this->lastRequest['url'])) {
+                $callUrl  = (string) $this->lastRequest['url']; // REST: full URL recorded
+                $callHost = (string) (parse_url($callUrl, PHP_URL_HOST) ?: '');
+            } elseif (property_exists($this, 'serviceUrl') && is_string($this->serviceUrl)) {
+                $callHost = (string) (parse_url($this->serviceUrl, PHP_URL_HOST) ?: ''); // SOAP: gateway host
+            }
+
+            $spanData = ['http.request.method' => $httpMethod];
+            if ($callHost !== '') {
+                $spanData['server.address'] = $callHost;
+            }
+            if ($callUrl !== '') {
+                $spanData['url.full'] = $callUrl;
+            }
+            if (isset($commonTags['status_code'])) {
+                $spanData['http.response.status_code'] = (int) $commonTags['status_code'];
+            }
+            // Sentry parses the outbound domain from this description shape.
+            $spanDescription = $callHost !== ''
+                ? $httpMethod . ' https://' . $callHost
+                : (string) $metrics['operation'];
+
             $vhostUser = '';
             try {
                 $vhostUser = function_exists('get_current_user') ? \get_current_user() : '';
@@ -746,8 +781,9 @@ trait SharedApiConfigAndUtilsTrait
                         'parent_span_id'  => $root_span_id,
                         'trace_id'        => $trace_id,
                         'op'              => $op,
-                        'description'     => $metrics['operation'],
+                        'description'     => $spanDescription,
                         'status'          => $traceStatus,
+                        'data'            => $spanData,
                         'start_timestamp' => $metrics['start_timestamp'],
                         'timestamp'       => $metrics['timestamp'],
                     ],
