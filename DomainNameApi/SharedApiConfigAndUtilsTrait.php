@@ -30,20 +30,21 @@ trait SharedApiConfigAndUtilsTrait
         'Price definition not found',
         'TLD is not supported',
         'Invalid API credentials',
-        // REST gateway phrases its "domain not found" differently than the
-        // legacy 'Domain not found' string above; without this the message
-        // slips past the filter (e.g. WISECP sync of registry-absent domains
-        // produced 1100+ events/week). Matches code Dna.DomainService:Domain:10007.
-        'could not be found',
-        // Expected business outcomes — caller/registry state, not library or
-        // backend defects. Suppressed so real signal isn't buried.
-        'already exists in the registry', // API_2302 object exists
-        'Request already sent',           // API_2306 duplicate request
-        'Parameter value policy error',   // API_2306 duplicate/policy
-        'Premium domain is not available',// API_362 premium not registerable
-        'Contact not found',              // API_410
-        'Object does not exist',          // API_2303
-        'Authorization problem',          // API_2200 reseller auth state
+        // 'could not be found',-
+        // 'already exists in the registry', // API_2302 object exists
+        // 'Request already sent',           // API_2306 duplicate request
+        // 'Parameter value policy error',   // API_2306 duplicate/policy
+        // 'Premium domain is not available',// API_362 premium not registerable
+        // 'Contact not found',              // API_410
+        // 'Object does not exist',          // API_2303
+        // 'Authorization problem',          // API_2200 reseller auth state
+        // 'is not authorized to access',       // API_0  caller IP not whitelisted
+        // 'clientTransferProhibited is not set',// API_2004 transfer lock absent on domain
+        // 'Transfer lock exists',               // API_592 transfer lock present on domain
+        // 'Domain transfer is not permitted',   // API_403 registry forbids transfer
+        // 'auto-renewal period',                // API_363 op cancelled in auto-renewal window
+        // 'Invalid zip code',                   // API_2306 contact zip validation
+        // 'Subordinate host info not available',// API_561 partial host info on register
     ];
 
     public static $DEFAULT_ERRORS = [
