@@ -1184,6 +1184,17 @@ class DNARest
                 $nameServers = self::$DEFAULT_NAMESERVERS;
             }
 
+            // For .tr domains the REST gateway only accepts the canonical TRABIS
+            // schema (TRABISDOMAINCATEGORY=Owner|Corporate + TRABISCITIZENID /
+            // TRABISTAXOFFICE / TRABISTAXNUMBER). Downstream modules still build the
+            // legacy SOAP-era shape (numeric or Company/Personal category, the
+            // TRABISCITIZIENID typo, and TRABISCOUNTRY*/CITY*/NAMESURNAME/ORG
+            // fields), which the gateway rejects with "Validation failed". Normalize
+            // here — REST ONLY; the SOAP gateway still accepts the legacy names.
+            if (substr(strtolower((string) $domainName), -3) === '.tr') {
+                $additionalAttributes = $this->normalizeTrAttributes((array) $additionalAttributes);
+            }
+
             // Gateway schema uses `tldAttributes` (object/dict), not the
             // legacy `additionalAttributes` (array). Always send as an object
             // — `{}` when empty, not `[]` — so it matches the OpenAPI schema
@@ -1210,6 +1221,60 @@ class DNARest
                     $this->lastParsedResponse['Details'] ?? ($this->lastResponse['raw_response'] ?? $e->getMessage()))
             ];
         }
+    }
+
+    /**
+     * Normalize legacy .tr TRABIS attributes to the REST gateway schema.
+     *
+     * REST-ONLY. The SOAP gateway still accepts the legacy/typo'd field names,
+     * so this must NOT be reused for DNASoap. Supported REST keys are exactly:
+     * TRABISDOMAINCATEGORY, TRABISCITIZENID, TRABISTAXOFFICE, TRABISTAXNUMBER.
+     *
+     * @param array $attrs
+     * @return array
+     */
+    private function normalizeTrAttributes($attrs)
+    {
+        if (!is_array($attrs) || empty($attrs)) {
+            return is_array($attrs) ? $attrs : [];
+        }
+
+        // Direct key→key map: legacy/SOAP-era name => REST /tlds schema name.
+        // Any key NOT listed here (TRABISNAMESURNAME, TRABISCOUNTRYID, TRABISCITYID,
+        // TRABISCOUNTRYNAME, TRABISCITYNAME, TRABISORGANIZATION, ...) is dropped — it
+        // is legacy data the gateway now derives from the contact record, and sending
+        // it as an unsupported attribute triggers "Validation failed".
+        $keyMap = [
+            'TRABISDOMAINCATEGORY' => 'TRABISDOMAINCATEGORY',
+            'TRABISCITIZENID'      => 'TRABISCITIZENID',
+            'TRABISCITIZIENID'     => 'TRABISCITIZENID', // long-standing typo → canonical
+            'TRABISTAXOFFICE'      => 'TRABISTAXOFFICE',
+            'TRABISTAXNUMBER'      => 'TRABISTAXNUMBER',
+        ];
+
+        $normalized = [];
+        foreach ($attrs as $key => $value) {
+            if (!isset($keyMap[$key])) {
+                continue;
+            }
+            // The canonical TRABISCITIZENID always wins over the typo'd variant.
+            if ($key === 'TRABISCITIZIENID' && array_key_exists('TRABISCITIZENID', $normalized)) {
+                continue;
+            }
+            $normalized[$keyMap[$key]] = $value;
+        }
+
+        // Value map for the TRABISDOMAINCATEGORY dropdown: 1 => Owner, 0 => Corporate.
+        if (isset($normalized['TRABISDOMAINCATEGORY'])) {
+            $cat = strtolower(trim((string) $normalized['TRABISDOMAINCATEGORY']));
+            if (in_array($cat, ['1', 'owner', 'personal', 'individual'], true)) {
+                $normalized['TRABISDOMAINCATEGORY'] = 'Owner';
+            } elseif (in_array($cat, ['0', 'corporate', 'company'], true)) {
+                $normalized['TRABISDOMAINCATEGORY'] = 'Corporate';
+            }
+        }
+
+        return $normalized;
     }
 
     /**
