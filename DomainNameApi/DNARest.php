@@ -312,7 +312,7 @@ class DNARest
         $headers = [
             'Content-Type: application/json',
             'Accept: application/json',
-            'X-API-KEY: ' . $this->token,  // Swagger'da X-API-KEY kullanılıyor
+            'X-API-KEY: ' . $this->token,  // Swagger uses X-API-KEY
             '__reseller: ' . $this->resellerId  // Zorunlu header
         ];
 
@@ -350,7 +350,7 @@ class DNARest
             } else {
                 $parsedResponse           = json_decode($response_body, true);
 
-                // 302 redirect genellikle auth hatası
+                // 302 redirect usually indicates an auth error
                 if ($response_status == 302 || $response_status == 301) {
                     $parsedResponse = ['message' => 'Invalid API credentials', 'code' => 'CREDENTIALS', 'details' => 'Authentication failed. Check your API key and reseller ID.'];
                 }
@@ -417,16 +417,16 @@ class DNARest
         try {
             $response = $this->request('GET', 'deposit/accounts/me');
 
-            // SOAP ile aynı pattern'i kullan
+            // Use the same pattern as SOAP
             $resp = [];
 
             if (isset($response['resellerId'])) {
                 $resp['result'] = self::$RESULT_OK;
                 $resp['id']     = $response['resellerId'];
-                $resp['active'] = true; // API'den status gelmiyor, varsayılan true
+                $resp['active'] = true; // API returns no status; default to true
                 $resp['name']   = $response['resellerName'] ?? '';
 
-                // Ana para birimi USD, ikincil TRY
+                // Primary currency USD, secondary TRY
                 $resp['balance']  = (string)($response['usdBalance'] ?? 0);
                 $resp['currency'] = 'USD';
                 $resp['symbol']   = '$';
@@ -470,7 +470,7 @@ class DNARest
     {
         $currencyName = strtoupper($currencyId);
 
-        // SOAP uyumu: TRY → TL, currency ID'leri eşle
+        // SOAP parity: TRY -> TL, map currency IDs
         $currencyMap = [
             'USD' => ['id' => 2, 'name' => 'USD', 'symbol' => '$'],
             'TRY' => ['id' => 1, 'name' => 'TL',  'symbol' => 'TL'],
@@ -651,7 +651,7 @@ class DNARest
                     $pricing    = [];
                     $currencies = [];
 
-                    // Fiyatlar
+                    // Prices
                     if (isset($tld['prices'][0]) && is_array($tld['prices'][0])) {
                         $priceTypes = [
                             'register'  => 'registration',
@@ -665,11 +665,11 @@ class DNARest
                             if (isset($tld['prices'][0][$apiType])) {
                                 $apiValue = $tld['prices'][0][$apiType];
                                 if (is_array($apiValue) && isset($apiValue[0])) {
-                                    // Dizi ise
+                                    // If it's an array
                                     foreach ($apiValue as $priceInfo) {
                                         if (is_array($priceInfo)) {
                                             $period = (int)($priceInfo['period'] ?? 1);
-                                            if ($period < 1) $period = 1; // SOAP uyumu: period 0 → 1
+                                            if ($period < 1) $period = 1; // SOAP parity: period 0 -> 1
                                             $price                      = isset($priceInfo['price']) ? number_format((float)$priceInfo['price'],
                                                 4, '.', '') : '0.0000';
                                             $pricing[$outType][$period] = $price;
@@ -677,9 +677,9 @@ class DNARest
                                         }
                                     }
                                 } elseif (is_array($apiValue)) {
-                                    // Obje ise
+                                    // If it's an object
                                     $period = (int)($apiValue['period'] ?? 1);
-                                    if ($period < 1) $period = 1; // SOAP uyumu: period 0 → 1
+                                    if ($period < 1) $period = 1; // SOAP parity: period 0 -> 1
                                     $price                      = isset($apiValue['price']) ? number_format((float)$apiValue['price'],
                                         4, '.', '') : '0.0000';
                                     $pricing[$outType][$period] = $price;
@@ -934,7 +934,7 @@ class DNARest
     public function getContacts($domainName)
     {
         try {
-            // Domain info contacts bilgisini zaten içeriyor
+            // Domain info already includes the contacts
             $domainInfo = $this->request('GET', 'domains/info', ['DomainName' => $domainName]);
 
             // REST API contactType → SOAP key mapping
@@ -1451,7 +1451,7 @@ class DNARest
     public function modifyPrivacyProtectionStatus($domainName, $status, $reason = 'Owner request')
     {
         try {
-            // Eğer reason boş ise, varsayılan değeri kullan
+            // If reason is empty, use the default value
             if (empty($reason)) {
                 $reason = self::$DEFAULT_REASON;
             }
@@ -1577,7 +1577,7 @@ class DNARest
                     $data['nameservers']) : [],
                 'Additional'              => isset($data['additionalAttributes']) ? (array)$data['additionalAttributes'] : [],
                 'ChildNameServers'        => isset($data['hosts']) ? array_map(function ($ns) {
-                    // SOAP uyumu: ip string olarak dönüyor (son IP)
+                    // SOAP parity: ip returned as a string (the last IP)
                     $ips = array_map(function ($ip) {
                         return $ip['ipAddress'];
                     }, $ns['ipAddresses'] ?? []);
@@ -1661,7 +1661,7 @@ class DNARest
         $fax       = $contact['Fax'] ?? ($contact['Phone']['Fax']['Number'] ?? '');
         $faxCc     = $contact['FaxCountryCode'] ?? ($contact['Phone']['Fax']['CountryCode'] ?? '');
 
-        // Array ise string olarak al (nested format)
+        // If it's an array, take it as a string (nested format)
         if (is_array($phone)) { $phoneCc = $phone['Phone']['CountryCode'] ?? ''; $phone = $phone['Phone']['Number'] ?? ''; }
         if (is_array($fax)) { $faxCc = $fax['Fax']['CountryCode'] ?? ''; $fax = $fax['Fax']['Number'] ?? ''; }
 
@@ -1755,7 +1755,7 @@ class DNARest
      */
     public function validateContact($contact)
     {
-        // Varsayılan değerleri tanımla
+        // Define default values
         $defaults = [
             "FirstName"        => "Isimyok",
             "LastName"         => "Isimyok",
@@ -1767,14 +1767,14 @@ class DNARest
             "PhoneCountryCode" => "90"
         ];
 
-        // Eksik anahtarları varsayılan değerlerle doldur
+        // Fill missing keys with default values
         foreach ($defaults as $key => $value) {
             if (!isset($contact[$key])) {
                 $contact[$key] = $value;
             }
         }
 
-        // Boş değerleri kontrol et ve varsayılan değerlerle doldur
+        // Check empty values and fill with defaults
         if (strlen(trim($contact["FirstName"])) == 0) {
             $contact["FirstName"] = $defaults["FirstName"];
         }
@@ -1794,7 +1794,7 @@ class DNARest
             $contact["ZipCode"] = $defaults["ZipCode"];
         }
 
-        // Telefon numarası işleme
+        // Phone number processing
         $tmpPhone = isset($contact["Phone"]) ? preg_replace('/[^0-9]/', '', $contact["Phone"]) : '';
         if (strlen($tmpPhone) == 10) {
             $contact["PhoneCountryCode"] = '';
