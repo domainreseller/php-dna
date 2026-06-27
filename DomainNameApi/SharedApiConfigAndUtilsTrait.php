@@ -30,7 +30,7 @@ trait SharedApiConfigAndUtilsTrait
         'Price definition not found',
         'TLD is not supported',
         'Invalid API credentials',
-        // 'could not be found',-
+        'could not be found', // API_404 "The domain name you requested could not be found" — high-volume expected noise
         // 'already exists in the registry', // API_2302 object exists
         // 'Request already sent',           // API_2306 duplicate request
         // 'Parameter value policy error',   // API_2306 duplicate/policy
