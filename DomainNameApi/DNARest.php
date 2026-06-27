@@ -358,6 +358,22 @@ class DNARest
                 $errorMessage             = $parsedResponse['message'] ?? ($parsedResponse['error']['message'] ?? $response_body);
                 $errorCode                = $parsedResponse['code'] ?? ($parsedResponse['error']['code'] ?? 'HTTP_' . $response_status);
                 $errorDetails             = $parsedResponse['details'] ?? ($parsedResponse['error']['details'] ?? $response_body);
+
+                // The REST gateway returns per-field validation errors under
+                // error.validationErrors[] as { members: ["$.path.field"], message }.
+                // Surface them to the end user instead of the generic "Validation
+                // failed. Please check the provided information." Otherwise the
+                // reseller never learns WHICH field is wrong. REST-only — the SOAP
+                // gateway does not return this shape.
+                $validationErrors = $parsedResponse['error']['validationErrors']
+                    ?? ($parsedResponse['validationErrors'] ?? null);
+                if (is_array($validationErrors) && !empty($validationErrors)) {
+                    $flattened = $this->flattenValidationErrors($validationErrors);
+                    if ($flattened !== '') {
+                        $errorDetails = $flattened;
+                    }
+                }
+
                 $this->lastParsedResponse = $this->setError($errorCode, $errorMessage, $errorDetails);
                 $error                    = new Exception($errorMessage, $response_status);
                 $isSuccess                = false;
@@ -1195,6 +1211,12 @@ class DNARest
                 $additionalAttributes = $this->normalizeTrAttributes((array) $additionalAttributes);
             }
 
+            // The REST gateway types tldAttributes as a string dictionary; a
+            // non-string value (e.g. an integer 215, or a bool) makes its JSON
+            // deserializer fail with "The JSON value could not be converted".
+            // Coerce every value to string before sending.
+            $additionalAttributes = $this->stringifyAttributes((array) $additionalAttributes);
+
             // Gateway schema uses `tldAttributes` (object/dict), not the
             // legacy `additionalAttributes` (array). Always send as an object
             // — `{}` when empty, not `[]` — so it matches the OpenAPI schema
@@ -1221,6 +1243,148 @@ class DNARest
                     $this->lastParsedResponse['Details'] ?? ($this->lastResponse['raw_response'] ?? $e->getMessage()))
             ];
         }
+    }
+
+    /**
+     * Coerce every tldAttributes value to a string. REST-only — the gateway
+     * deserializes tldAttributes as a string dictionary, so integers/bools
+     * otherwise throw "The JSON value could not be converted".
+     *
+     * @param array $attrs
+     * @return array
+     */
+    private function stringifyAttributes($attrs)
+    {
+        $out = [];
+        foreach ($attrs as $key => $value) {
+            if (is_bool($value)) {
+                $out[$key] = $value ? 'true' : 'false';
+            } elseif (is_null($value)) {
+                $out[$key] = '';
+            } elseif (is_scalar($value)) {
+                $out[$key] = (string) $value;
+            } else {
+                // Arrays/objects are not valid attribute values; encode defensively.
+                $out[$key] = json_encode($value);
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Normalize a contact country to the 2-character ISO code the gateway
+     * requires ("Country must be a 2-character ISO code"). Already-2-char codes
+     * are upper-cased; a few common full names are mapped; otherwise the value
+     * is returned untouched (the surfaced validation error then tells the
+     * reseller to fix it).
+     *
+     * @param string $country
+     * @return string
+     */
+    private function normalizeCountryCode($country)
+    {
+        $country = trim((string) $country);
+        if ($country === '') {
+            return '';
+        }
+        if (strlen($country) === 2) {
+            return strtoupper($country);
+        }
+
+        $map = [
+            'turkey' => 'TR', 'türkiye' => 'TR', 'turkiye' => 'TR',
+            'united states' => 'US', 'united states of america' => 'US', 'usa' => 'US',
+            'united kingdom' => 'GB', 'great britain' => 'GB', 'england' => 'GB',
+            'germany' => 'DE', 'deutschland' => 'DE', 'france' => 'FR', 'spain' => 'ES',
+            'italy' => 'IT', 'netherlands' => 'NL', 'india' => 'IN', 'china' => 'CN',
+            'russia' => 'RU', 'canada' => 'CA', 'australia' => 'AU', 'brazil' => 'BR',
+        ];
+        $key = strtolower($country);
+        return $map[$key] ?? $country;
+    }
+
+    /**
+     * Flatten the REST gateway's validation errors into an end-user friendly
+     * string so resellers see WHICH field failed, not just "Validation failed".
+     *
+     * REST-ONLY. Input shape: [ { "members": ["$.path.field", ...], "message": "..." }, ... ].
+     * Produces e.g. "Admin PostalCode, Tech PostalCode - 'PostalCode' is required".
+     *
+     * @param array $validationErrors
+     * @return string
+     */
+    private function flattenValidationErrors($validationErrors)
+    {
+        $parts = [];
+        foreach ($validationErrors as $ve) {
+            if (is_string($ve)) {
+                if (trim($ve) !== '') {
+                    $parts[] = trim($ve);
+                }
+                continue;
+            }
+            if (!is_array($ve)) {
+                continue;
+            }
+
+            $message = isset($ve['message']) ? trim((string) $ve['message']) : '';
+            $members = [];
+            if (isset($ve['members']) && is_array($ve['members'])) {
+                foreach ($ve['members'] as $member) {
+                    $label = $this->humanizeValidationMember((string) $member);
+                    if ($label !== '') {
+                        $members[] = $label;
+                    }
+                }
+            }
+
+            if (!empty($members) && $message !== '') {
+                $parts[] = implode(', ', $members) . ' - ' . $message;
+            } elseif (!empty($members)) {
+                $parts[] = implode(', ', $members);
+            } elseif ($message !== '') {
+                $parts[] = $message;
+            }
+        }
+
+        return implode(' | ', array_values(array_unique($parts)));
+    }
+
+    /**
+     * Turn a gateway validation member path into a readable field label.
+     * e.g. "$.administrativeContact.postalCode" => "Admin PostalCode",
+     *      "$.tldAttributes.TRABISCOUNTRYID"    => "TldAttributes TRABISCOUNTRYID".
+     *
+     * @param string $member
+     * @return string
+     */
+    private function humanizeValidationMember($member)
+    {
+        $member = trim((string) $member);
+        if ($member === '') {
+            return '';
+        }
+        $member = ltrim($member, '$.');               // drop JSONPath root "$."
+        $member = preg_replace('/\[\d+\]/', '', $member); // drop array indexes
+        $segments = preg_split('/[.\/]+/', $member, -1, PREG_SPLIT_NO_EMPTY);
+        if (empty($segments)) {
+            return '';
+        }
+
+        $roles = [
+            'administrativecontact' => 'Admin', 'administrative' => 'Admin',
+            'technicalcontact'      => 'Tech',  'technical'      => 'Tech',
+            'registrantcontact'     => 'Registrant', 'registrant' => 'Registrant',
+            'billingcontact'        => 'Billing', 'billing'      => 'Billing',
+        ];
+
+        $out = [];
+        foreach ($segments as $seg) {
+            $key   = strtolower($seg);
+            $out[] = $roles[$key] ?? ucfirst($seg);
+        }
+
+        return trim(implode(' ', $out));
     }
 
     /**
@@ -1373,8 +1537,15 @@ class DNARest
      */
     private function parseDomainInfo($data)
     {
+        // Always return a 'result'-keyed array. An empty/null gateway body
+        // (common during 5xx/timeout storms) otherwise returned a bare []
+        // and every consumer reading $result['result'] hit
+        // "Undefined array key 'result'".
         if (empty($data)) {
-            return [];
+            return [
+                'result' => self::$RESULT_ERROR,
+                'error'  => $this->setError('RESPONSE'),
+            ];
         }
         return [
             'data'   => [
@@ -1503,7 +1674,7 @@ class DNARest
             'address'          => $address,
             'city'             => $contact['City'] ?? ($contact['Address']['City'] ?? ''),
             'state'            => $contact['State'] ?? ($contact['Address']['State'] ?? ''),
-            'country'          => $contact['Country'] ?? ($contact['Address']['Country'] ?? ''),
+            'country'          => $this->normalizeCountryCode($contact['Country'] ?? ($contact['Address']['Country'] ?? '')),
             'postalCode'       => $contact['ZipCode'] ?? ($contact['Address']['ZipCode'] ?? ''),
             'phoneCountryCode' => (string)$phoneCc,
             'phone'            => (string)$phone,
