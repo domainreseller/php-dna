@@ -10,6 +10,12 @@
   <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>  
 </div>
 
+## 📦 Yükləmə — həmişə Releases istifadə edin!
+
+⬇️ **Ən son test edilmiş versiyanı buradan əldə edin: https://github.com/domainreseller/php-dna/releases/latest**
+
+> ⚠️ Yaşıl **Code → Download ZIP** düyməsindən **istifadə etməyin** — bu, xam inkişaf branch-ını yükləyir. Release paketləri versiyalanmış, test edilmiş və istehsalata hazırdır.
+
 ## Quraşdırma və İnteqrasiya Təlimatı
 
 ### Minimum Tələblər
@@ -18,27 +24,26 @@
 - PHP SOAPClient əlavəsi aktiv olmalıdır (SOAP rejimi üçün).
 - PHP cURL əlavəsi aktiv olmalıdır (REST rejimi üçün).
 
-### SOAP vs REST API
+## 🔑 API Məlumatları — İstifadəçi adı/Şifrə, yoxsa Reseller ID/API Key?
 
-Kitabxana iki API rejimini dəstəkləyir. Rejim istifadəçi adı formatına görə avtomatik seçilir:
+Hər ikisi dəstəklənir — məlumatları eyni iki constructor parametrinə daxil edin; kitabxana hansı API-nin istifadə olunacağını avtomatik müəyyən edir:
 
-| Rejim | İstifadəçi adı formatı | Nümunə |
-|-------|----------------------|--------|
-| **SOAP** (Köhnə) | Normal istifadəçi adı | `myreseller` |
-| **REST** (Yeni) | UUID formatı | `fd2bea54-99ea-16b6-c195-3a1b9079df00` |
+| Sizdə olan | Birinci parametr | İkinci parametr | İstifadə olunan API |
+|---|---|---|---|
+| **Yeni panel məlumatları** (tövsiyə olunur) | Reseller ID — `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` kimi UUID | API Key | REST |
+| **Köhnə (legacy) məlumatlar** | API istifadəçi adı | API şifrəsi | SOAP |
 
-Hər iki rejim eyni cavab strukturunu qaytarır, inteqrasiya kodunuzu dəyişdirmədən keçid edə bilərsiniz.
+> 💡 **Reseller ID** və **API Key** məlumatlarınızı DomainNameAPI panelinizdə **API Parametrləri** bölməsində tapa bilərsiniz.
+> ⚠️ Bunlar **API məlumatlarıdır** — panelə giriş e-poçtunuz və şifrəniz burada **işləməyəcək**.
+
+Heç bir əlavə konfiqurasiya lazım deyil: birinci parametr UUID formatındadırsa, kitabxana müasir REST API ilə əlaqə qurur, əks halda klassik SOAP-a keçir. Hər iki rejim eyni cavab strukturunu qaytarır, ona görə də inteqrasiya kodunuz heç vaxt dəyişmir.
 
 ```php
-// SOAP mode (legacy credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('myreseller', 'mypassword');
+// Yeni panel məlumatları (REST)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
 
-// REST mode (UUID credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('fd2bea54-99ea-16b6-c195-3a1b9079df00', 'your-api-token');
-
-// Both modes use the exact same method calls
-$details = $dna->GetResellerDetails();
-$domains = $dna->GetList();
+// Köhnə (legacy) məlumatlar (SOAP)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
 ```
 
 ### A) Manual İstifadə

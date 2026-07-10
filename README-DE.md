@@ -10,6 +10,12 @@
   <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>  
 </div>
 
+## 📦 Download — immer die Releases verwenden!
+
+⬇️ **Die neueste getestete Version erhalten Sie hier: https://github.com/domainreseller/php-dna/releases/latest**
+
+> ⚠️ Verwenden Sie **nicht** den grünen Button **Code → Download ZIP** — damit laden Sie den rohen Entwicklungszweig herunter. Release-Pakete sind versioniert, getestet und produktionsreif.
+
 ## Installations- und Integrationsanleitung
 
 ### Mindestanforderungen
@@ -18,27 +24,26 @@
 - PHP SOAPClient-Erweiterung muss aktiviert sein (für SOAP-Modus).
 - PHP cURL-Erweiterung muss aktiviert sein (für REST-Modus).
 
-### SOAP vs REST API
+## 🔑 API-Zugangsdaten — Benutzername/Passwort oder Reseller-ID/API-Key?
 
-Die Bibliothek unterstützt zwei API-Modi. Der Modus wird automatisch anhand des Benutzernamenformats ausgewählt:
+Beides wird unterstützt — tragen Sie die Daten einfach in dieselben zwei Konstruktor-Parameter ein; die Bibliothek erkennt automatisch, welche API verwendet wird:
 
-| Modus | Benutzernamenformat | Beispiel |
-|-------|-------------------|----------|
-| **SOAP** (Legacy) | Regulärer Benutzername | `myreseller` |
-| **REST** (Neu) | UUID-Format | `fd2bea54-99ea-16b6-c195-3a1b9079df00` |
+| Sie haben | Erster Parameter | Zweiter Parameter | Verwendete API |
+|---|---|---|---|
+| **Neue Panel-Zugangsdaten** (empfohlen) | Reseller-ID — UUID wie `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` | API-Key | REST |
+| **Legacy-Zugangsdaten** | API-Benutzername | API-Passwort | SOAP |
 
-Beide Modi liefern die gleiche Antwortstruktur, sodass Sie zwischen ihnen wechseln können, ohne Ihren Integrationscode zu ändern.
+> 💡 Ihre **Reseller-ID** und Ihren **API-Key** finden Sie in Ihrem DomainNameAPI-Panel unter **API-Einstellungen**.
+> ⚠️ Dies sind **API-Zugangsdaten** — Ihre Panel-Login-E-Mail und Ihr Passwort funktionieren hier **nicht**.
+
+Es ist keine zusätzliche Konfiguration nötig: Hat der erste Parameter das UUID-Format, spricht die Bibliothek mit der modernen REST-API, andernfalls greift sie auf das klassische SOAP zurück. Beide Modi liefern identische Antwortstrukturen, Ihr Integrationscode ändert sich also nie.
 
 ```php
-// SOAP mode (legacy credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('myreseller', 'mypassword');
+// Neue Panel-Zugangsdaten (REST)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
 
-// REST mode (UUID credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('fd2bea54-99ea-16b6-c195-3a1b9079df00', 'your-api-token');
-
-// Both modes use the exact same method calls
-$details = $dna->GetResellerDetails();
-$domains = $dna->GetList();
+// Legacy-Zugangsdaten (SOAP)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
 ```
 
 ### A) Manuelle Verwendung

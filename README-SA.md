@@ -10,6 +10,12 @@
   <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>  
 </div>
 
+## 📦 التنزيل — استخدم دائمًا صفحة الإصدارات (Releases)!
+
+⬇️ **احصل على أحدث نسخة مختبَرة من هنا: https://github.com/domainreseller/php-dna/releases/latest**
+
+> ⚠️ **لا** تستخدم الزر الأخضر **Code → Download ZIP** — فهو ينزّل فرع التطوير الخام. حزم الإصدارات مرقّمة الإصدار ومختبَرة وجاهزة لبيئة الإنتاج.
+
 ## دليل التثبيت والتكامل
 
 ### الحد الأدنى من المتطلبات
@@ -18,27 +24,26 @@
 - يجب تفعيل إضافة PHP SOAPClient (لوضع SOAP).
 - يجب تفعيل إضافة PHP cURL (لوضع REST).
 
-### SOAP مقابل REST API
+## 🔑 بيانات اعتماد API — اسم المستخدم/كلمة المرور أم Reseller ID/API Key؟
 
-تدعم المكتبة وضعين لواجهة API. يتم تحديد الوضع تلقائيًا بناءً على تنسيق اسم المستخدم:
+كلاهما مدعوم — أدخلهما في نفس مُعامِلَي الدالة الإنشائية (constructor)؛ وستكتشف المكتبة تلقائيًا أي API يجب استخدامه:
 
-| الوضع | تنسيق اسم المستخدم | مثال |
-|-------|-------------------|------|
-| **SOAP** (القديم) | اسم مستخدم عادي | `myreseller` |
-| **REST** (الجديد) | تنسيق UUID | `fd2bea54-99ea-16b6-c195-3a1b9079df00` |
+| ما لديك | المُعامِل الأول | المُعامِل الثاني | API المستخدم |
+|---|---|---|---|
+| **بيانات اللوحة الجديدة** (موصى به) | Reseller ID — بصيغة UUID مثل `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` | API Key | REST |
+| **البيانات القديمة (Legacy)** | اسم مستخدم API | كلمة مرور API | SOAP |
 
-كلا الوضعين يرجعان نفس هيكل الاستجابة، لذا يمكنك التبديل بينهما دون تغيير كود التكامل الخاص بك.
+> 💡 ستجد **Reseller ID** و **API Key** في لوحة DomainNameAPI الخاصة بك ضمن **إعدادات API**.
+> ⚠️ هذه **بيانات اعتماد API** — البريد الإلكتروني وكلمة المرور الخاصان بتسجيل الدخول إلى اللوحة **لن يعملا** هنا.
+
+لا حاجة إلى أي إعداد إضافي: إذا كان المُعامِل الأول بصيغة UUID فستتواصل المكتبة مع REST API الحديثة، وإلا فستعود إلى SOAP الكلاسيكية. كلا الوضعين يُرجعان نفس هيكل الاستجابة تمامًا، لذا لن يتغير كود التكامل الخاص بك أبدًا.
 
 ```php
-// SOAP mode (legacy credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('myreseller', 'mypassword');
+// بيانات اللوحة الجديدة (REST)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
 
-// REST mode (UUID credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('fd2bea54-99ea-16b6-c195-3a1b9079df00', 'your-api-token');
-
-// Both modes use the exact same method calls
-$details = $dna->GetResellerDetails();
-$domains = $dna->GetList();
+// البيانات القديمة (SOAP)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
 ```
 
 ### أ) الاستخدام اليدوي

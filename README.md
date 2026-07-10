@@ -10,6 +10,12 @@
   <a href="README-IT.md"> | IT <img style="padding-top: 8px" src="https://raw.githubusercontent.com/yammadev/flag-icons/master/png/IT.png" alt="IT" height="20" /></a>
 </div>
 
+## 📦 Download — always use Releases!
+
+⬇️ **Get the latest tested version here: https://github.com/domainreseller/php-dna/releases/latest**
+
+> ⚠️ Do **not** use the green **Code → Download ZIP** button — that downloads the raw development branch. Release packages are versioned, tested and production-ready.
+
 ## Installation and Integration Guide
 
 ### Minimum Requirements
@@ -18,27 +24,26 @@
 - PHP SOAPClient extension must be active (for SOAP mode).
 - PHP cURL extension must be active (for REST mode).
 
-### SOAP vs REST API
+## 🔑 API Credentials — Username/Password or Reseller ID/API Key?
 
-The library supports two API modes. The mode is automatically selected based on the username format:
+Both are supported — enter them into the same two constructor parameters; the library detects which API to use automatically:
 
-| Mode | Username Format | Example |
-|------|----------------|---------|
-| **SOAP** (Legacy) | Regular username | `myreseller` |
-| **REST** (New) | UUID format | `fd2bea54-99ea-16b6-c195-3a1b9079df00` |
+| You have | First parameter | Second parameter | API used |
+|---|---|---|---|
+| **New panel credentials** (recommended) | Reseller ID — UUID like `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` | API Key | REST |
+| **Legacy credentials** | API username | API password | SOAP |
 
-Both modes return the same response structure, so you can switch between them without changing your integration code.
+> 💡 Find your **Reseller ID** and **API Key** in your DomainNameAPI panel under **API Settings**.
+> ⚠️ These are **API credentials** — your panel login e-mail and password will **not** work here.
+
+No extra configuration is needed: if the first parameter is in UUID format the library talks to the modern REST API, otherwise it falls back to classic SOAP. Both modes return identical response structures, so your integration code never changes.
 
 ```php
-// SOAP mode (legacy credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('myreseller', 'mypassword');
+// New panel credentials (REST)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
 
-// REST mode (UUID credentials)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('fd2bea54-99ea-16b6-c195-3a1b9079df00', 'your-api-token');
-
-// Both modes use the exact same method calls
-$details = $dna->GetResellerDetails();
-$domains = $dna->GetList();
+// Legacy credentials (SOAP)
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
 ```
 
 ### A) Manual Usage

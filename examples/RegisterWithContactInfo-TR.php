@@ -8,8 +8,10 @@
  */
 require_once __DIR__.'/../DomainNameApi/DomainNameAPI_PHPLibrary.php';
 
-$username = 'your-username@example.com';
-$password = 'your-password';
+// Credentials: use your Reseller ID (UUID) + API Key from Panel → API Settings (REST),
+// or your legacy API username + password (SOAP). Panel login e-mail/password will NOT work.
+$username = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'; // Reseller ID (UUID) or legacy API username
+$password = 'your-api-key';                          // API Key or legacy API password
 
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($username,$password);
 
