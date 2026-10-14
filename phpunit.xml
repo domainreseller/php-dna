@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="vendor/autoload.php" colors="true" stopOnFailure="false">
     <testsuites>
-        <testsuite name="REST-SOAP Comparison">
+        <testsuite name="REST API">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>
     <php>
-        <env name="SOAP_USER" value="" />
-        <env name="SOAP_PASS" value="" />
-        <env name="REST_USER" value="" />
-        <env name="REST_PASS" value="" />
-        <env name="SOAP_DOMAIN" value="" />
-        <env name="REST_DOMAIN" value="" />
-        <env name="SOAP_DOMAIN_CONTACTS" value="" />
-        <env name="REST_DOMAIN_CONTACTS" value="" />
+        <env name="DNA_RESELLER_ID" value="" />
+        <env name="DNA_API_KEY" value="" />
+        <env name="DNA_DOMAIN" value="" />
+        <env name="DNA_DOMAIN_CONTACTS" value="" />
     </php>
 </phpunit>

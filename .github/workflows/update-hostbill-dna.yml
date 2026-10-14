@@ -19,6 +19,7 @@ jobs:
           git clone https://github.com/domainreseller/hostbill-dna.git
           git clone https://github.com/domainreseller/whmcs-dna.git
           git clone https://github.com/domainreseller/wisecp-dna.git
+          git clone https://github.com/domainreseller/wisecp-dna-v5.git
           git clone https://github.com/domainreseller/blesta-dna.git
           git clone https://github.com/domainreseller/clientexec-dna
           git clone https://github.com/domainreseller/hostfact-dna
@@ -28,7 +29,7 @@ jobs:
       - name: Copy updated library files
         run: |
           SRC="DomainNameApi"
-          EXTRA="DNASoap.php DNARest.php SharedApiConfigAndUtilsTrait.php"
+          EXTRA="DNARest.php SharedApiConfigAndUtilsTrait.php"
 
           copy_lib() {
             local dest_dir="$1" main_dest="$2"
@@ -36,11 +37,14 @@ jobs:
             for f in $EXTRA; do
               cp "$SRC/$f" "$dest_dir/$f"
             done
+            # SOAP was removed from the library; drop any stale copy.
+            rm -f "$dest_dir/DNASoap.php"
           }
 
           copy_lib "hostbill-dna/includes/modules/Domain/domainnameapi/lib"           "hostbill-dna/includes/modules/Domain/domainnameapi/lib/dna.php"
           copy_lib "whmcs-dna/modules/registrars/domainnameapi/lib"                   "whmcs-dna/modules/registrars/domainnameapi/lib/dna.php"
           copy_lib "wisecp-dna/coremio/modules/Registrars/DomainNameAPI"              "wisecp-dna/coremio/modules/Registrars/DomainNameAPI/api.php"
+          copy_lib "wisecp-dna-v5/coremio/modules/Registrars/DomainNameAPI"           "wisecp-dna-v5/coremio/modules/Registrars/DomainNameAPI/api.php"
           copy_lib "blesta-dna/components/modules/domainnameapi/apis"                 "blesta-dna/components/modules/domainnameapi/apis/api.php"
           copy_lib "clientexec-dna"                                                   "clientexec-dna/api.php"
           copy_lib "hostfact-dna/domainnameapi/library/DomainNameApi"                 "hostfact-dna/domainnameapi/library/DomainNameApi/DomainNameAPI_PHPLibrary.php"
@@ -53,7 +57,7 @@ jobs:
         env:
           PAT: ${{ secrets.HOSTBILL_DNA_PAT }}
         run: |
-          for repo in hostbill-dna whmcs-dna blesta-dna wisecp-dna clientexec-dna hostfact-dna fossbilling-dna dna-extended; do
+          for repo in hostbill-dna whmcs-dna blesta-dna wisecp-dna wisecp-dna-v5 clientexec-dna hostfact-dna fossbilling-dna dna-extended; do
             cd $repo
             git config user.name "DomainNameApi"
             git config user.email "info@domainnameapi.com"

@@ -21,29 +21,29 @@
 ### 最低要求
 
 - PHP7.4 或更高版本（推荐 8.1）
-- PHP SOAPClient 扩展必须激活（用于 SOAP 模式）。
-- PHP cURL 扩展必须激活（用于 REST 模式）。
+- PHP JSON 和 cURL 扩展必须激活。
 
-## 🔑 API 凭据 — 用户名/密码还是 Reseller ID/API Key？
+## 🔑 API 凭据 — Reseller ID 与 API Key
 
-两种方式都支持 — 只需将凭据填入相同的两个构造函数参数中，库会自动检测应使用哪种 API：
+本库通过 DomainNameAPI REST API 通信，只需向构造函数传入两项凭据：
 
-| 您持有的凭据 | 第一个参数 | 第二个参数 | 使用的 API |
-|---|---|---|---|
-| **新版面板凭据**（推荐） | Reseller ID — 形如 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` 的 UUID | API Key | REST |
-| **旧版凭据** | API 用户名 | API 密码 | SOAP |
+| 参数 | 值 |
+|---|---|
+| 第一个 | Reseller ID — 形如 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` 的 UUID |
+| 第二个 | API Key |
 
 > 💡 您可以在 DomainNameAPI 面板的 **API 设置** 中找到您的 **Reseller ID** 和 **API Key**。
-> ⚠️ 这些是 **API 凭据** — 面板登录邮箱和密码在此**无法使用**。
-
-无需任何额外配置：如果第一个参数是 UUID 格式，库会与现代 REST API 通信，否则回退到经典 SOAP。两种模式返回完全相同的响应结构，因此您的集成代码永远无需更改。
+> ⚠️ 这些是 **API 凭据** — 面板登录信息在此**无法使用**。
 
 ```php
-// 新版面板凭据（REST）
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
+$resellerId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+$apiKey     = 'your-api-key';
 
-// 旧版凭据（SOAP）
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
+// 正式环境
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+
+// 测试（OTE）环境
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
 ### A) 手动使用
@@ -53,7 +53,7 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-ap
 ```php
 require_once __DIR__.'/DomainNameApi/DomainNameAPI_PHPLibrary.php';
 
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 ```
 
 ### B) 与 Composer 集成
@@ -65,7 +65,7 @@ composer require domainreseller/php-dna
 ```php
 require_once __DIR__.'/vendor/autoload.php';
 
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 ```
 
 ### 使用方法
@@ -595,21 +595,17 @@ Array
 
 ### 测试
 
-该库包含 PHPUnit 测试，用于验证 SOAP 和 REST API 响应结构是否匹配。
+该库包含针对 DomainNameAPI REST API 运行的 PHPUnit 测试。
 
 #### Setup
 
 1. Create a `.env.test` file in the project root:
 
 ```env
-SOAP_USER=your-soap-username
-SOAP_PASS=your-soap-password
-REST_USER=your-uuid-rest-username
-REST_PASS=your-rest-api-token
-SOAP_DOMAIN=yourdomain.com
-REST_DOMAIN=yourdomain.com
-SOAP_DOMAIN_CONTACTS=yourdomain-with-contacts.com
-REST_DOMAIN_CONTACTS=yourdomain-with-contacts.com
+DNA_RESELLER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+DNA_API_KEY=your-api-key
+DNA_DOMAIN=yourdomain.com
+DNA_DOMAIN_CONTACTS=yourdomain-with-contacts.com
 ```
 
 2. Run all tests:
@@ -621,10 +617,10 @@ env $(cat .env.test | xargs) vendor/bin/phpunit --testdox
 3. Run specific test suites:
 
 ```bash
-# SOAP read operations only
-env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter SoapRead
+# Read operations only
+env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestRead
 
-# REST write operations only
+# Write operations only
 env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestWrite
 ```
 
@@ -632,10 +628,9 @@ env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestWrite
 
 | Test File | Description |
 |-----------|-------------|
-| `tests/SoapReadTest.php` | SOAP API read operations (GetDetails, GetList, CheckAvailability, etc.) |
-| `tests/SoapWriteTest.php` | SOAP API write operations (ModifyNameServer, Lock, ChildNS, etc.) |
-| `tests/RestReadTest.php` | REST API read operations |
-| `tests/RestWriteTest.php` | REST API write operations |
+| `tests/RestReadTest.php` | Read operations (GetDetails, GetList, CheckAvailability, etc.) |
+| `tests/RestWriteTest.php` | Write operations (ModifyNameServer, Lock, ChildNS, etc.) |
+| `tests/RestEdgeCaseTest.php` | Edge cases (empty/invalid input handling) |
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 

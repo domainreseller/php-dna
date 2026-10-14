@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/BaseComparisonTestCase.php';
+require_once __DIR__ . '/BaseApiTestCase.php';
 
-class RestReadTest extends BaseComparisonTestCase
+class RestReadTest extends BaseApiTestCase
 {
     public function testGetResellerDetails(): void
     {
@@ -185,7 +185,7 @@ class RestReadTest extends BaseComparisonTestCase
         $this->assertIsArray($result['data']);
         $this->assertNotEmpty($result['data']);
 
-        // Shape must match SOAP exactly so the facade is transport-transparent.
+        // Shape the modules depend on.
         $expectedKeys = ['id', 'status', 'maxchar', 'maxperiod', 'minchar', 'minperiod',
             'tld', 'pricing', 'currencies'];
         $this->assertEquals($expectedKeys, array_keys($result['data'][0]));

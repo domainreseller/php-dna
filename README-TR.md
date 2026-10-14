@@ -21,29 +21,29 @@
 ### Minimum Gereksinimler
 
 - PHP7.4 veya daha üstü (Önerilen 8.1)
-- PHP SOAPClient eklentisi aktif olmalıdır (SOAP modu için).
-- PHP cURL eklentisi aktif olmalıdır (REST modu için).
+- PHP JSON ve cURL eklentileri aktif olmalıdır.
 
-## 🔑 API Bilgileri — Kullanıcı Adı/Şifre mi, Reseller ID/API Key mi?
+## 🔑 API Bilgileri — Reseller ID ve API Key
 
-Her ikisi de desteklenir — bilgilerinizi aynı iki constructor parametresine girmeniz yeterli; kütüphane hangi API'nin kullanılacağını otomatik olarak algılar:
+Kütüphane DomainNameAPI REST API ile konuşur ve constructor'a verilen yalnızca iki bilgiye ihtiyaç duyar:
 
-| Elinizdeki bilgi | Birinci parametre | İkinci parametre | Kullanılan API |
-|---|---|---|---|
-| **Yeni panel bilgileri** (önerilen) | Reseller ID — `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` biçiminde UUID | API Key | REST |
-| **Eski (legacy) bilgiler** | API kullanıcı adı | API şifresi | SOAP |
+| Parametre | Değer |
+|---|---|
+| Birinci | Reseller ID — `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` biçiminde UUID |
+| İkinci | API Key |
 
 > 💡 **Reseller ID** ve **API Key** bilgilerinizi DomainNameAPI panelinizdeki **API Ayarları** bölümünde bulabilirsiniz.
-> ⚠️ Bunlar **API bilgileridir** — panel giriş e-postanız ve şifreniz burada **ÇALIŞMAZ**.
-
-Ekstra hiçbir yapılandırma gerekmez: birinci parametre UUID biçimindeyse kütüphane modern REST API ile konuşur, aksi halde klasik SOAP'a döner. Her iki mod da birebir aynı response yapısını döndürür, entegrasyon kodunuz asla değişmez.
+> ⚠️ Bunlar **API bilgileridir** — panel giriş bilgileriniz burada **ÇALIŞMAZ**.
 
 ```php
-// Yeni panel bilgileri (REST)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'your-api-key');
+$resellerId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+$apiKey     = 'your-api-key';
 
-// Eski (legacy) bilgiler (SOAP)
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('your-api-username', 'your-api-password');
+// Canlı ortam
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+
+// Test (OTE) ortamı
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
 ### A) Manuel Kullanım
@@ -53,7 +53,7 @@ Dosyaları indirin [examples](examples) klasörünün içindeki örnekleri incel
 ```php
 require_once __DIR__.'/DomainNameApi/DomainNameAPI_PHPLibrary.php';
 
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 ```
 
 
@@ -66,7 +66,7 @@ composer require domainreseller/php-dna
 ```php
 require_once __DIR__.'/vendor/autoload.php';
 
-$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary('username','password');
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 ```
 
 
@@ -921,21 +921,17 @@ Array
 
 ### Testler
 
-Kütüphane, hem SOAP hem REST API yanıt yapılarının eşleştiğini doğrulayan PHPUnit testleri içerir.
+Kütüphane, DomainNameAPI REST API'ye karşı çalışan PHPUnit testleri içerir.
 
 #### Setup
 
 1. Create a `.env.test` file in the project root:
 
 ```env
-SOAP_USER=your-soap-username
-SOAP_PASS=your-soap-password
-REST_USER=your-uuid-rest-username
-REST_PASS=your-rest-api-token
-SOAP_DOMAIN=yourdomain.com
-REST_DOMAIN=yourdomain.com
-SOAP_DOMAIN_CONTACTS=yourdomain-with-contacts.com
-REST_DOMAIN_CONTACTS=yourdomain-with-contacts.com
+DNA_RESELLER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+DNA_API_KEY=your-api-key
+DNA_DOMAIN=yourdomain.com
+DNA_DOMAIN_CONTACTS=yourdomain-with-contacts.com
 ```
 
 2. Run all tests:
@@ -947,10 +943,10 @@ env $(cat .env.test | xargs) vendor/bin/phpunit --testdox
 3. Run specific test suites:
 
 ```bash
-# SOAP read operations only
-env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter SoapRead
+# Read operations only
+env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestRead
 
-# REST write operations only
+# Write operations only
 env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestWrite
 ```
 
@@ -958,10 +954,9 @@ env $(cat .env.test | xargs) vendor/bin/phpunit --testdox --filter RestWrite
 
 | Test File | Description |
 |-----------|-------------|
-| `tests/SoapReadTest.php` | SOAP API read operations (GetDetails, GetList, CheckAvailability, etc.) |
-| `tests/SoapWriteTest.php` | SOAP API write operations (ModifyNameServer, Lock, ChildNS, etc.) |
-| `tests/RestReadTest.php` | REST API read operations |
-| `tests/RestWriteTest.php` | REST API write operations |
+| `tests/RestReadTest.php` | Read operations (GetDetails, GetList, CheckAvailability, etc.) |
+| `tests/RestWriteTest.php` | Write operations (ModifyNameServer, Lock, ChildNS, etc.) |
+| `tests/RestEdgeCaseTest.php` | Edge cases (empty/invalid input handling) |
 
 <hr style="border: 4px solid #000; border-style: dashed;">
 

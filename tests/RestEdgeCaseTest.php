@@ -1,13 +1,13 @@
 <?php
 
-require_once __DIR__ . '/BaseComparisonTestCase.php';
+require_once __DIR__ . '/BaseApiTestCase.php';
 
 /**
  * Edge cases for DNARest: weird input, empty payloads, missing fields,
  * boundary values. None of these should throw — every public method must
  * return a structured envelope.
  */
-class RestEdgeCaseTest extends BaseComparisonTestCase
+class RestEdgeCaseTest extends BaseApiTestCase
 {
     // -----------------------------------------------------------------------
     // Empty / missing payloads

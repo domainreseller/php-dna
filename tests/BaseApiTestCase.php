@@ -4,28 +4,22 @@ use DomainNameApi\DomainNameAPI_PHPLibrary;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Base class for REST vs SOAP comparison tests.
+ * Base class for live REST API tests.
  *
  * Required ENV vars:
- *   SOAP_USER, SOAP_PASS, REST_USER, REST_PASS
- *   SOAP_DOMAIN, REST_DOMAIN
- *   SOAP_DOMAIN_CONTACTS, REST_DOMAIN_CONTACTS
+ *   DNA_RESELLER_ID, DNA_API_KEY, DNA_DOMAIN, DNA_DOMAIN_CONTACTS
  *
  * Run: env $(cat .env.test | xargs) vendor/bin/phpunit --testdox
  */
-abstract class BaseComparisonTestCase extends TestCase
+abstract class BaseApiTestCase extends TestCase
 {
-    protected static DomainNameAPI_PHPLibrary $soap;
     protected static DomainNameAPI_PHPLibrary $rest;
-    protected static string $soapDomain;
     protected static string $restDomain;
-    protected static string $soapDomainContacts;
     protected static string $restDomainContacts;
 
     public static function setUpBeforeClass(): void
     {
-        $required = ['SOAP_USER', 'SOAP_PASS', 'REST_USER', 'REST_PASS',
-            'SOAP_DOMAIN', 'REST_DOMAIN', 'SOAP_DOMAIN_CONTACTS', 'REST_DOMAIN_CONTACTS'];
+        $required = ['DNA_RESELLER_ID', 'DNA_API_KEY', 'DNA_DOMAIN', 'DNA_DOMAIN_CONTACTS'];
 
         foreach ($required as $key) {
             if (empty(getenv($key))) {
@@ -33,20 +27,16 @@ abstract class BaseComparisonTestCase extends TestCase
             }
         }
 
-        self::$soap = new DomainNameAPI_PHPLibrary(getenv('SOAP_USER'), getenv('SOAP_PASS'));
-        self::$rest = new DomainNameAPI_PHPLibrary(getenv('REST_USER'), getenv('REST_PASS'));
+        self::$rest = new DomainNameAPI_PHPLibrary(getenv('DNA_RESELLER_ID'), getenv('DNA_API_KEY'));
 
         // Tests deliberately probe the library with pathological inputs
         // (testNoMethodEverThrows, edge cases). Letting those errors stream
         // into the shared production Sentry project would pollute real
         // signal with synthetic test noise.
-        self::$soap->setErrorReportingEnabled(false);
         self::$rest->setErrorReportingEnabled(false);
 
-        self::$soapDomain         = getenv('SOAP_DOMAIN');
-        self::$restDomain         = getenv('REST_DOMAIN');
-        self::$soapDomainContacts = getenv('SOAP_DOMAIN_CONTACTS');
-        self::$restDomainContacts = getenv('REST_DOMAIN_CONTACTS');
+        self::$restDomain         = getenv('DNA_DOMAIN');
+        self::$restDomainContacts = getenv('DNA_DOMAIN_CONTACTS');
     }
 
     protected static function sampleContacts(): array

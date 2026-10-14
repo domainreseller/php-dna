@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/BaseComparisonTestCase.php';
+require_once __DIR__ . '/BaseApiTestCase.php';
 
-class RestWriteTest extends BaseComparisonTestCase
+class RestWriteTest extends BaseApiTestCase
 {
     public function testEnableTheftProtectionLock(): void
     {
