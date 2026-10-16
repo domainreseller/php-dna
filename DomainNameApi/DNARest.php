@@ -608,6 +608,10 @@ class DNARest
 
             $balanceKey = strtolower($currencyId) . 'Balance';
 
+            if (!is_array($response) || !array_key_exists($balanceKey, $response)) {
+                throw new Exception($this->lastParsedResponse['Message'] ?? 'Empty or invalid response from API');
+            }
+
             return [
                 'ErrorCode'        => 0,
                 'OperationMessage' => 'Command completed succesfully.',
