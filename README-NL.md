@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### Foutrapportage (telemetrie)
+
+Wanneer een API-aanroep mislukt, stuurt de bibliotheek een foutrapport naar de eigen fouttracker van DomainNameAPI (Sentry, op `sentry.atakdomain.com`). Een klein, willekeurig deel van de geslaagde aanroepen (4%, plus elke aanroep die langer dan 1 seconde duurt) wordt als prestatiegegeven verstuurd. Dit helpt DomainNameAPI problemen te vinden en op te lossen. Foutrapportage staat **standaard aan**.
+
+**Wat wordt verstuurd:**
+
+- foutcode en -melding (e-mailadressen en lange getallen worden gemaskeerd)
+- pad van het aangeroepen endpoint en HTTP-methode
+- duur van de aanroep
+- modulenaam, bibliotheekversie en PHP-versie
+- reseller-ID en domeinnaam
+- het publieke IP-adres van de server (opgevraagd via `api.ipify.org`)
+- een anonieme eenrichtings-hash van de naam van het hostingaccount
+
+**Wat nooit wordt verstuurd:** inhoud van verzoeken of antwoorden, EPP-/auth-codes, contactgegevens (namen, e-mail, telefoon, adres), de panel-URL of admin-map, de naam van het hostingaccount zelf, API-keys.
+
+**Uitschakelen:** roep `setErrorReportingEnabled(false)` aan nadat u de client hebt aangemaakt:
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **Beveiliging:** TLS-certificaatverificatie staat aan. Op een server met een verouderde CA-bundle kan deze worden uitgeschakeld met `$dna->setSslVerification(false);` — niet aanbevolen; de CA-bundle bijwerken is de betere oplossing.
+
 ### A) Handmatig Gebruik
 
 Download de bestanden en bekijk de voorbeelden in de [examples](examples) map.

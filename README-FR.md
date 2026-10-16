@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### Rapports d'erreurs (télémétrie)
+
+Lorsqu'un appel API échoue, la bibliothèque envoie un rapport d'erreur au système de suivi des erreurs de DomainNameAPI (Sentry, à l'adresse `sentry.atakdomain.com`). Une petite part aléatoire des appels réussis (4 %, plus chaque appel de plus d'une seconde) est envoyée comme enregistrement de performance. Cela aide DomainNameAPI à trouver et corriger les problèmes. Les rapports d'erreurs sont **activés par défaut**.
+
+**Ce qui est envoyé :**
+
+- le code et le message d'erreur (les adresses e-mail et les longs nombres sont masqués)
+- le chemin du point de terminaison appelé et la méthode HTTP
+- la durée de l'appel
+- le nom du module, la version de la bibliothèque et la version de PHP
+- l'ID revendeur et le nom de domaine
+- l'adresse IP publique du serveur (obtenue via `api.ipify.org`)
+- un hachage anonyme et irréversible du nom du compte d'hébergement
+
+**Ce qui n'est jamais envoyé :** le contenu des requêtes ou des réponses, les codes EPP/auth, les coordonnées (noms, e-mail, téléphone, adresse), l'URL du panneau ou le répertoire d'administration, le nom du compte d'hébergement lui-même, les clés API.
+
+**Comment le désactiver :** appelez `setErrorReportingEnabled(false)` après avoir créé le client :
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **Sécurité :** la vérification des certificats TLS est activée. Sur un serveur dont le bundle CA est obsolète, elle peut être désactivée avec `$dna->setSslVerification(false);` — déconseillé ; mettre à jour le bundle CA est la meilleure solution.
+
 ### A) Utilisation Manuelle
 
 Téléchargez les fichiers et examinez les exemples dans le dossier [examples](examples).

@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### Error reporting (telemetry)
+
+When an API call fails, the library sends an error report to DomainNameAPI's own error tracker (Sentry, at `sentry.atakdomain.com`). A small random share of successful calls (4%, plus every call slower than 1 second) is sent as a performance record. This helps DomainNameAPI find and fix problems. Error reporting is **on by default**.
+
+**What is sent:**
+
+- error code and message (e-mail addresses and long numbers are masked)
+- called endpoint path and HTTP method
+- call duration
+- module name, library version and PHP version
+- reseller ID and domain name
+- the server's public IP address (looked up via `api.ipify.org`)
+- an anonymous one-way hash of the hosting account name
+
+**What is never sent:** request or response bodies, EPP/auth codes, contact details (names, e-mail, phone, address), the panel URL or admin directory, the hosting account name itself, API keys.
+
+**How to turn it off:** call `setErrorReportingEnabled(false)` after constructing the client:
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **Security:** TLS certificate verification is on. On a host with an outdated CA bundle it can be switched off with `$dna->setSslVerification(false);` — this is not recommended; updating the CA bundle is the better fix.
+
 ### A) Manual Usage
 
 Download the files and examine the examples in the [examples](examples) folder.

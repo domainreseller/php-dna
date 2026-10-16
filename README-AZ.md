@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### Xəta hesabatları (telemetriya)
+
+API çağırışı uğursuz olduqda kitabxana DomainNameAPI-nin öz xəta izləmə sisteminə (Sentry, `sentry.atakdomain.com`) xəta hesabatı göndərir. Uğurlu çağırışların təsadüfi seçilmiş kiçik bir hissəsi (4%, üstəlik 1 saniyədən uzun çəkən hər çağırış) performans qeydi kimi göndərilir. Bu, DomainNameAPI-yə problemləri tapıb düzəltməyə kömək edir. Xəta hesabatları **standart olaraq aktivdir**.
+
+**Göndərilənlər:**
+
+- xəta kodu və mesajı (e-poçt ünvanları və uzun rəqəmlər maskalanır)
+- çağırılan endpoint yolu və HTTP metodu
+- çağırışın müddəti
+- modulun adı, kitabxananın versiyası və PHP versiyası
+- reseller ID və domen adı
+- serverin ictimai (public) IP ünvanı (`api.ipify.org` vasitəsilə müəyyən edilir)
+- hosting hesabı adının anonim, birtərəfli heşi (hash)
+
+**Heç vaxt göndərilməyənlər:** sorğu və cavab məzmunu (body), EPP/auth kodları, əlaqə məlumatları (ad, e-poçt, telefon, ünvan), panel URL-i və ya admin qovluğu, hosting hesabının adının özü, API açarları.
+
+**Necə söndürmək olar:** klienti yaratdıqdan sonra `setErrorReportingEnabled(false)` çağırın:
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **Təhlükəsizlik:** TLS sertifikat yoxlaması aktivdir. CA paketi köhnə olan serverdə `$dna->setSslVerification(false);` ilə söndürülə bilər — tövsiyə edilmir; CA paketini yeniləmək daha düzgün həlldir.
+
 ### A) Manual İstifadə
 
 Faylları endirin və [examples](examples) qovluğundakı nümunələrə baxın.

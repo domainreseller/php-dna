@@ -337,4 +337,12 @@ class DomainNameAPI_PHPLibrary
     {
         $this->client->setErrorReportingEnabled($enabled);
     }
+
+    /**
+     * Turn TLS certificate verification for gateway calls on or off (on by default).
+     */
+    public function setSslVerification(bool $enabled): void
+    {
+        $this->client->setSslVerification($enabled);
+    }
 }

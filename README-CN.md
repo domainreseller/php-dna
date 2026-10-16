@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### 错误报告（遥测）
+
+当 API 调用失败时，本库会向 DomainNameAPI 自己的错误跟踪系统（Sentry，地址 `sentry.atakdomain.com`）发送一份错误报告。成功调用中会随机抽取一小部分（4%，另外所有耗时超过 1 秒的调用）作为性能记录发送。这有助于 DomainNameAPI 发现并修复问题。错误报告**默认开启**。
+
+**发送的内容：**
+
+- 错误代码和消息（电子邮件地址和长数字会被屏蔽）
+- 所调用端点的路径和 HTTP 方法
+- 调用耗时
+- 模块名称、库版本和 PHP 版本
+- 经销商 ID（Reseller ID）和域名
+- 服务器的公网 IP 地址（通过 `api.ipify.org` 获取）
+- 托管账户名的匿名单向哈希值
+
+**绝不发送的内容：** 请求或响应正文、EPP/授权码、联系人信息（姓名、电子邮件、电话、地址）、面板 URL 或管理目录、托管账户名本身、API 密钥。
+
+**如何关闭：** 在创建客户端之后调用 `setErrorReportingEnabled(false)`：
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **安全：** TLS 证书验证默认开启。在 CA 证书包过旧的服务器上，可以通过 `$dna->setSslVerification(false);` 关闭——不建议这样做；更新 CA 证书包才是更好的解决办法。
+
 ### A) 手动使用
 
 下载文件并查看 [examples](examples) 文件夹中的示例。

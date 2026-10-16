@@ -46,6 +46,31 @@ $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
 $dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey, true);
 ```
 
+### Hata raporlama (telemetri)
+
+Bir API çağrısı başarısız olduğunda kütüphane, DomainNameAPI'nin kendi hata takip sistemine (Sentry, `sentry.atakdomain.com`) bir hata raporu gönderir. Başarılı çağrıların rastgele seçilen küçük bir kısmı (%4, ayrıca 1 saniyeden uzun süren her çağrı) performans kaydı olarak gönderilir. Bu, DomainNameAPI'nin sorunları bulup düzeltmesine yardımcı olur. Hata raporlama **varsayılan olarak açıktır**.
+
+**Gönderilenler:**
+
+- hata kodu ve mesajı (e-posta adresleri ve uzun sayılar maskelenir)
+- çağrılan uç nokta yolu ve HTTP yöntemi
+- çağrı süresi
+- modül adı, kütüphane sürümü ve PHP sürümü
+- bayi kimliği (Reseller ID) ve alan adı
+- sunucunun genel (public) IP adresi (`api.ipify.org` üzerinden öğrenilir)
+- hosting hesap adının anonim, tek yönlü özeti (hash)
+
+**Asla gönderilmeyenler:** istek ve yanıt gövdeleri, EPP/transfer kodları, kişi bilgileri (ad, e-posta, telefon, adres), panel adresi (URL) veya yönetici dizini, hosting hesap adının kendisi, API anahtarları.
+
+**Nasıl kapatılır:** istemciyi oluşturduktan sonra `setErrorReportingEnabled(false)` çağırın:
+
+```php
+$dna = new \DomainNameApi\DomainNameAPI_PHPLibrary($resellerId, $apiKey);
+$dna->setErrorReportingEnabled(false);
+```
+
+> 🔒 **Güvenlik:** TLS sertifika doğrulaması açıktır. CA paketi güncel olmayan bir sunucuda `$dna->setSslVerification(false);` ile kapatılabilir — önerilmez; CA paketini güncellemek daha doğru çözümdür.
+
 ### A) Manuel Kullanım
 
 Dosyaları indirin [examples](examples) klasörünün içindeki örnekleri inceleyin.
