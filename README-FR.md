@@ -52,15 +52,19 @@ Lorsqu'un appel API échoue, la bibliothèque envoie un rapport d'erreur au syst
 
 **Ce qui est envoyé :**
 
-- le code et le message d'erreur (les adresses e-mail et les longs nombres sont masqués)
+- le code et le message d'erreur
 - le chemin du point de terminaison appelé et la méthode HTTP
 - la durée de l'appel
 - le nom du module, la version de la bibliothèque et la version de PHP
 - l'ID revendeur et le nom de domaine
 - l'adresse IP publique du serveur (obtenue via `api.ipify.org`)
-- un hachage anonyme et irréversible du nom du compte d'hébergement
+- l'adresse (URL) de la page du panneau ayant déclenché l'appel
+- le nom du compte d'hébergement sur le serveur
+- la requête et la réponse API, y compris les coordonnées de contact du domaine ; seuls les identifiants sont masqués — les codes EPP/auth, clés API, mots de passe et jetons sont remplacés par `***`
 
-**Ce qui n'est jamais envoyé :** le contenu des requêtes ou des réponses, les codes EPP/auth, les coordonnées (noms, e-mail, téléphone, adresse), l'URL du panneau ou le répertoire d'administration, le nom du compte d'hébergement lui-même, les clés API.
+**Ce qui n'est jamais envoyé :** les codes EPP/auth, clés API, mots de passe ou jetons sous forme lisible ; les arguments des appels de fonction dans les traces de pile (stack traces).
+
+**Pourquoi et combien de temps :** les données servent uniquement à mesurer l'utilisation et à diagnostiquer les problèmes au plus tôt ; elles sont conservées 30 jours sur le serveur Sentry propre à DomainNameAPI, puis supprimées automatiquement.
 
 **Comment le désactiver :** appelez `setErrorReportingEnabled(false)` après avoir créé le client :
 

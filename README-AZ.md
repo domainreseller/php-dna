@@ -52,15 +52,19 @@ API çağırışı uğursuz olduqda kitabxana DomainNameAPI-nin öz xəta izləm
 
 **Göndərilənlər:**
 
-- xəta kodu və mesajı (e-poçt ünvanları və uzun rəqəmlər maskalanır)
+- xəta kodu və mesajı
 - çağırılan endpoint yolu və HTTP metodu
 - çağırışın müddəti
 - modulun adı, kitabxananın versiyası və PHP versiyası
 - reseller ID və domen adı
 - serverin ictimai (public) IP ünvanı (`api.ipify.org` vasitəsilə müəyyən edilir)
-- hosting hesabı adının anonim, birtərəfli heşi (hash)
+- çağırışı başladan panel səhifəsinin ünvanı (URL)
+- serverdəki hosting hesabının adı
+- API sorğusu və cavabı, domenin əlaqə məlumatları daxil olmaqla; yalnız giriş məlumatları maskalanır — EPP/auth kodları, API açarları, parollar və tokenlər `***` ilə əvəz olunur
 
-**Heç vaxt göndərilməyənlər:** sorğu və cavab məzmunu (body), EPP/auth kodları, əlaqə məlumatları (ad, e-poçt, telefon, ünvan), panel URL-i və ya admin qovluğu, hosting hesabının adının özü, API açarları.
+**Heç vaxt göndərilməyənlər:** oxunaqlı formada EPP/auth kodları, API açarları, parollar və ya tokenlər; stack trace-lərdəki funksiya çağırışı arqumentləri.
+
+**Niyə və nə qədər müddətə:** məlumatlar yalnız istifadənin ölçülməsi və problemlərin erkən diaqnostikası üçün istifadə olunur, DomainNameAPI-nin öz Sentry serverində 30 gün saxlanılır, sonra avtomatik olaraq silinir.
 
 **Necə söndürmək olar:** klienti yaratdıqdan sonra `setErrorReportingEnabled(false)` çağırın:
 

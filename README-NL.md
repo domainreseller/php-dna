@@ -52,15 +52,19 @@ Wanneer een API-aanroep mislukt, stuurt de bibliotheek een foutrapport naar de e
 
 **Wat wordt verstuurd:**
 
-- foutcode en -melding (e-mailadressen en lange getallen worden gemaskeerd)
+- foutcode en -melding
 - pad van het aangeroepen endpoint en HTTP-methode
 - duur van de aanroep
 - modulenaam, bibliotheekversie en PHP-versie
 - reseller-ID en domeinnaam
 - het publieke IP-adres van de server (opgevraagd via `api.ipify.org`)
-- een anonieme eenrichtings-hash van de naam van het hostingaccount
+- het adres (URL) van de panelpagina die de aanroep veroorzaakte
+- de naam van het hostingaccount op de server
+- het API-verzoek en -antwoord, inclusief de contactgegevens van het domein; alleen inloggegevens worden gemaskeerd — EPP-/auth-codes, API-keys, wachtwoorden en tokens worden vervangen door `***`
 
-**Wat nooit wordt verstuurd:** inhoud van verzoeken of antwoorden, EPP-/auth-codes, contactgegevens (namen, e-mail, telefoon, adres), de panel-URL of admin-map, de naam van het hostingaccount zelf, API-keys.
+**Wat nooit wordt verstuurd:** EPP-/auth-codes, API-keys, wachtwoorden of tokens in leesbare vorm; functieargumenten in stacktraces.
+
+**Waarom en hoe lang:** de gegevens worden alleen gebruikt voor gebruiksmeting en het vroegtijdig opsporen van problemen, en worden 30 dagen bewaard op de eigen Sentry-server van DomainNameAPI, waarna ze automatisch worden verwijderd.
 
 **Uitschakelen:** roep `setErrorReportingEnabled(false)` aan nadat u de client hebt aangemaakt:
 

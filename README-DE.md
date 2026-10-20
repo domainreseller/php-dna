@@ -52,15 +52,19 @@ Wenn ein API-Aufruf fehlschlägt, sendet die Bibliothek einen Fehlerbericht an d
 
 **Was gesendet wird:**
 
-- Fehlercode und -meldung (E-Mail-Adressen und lange Zahlen werden maskiert)
+- Fehlercode und -meldung
 - Pfad des aufgerufenen Endpunkts und HTTP-Methode
 - Dauer des Aufrufs
 - Modulname, Bibliotheksversion und PHP-Version
 - Reseller-ID und Domainname
 - die öffentliche IP-Adresse des Servers (ermittelt über `api.ipify.org`)
-- ein anonymer Einweg-Hash des Hosting-Kontonamens
+- die Adresse (URL) der Panel-Seite, die den Aufruf ausgelöst hat
+- der Name des Hosting-Kontos auf dem Server
+- API-Anfrage und -Antwort, einschließlich der Kontaktdaten der Domain; nur Zugangsdaten werden maskiert – EPP-/Auth-Codes, API-Keys, Passwörter und Tokens werden durch `***` ersetzt
 
-**Was nie gesendet wird:** Anfrage- oder Antwortinhalte, EPP-/Auth-Codes, Kontaktdaten (Namen, E-Mail, Telefon, Adresse), die Panel-URL oder das Admin-Verzeichnis, der Hosting-Kontoname selbst, API-Keys.
+**Was nie gesendet wird:** EPP-/Auth-Codes, API-Keys, Passwörter oder Tokens in lesbarer Form; Funktionsargumente in Stacktraces.
+
+**Wozu und wie lange:** Die Daten werden ausschließlich zur Nutzungsmessung und zur frühzeitigen Erkennung von Problemen verwendet und 30 Tage lang auf dem eigenen Sentry-Server von DomainNameAPI gespeichert; danach werden sie automatisch gelöscht.
 
 **So schalten Sie es ab:** rufen Sie nach dem Erstellen des Clients `setErrorReportingEnabled(false)` auf:
 

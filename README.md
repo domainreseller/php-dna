@@ -52,15 +52,19 @@ When an API call fails, the library sends an error report to DomainNameAPI's own
 
 **What is sent:**
 
-- error code and message (e-mail addresses and long numbers are masked)
+- error code and message
 - called endpoint path and HTTP method
 - call duration
 - module name, library version and PHP version
 - reseller ID and domain name
 - the server's public IP address (looked up via `api.ipify.org`)
-- an anonymous one-way hash of the hosting account name
+- the address (URL) of the panel page that triggered the call
+- the hosting account name on the server
+- the API request and response, including the domain's contact details; only credentials are masked — EPP/auth codes, API keys, passwords and tokens are replaced with `***`
 
-**What is never sent:** request or response bodies, EPP/auth codes, contact details (names, e-mail, phone, address), the panel URL or admin directory, the hosting account name itself, API keys.
+**What is never sent:** EPP/auth codes, API keys, passwords or tokens in readable form; function call arguments in stack traces.
+
+**Why and how long:** the data is used only for usage measurement and early diagnosis of problems, and is kept for 30 days on DomainNameAPI's own Sentry server, after which it is deleted automatically.
 
 **How to turn it off:** call `setErrorReportingEnabled(false)` after constructing the client:
 

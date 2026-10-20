@@ -52,15 +52,19 @@ Quando una chiamata API fallisce, la libreria invia una segnalazione di errore a
 
 **Cosa viene inviato:**
 
-- codice e messaggio di errore (indirizzi e-mail e numeri lunghi vengono mascherati)
+- codice e messaggio di errore
 - percorso dell'endpoint chiamato e metodo HTTP
 - durata della chiamata
 - nome del modulo, versione della libreria e versione di PHP
 - ID rivenditore e nome di dominio
 - l'indirizzo IP pubblico del server (ricavato tramite `api.ipify.org`)
-- un hash anonimo e irreversibile del nome dell'account di hosting
+- l'indirizzo (URL) della pagina del pannello che ha generato la chiamata
+- il nome dell'account di hosting sul server
+- la richiesta e la risposta API, inclusi i dati di contatto del dominio; vengono mascherate solo le credenziali — codici EPP/auth, chiavi API, password e token vengono sostituiti con `***`
 
-**Cosa non viene mai inviato:** corpi di richieste o risposte, codici EPP/auth, dati di contatto (nomi, e-mail, telefono, indirizzo), l'URL del pannello o la directory di amministrazione, il nome dell'account di hosting stesso, chiavi API.
+**Cosa non viene mai inviato:** codici EPP/auth, chiavi API, password o token in forma leggibile; argomenti delle chiamate di funzione negli stack trace.
+
+**Perché e per quanto tempo:** i dati vengono usati solo per misurare l'utilizzo e diagnosticare tempestivamente i problemi, e sono conservati per 30 giorni sul server Sentry di DomainNameAPI, dopodiché vengono eliminati automaticamente.
 
 **Come disattivarla:** chiama `setErrorReportingEnabled(false)` dopo aver creato il client:
 

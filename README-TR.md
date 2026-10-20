@@ -52,15 +52,19 @@ Bir API çağrısı başarısız olduğunda kütüphane, DomainNameAPI'nin kendi
 
 **Gönderilenler:**
 
-- hata kodu ve mesajı (e-posta adresleri ve uzun sayılar maskelenir)
+- hata kodu ve mesajı
 - çağrılan uç nokta yolu ve HTTP yöntemi
 - çağrı süresi
 - modül adı, kütüphane sürümü ve PHP sürümü
 - bayi kimliği (Reseller ID) ve alan adı
 - sunucunun genel (public) IP adresi (`api.ipify.org` üzerinden öğrenilir)
-- hosting hesap adının anonim, tek yönlü özeti (hash)
+- çağrıyı tetikleyen panel sayfasının adresi (URL)
+- sunucudaki hosting hesap adı
+- API isteği ve yanıtı, alan adının kişi bilgileri dahil; yalnızca kimlik bilgileri maskelenir — EPP/transfer kodları, API anahtarları, parolalar ve token'lar `***` ile değiştirilir
 
-**Asla gönderilmeyenler:** istek ve yanıt gövdeleri, EPP/transfer kodları, kişi bilgileri (ad, e-posta, telefon, adres), panel adresi (URL) veya yönetici dizini, hosting hesap adının kendisi, API anahtarları.
+**Asla gönderilmeyenler:** okunabilir biçimde EPP/transfer kodları, API anahtarları, parolalar veya token'lar; hata izlerindeki (stack trace) fonksiyon çağrısı argümanları.
+
+**Neden ve ne kadar süre:** veriler yalnızca kullanım ölçümü ve sorunların erken teşhisi için kullanılır; DomainNameAPI'nin kendi Sentry sunucusunda 30 gün saklanır, ardından otomatik olarak silinir.
 
 **Nasıl kapatılır:** istemciyi oluşturduktan sonra `setErrorReportingEnabled(false)` çağırın:
 
