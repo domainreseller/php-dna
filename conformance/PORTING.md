@@ -137,9 +137,12 @@ Follow `DNARest::request()` exactly:
   `humanizeValidationMember`). Codes are formatted `API_<status>`.
 - Transport failures (timeout, DNS, TLS, reset) are errors, never empty
   success. A timeout reads
-  `Could not reach the DomainNameAPI service: the connection timed out. (...)`
-  with code `CURL_28`; other transport errors use code `CURL_<n>` or a
-  language-appropriate equivalent and the message `Curl error during request: ...`.
+  `Could not reach the DomainNameAPI service: the connection timed out. (...)`;
+  other transport errors read `Curl error during request: ...`. Use the curl
+  errno equivalents (28 timeout, 6 DNS, 7 connect refused, 35/60 TLS, 56
+  reset). As in php-dna, the method's returned envelope carries
+  `API_<errno>` (e.g. `API_28`, via `formatErrorCode`), while
+  `getParsedResponseData()['Code']` holds `CURL_<errno>`.
 
 ## Telemetry
 
