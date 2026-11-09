@@ -32,6 +32,7 @@ trait SharedApiConfigAndUtilsTrait
         'Invalid API credentials',
         'could not be found', // API_404 "The domain name you requested could not be found" — high-volume expected noise
         'Insufficent reseller balance', // insufficient balance
+        'Redirect information not found', // no forwarding configured: getForwarding reports it as disabled
         // 'already exists in the registry', // API_2302 object exists
         // 'Request already sent',           // API_2306 duplicate request
         // 'Parameter value policy error',   // API_2306 duplicate/policy
@@ -291,6 +292,12 @@ trait SharedApiConfigAndUtilsTrait
             $result["Code"] = $code;
             $result["Message"] = $message;
             $result["Details"] = $details;
+        }
+        // Keep the gateway's own error code next to the API_<status> code, so
+        // callers can tell e.g. "domain not found" from "TLD not supported".
+        if (is_string($result["Code"]) && preg_match('/^API_\d+$/', $result["Code"])
+            && property_exists($this, 'lastGatewayCode') && $this->lastGatewayCode !== '') {
+            $result["GatewayCode"] = $this->lastGatewayCode;
         }
         return $result;
     }

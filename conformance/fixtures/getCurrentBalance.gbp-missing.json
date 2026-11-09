@@ -1,0 +1,38 @@
+{
+    "id": "getCurrentBalance.gbp-missing",
+    "call": "getCurrentBalance",
+    "args": [
+        "GBP"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"resellerName\":\"example-reseller\",\"resellerGroupName\":\"Reseller\",\"tryBalance\":1250.5,\"usdBalance\":601.64}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "deposit/accounts/me",
+            "query": {
+                "currency": "GBP"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "ErrorCode": "BALANCE",
+        "OperationMessage": "No GBP balance is reported for this account. Available: USD, TRY.",
+        "OperationResult": "FAILED",
+        "Balance": "0.00",
+        "CurrencyId": 4,
+        "CurrencyInfo": null,
+        "CurrencyName": "GBP",
+        "CurrencySymbol": "£"
+    },
+    "ignore": []
+}

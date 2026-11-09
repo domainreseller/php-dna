@@ -1,0 +1,36 @@
+{
+    "id": "modifyPrivacyProtectionStatus.string-on",
+    "call": "modifyPrivacyProtectionStatus",
+    "args": [
+        "example.com",
+        "1"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/privacy",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "privacyStatus": true
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "PrivacyProtectionStatus": true
+        },
+        "result": "OK"
+    },
+    "ignore": []
+}

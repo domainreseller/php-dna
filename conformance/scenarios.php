@@ -151,11 +151,13 @@ $add('getCurrentBalance.usd', 'getCurrentBalance', ['USD'], [$ok($account)]);
 $add('getCurrentBalance.try-lowercase', 'getCurrentBalance', ['try'], [$ok($account)]);
 $add('getCurrentBalance.eur-missing', 'getCurrentBalance', ['EUR'], [$ok($account)]);
 $add('getCurrentBalance.unknown', 'getCurrentBalance', ['JPY'], [$ok($account)]);
+$add('getCurrentBalance.gbp-missing', 'getCurrentBalance', ['GBP'], [$ok($account)]);
 $add('getCurrentBalance.429', 'getCurrentBalance', ['USD'], [$tooMany]);
 
 // ---- search / lists ------------------------------------------------------------
 $add('checkAvailability.ok', 'checkAvailability', [['dnaprobexyz123', 'google', 'premium'], ['com', '.net'], 1, 'create'], [$ok($bulkBody)]);
 $add('checkAvailability.plain-list', 'checkAvailability', [['a'], ['com'], 2, 'transfer'], [$ok([['domainName' => 'a.com', 'status' => 'available']])]);
+$add('checkAvailability.dotted-label', 'checkAvailability', [['my.company'], ['com'], 1], [$ok(['infos' => [['domainName' => 'my.company.com', 'tld' => 'COM', 'status' => 'AVAILABLE', 'price' => 9.5, 'currency' => 'USD', 'period' => 1]]])], 'only the trailing .tld is stripped; default command');
 $add('checkAvailability.empty-input', 'checkAvailability', [[], ['com'], 1, 'create'], []);
 $add('checkAvailability.validation', 'checkAvailability', [['x'], ['com'], 1, 'create'], [$validation]);
 $add('checkAvailability.429', 'checkAvailability', [['x'], ['com'], 1, 'create'], [$tooMany]);
@@ -179,6 +181,12 @@ $add('syncFromRegistry.ok', 'syncFromRegistry', ['example.com'], [$ok($domainInf
 $add('syncFromRegistry.not-found', 'syncFromRegistry', ['missing.com'], [$notFound]);
 $add('getContacts.ok', 'getContacts', ['example.com'], [$ok($domainInfo)]);
 $add('getContacts.no-contacts', 'getContacts', ['example.com'], [$ok(array_merge($domainInfo, ['contacts' => []]))]);
+$add('getContacts.mixed-types', 'getContacts', ['example.com'], [$ok(array_merge($domainInfo, ['contacts' => [
+    array_merge($domainInfo['contacts'][0], ['contactType' => 'registrant']),
+    array_merge($domainInfo['contacts'][1], ['contactType' => 'ADMINISTRATIVE']),
+    array_merge($domainInfo['contacts'][2], ['contactType' => 'technical']),
+    array_merge($domainInfo['contacts'][3], ['contactType' => 'Reseller']),
+]]))], 'case-insensitive types; unknown types kept after the four known ones');
 $add('getContacts.error', 'getContacts', ['example.com'], [$notFound]);
 
 // ---- nameservers / locks / hosts --------------------------------------------------
@@ -234,6 +242,7 @@ $add('replaceResourceRecordValue.zone-error', 'replaceResourceRecordValue', ['ex
 // ---- forwarding ----------------------------------------------------------------
 $add('getForwarding.ok', 'getForwarding', ['example.com'], [$ok(['redirectAlias' => 'https://www.example.org/landing', 'redirectType' => 'Frame'])]);
 $add('getForwarding.not-set', 'getForwarding', ['example.com'], [$abp(404, 'Dna.DomainService:Domain:10061', 'Redirect information not found')]);
+$add('getForwarding.domain-missing', 'getForwarding', ['missing.com'], [$notFound], 'a missing domain is an error, not "forwarding disabled"');
 $add('getForwarding.error', 'getForwarding', ['example.com'], [$internal]);
 $add('setForwarding.standard', 'setForwarding', ['example.com', 'https://www.example.org'], [$ok('')]);
 $add('setForwarding.frame', 'setForwarding', ['example.com', 'example.org/path', 'frame'], [$ok('')]);
@@ -283,6 +292,8 @@ $add('registerWithContactInfo.validation', 'registerWithContactInfo', ['example.
     [['message' => 'Invalid citizen id.', 'members' => ['$.additionalAttributes.TRABISCITIZIENID']]])]);
 $add('modifyPrivacyProtectionStatus.on', 'modifyPrivacyProtectionStatus', ['example.com', true], [$ok('')]);
 $add('modifyPrivacyProtectionStatus.off-reason', 'modifyPrivacyProtectionStatus', ['example.com', false, 'Customer asked'], [$ok('')]);
+$add('modifyPrivacyProtectionStatus.string-on', 'modifyPrivacyProtectionStatus', ['example.com', '1'], [$ok('')]);
+$add('modifyPrivacyProtectionStatus.string-off', 'modifyPrivacyProtectionStatus', ['example.com', 'off'], [$ok('')]);
 $add('modifyPrivacyProtectionStatus.error', 'modifyPrivacyProtectionStatus', ['example.com', true], [$abp(400, 'Dna.DomainService:Domain:10040', 'Privacy protection is not supported for this TLD.')]);
 
 // ---- pure utilities ------------------------------------------------------------
@@ -292,6 +303,8 @@ $add('isTrTLD.com', 'isTrTLD', ['example.com'], []);
 $add('isTrTLD.tricky', 'isTrTLD', ['example.trade'], []);
 $add('validateContact.complete', 'validateContact', [$contact], []);
 $add('validateContact.empty', 'validateContact', [[]], []);
+$add('validateContact.state-missing', 'validateContact', [['FirstName' => 'Ada', 'LastName' => 'Lovelace', 'City' => 'Ankara', 'Phone' => '3121234567', 'PhoneCountryCode' => '90']], []);
+$add('validateContact.intl-mismatch', 'validateContact', [['FirstName' => 'Grace', 'LastName' => 'Hopper', 'Phone' => '+44 20 7123 4567', 'PhoneCountryCode' => '90', 'Fax' => '+1-202-555-0101', 'FaxCountryCode' => '']], []);
 $add('validateContact.messy', 'validateContact', [['FirstName' => ' Jo ', 'Phone' => '+1 (202) 555-0100', 'Country' => 'Turkey', 'City' => '', 'Fax' => '0090 212 123 45 67']], []);
 
 return $S;

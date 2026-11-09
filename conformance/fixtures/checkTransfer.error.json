@@ -31,7 +31,8 @@
         "error": {
             "Code": "API_500",
             "Message": "An internal error has occurred. Please contact the system administrator.",
-            "Details": "{\"error\":{\"code\":\"Dna.DomainService:General:10001\",\"message\":\"An internal error has occurred. Please contact the system administrator.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:General:10001\",\"message\":\"An internal error has occurred. Please contact the system administrator.\",\"details\":null,\"data\":[],\"validationErrors\":null}}",
+            "GatewayCode": "Dna.DomainService:General:10001"
         }
     },
     "ignore": []

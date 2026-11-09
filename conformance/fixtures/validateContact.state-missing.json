@@ -1,0 +1,29 @@
+{
+    "id": "validateContact.state-missing",
+    "call": "validateContact",
+    "args": [
+        {
+            "FirstName": "Ada",
+            "LastName": "Lovelace",
+            "City": "Ankara",
+            "Phone": "3121234567",
+            "PhoneCountryCode": "90"
+        }
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "FirstName": "Ada",
+        "LastName": "Lovelace",
+        "City": "Ankara",
+        "Phone": "3121234567",
+        "PhoneCountryCode": "90",
+        "AddressLine1": "Addres yok",
+        "Country": "TR",
+        "ZipCode": "34000",
+        "State": "Ankara",
+        "Fax": "",
+        "FaxCountryCode": ""
+    },
+    "ignore": []
+}

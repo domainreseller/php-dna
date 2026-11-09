@@ -47,7 +47,7 @@
         "data": {
             "Name": "",
             "Type": "TXT",
-            "TTL": 999999,
+            "TTL": 86400,
             "Content": [
                 "v=spf1 -all",
                 "hello"

@@ -1,0 +1,156 @@
+{
+    "id": "getContacts.mixed-types",
+    "call": "getContacts",
+    "args": [
+        "example.com"
+    ],
+    "note": "case-insensitive types; unknown types kept after the four known ones",
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"domainName\":\"example.com\",\"domainNameIdn\":\"example.com\",\"isIdnName\":false,\"startDate\":\"2024-03-15T10:20:30\",\"expirationDate\":\"2027-03-15T10:20:30\",\"transferDate\":null,\"updatedDate\":\"2026-10-01T08:00:00\",\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"renewalMode\":\"Manual\",\"authCode\":\"Ab1!xyZ9\",\"lockStatus\":true,\"privacyProtectionStatus\":false,\"remainingDay\":126,\"statusCode\":\"clientTransferProhibited\",\"objectId\":\"123456_DOMAIN_COM-VRSN\",\"rgpStatues\":null,\"status\":\"Active\",\"statusReason\":null,\"isForwarded\":false,\"useTrusteeContact\":false,\"id\":4321,\"nameservers\":[\"ns1.example.net\",\"ns2.example.net\"],\"hosts\":[{\"name\":\"ns1.example.com\",\"ipAddresses\":[{\"ipAddress\":\"192.0.2.10\"},{\"ipAddress\":\"192.0.2.11\"}]},{\"name\":\"ns2.example.com\",\"ipAddresses\":[]}],\"contacts\":[{\"firstName\":\"Ada\",\"lastName\":\"Lovelace\",\"companyName\":\"Example Ltd\",\"eMail\":\"ada@example.com\",\"address\":\"Example Street 1\",\"phoneCountryCode\":\"90\",\"phone\":\"5551234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"34000\",\"country\":\"TR\",\"city\":\"Istanbul\",\"state\":\"Istanbul\",\"discloseFlag\":false,\"contactType\":\"registrant\",\"handle\":\"DNA-R-1\"},{\"firstName\":\"Grace\",\"lastName\":\"Hopper\",\"companyName\":\"\",\"eMail\":\"grace@example.com\",\"address\":\"Example Street 2\",\"phoneCountryCode\":\"1\",\"phone\":\"2025550100\",\"faxCountryCode\":\"1\",\"fax\":\"2025550101\",\"postalCode\":\"20001\",\"country\":\"US\",\"city\":\"Washington\",\"state\":\"DC\",\"discloseFlag\":true,\"contactType\":\"ADMINISTRATIVE\",\"handle\":\"DNA-A-2\"},{\"firstName\":\"Alan\",\"lastName\":\"Turing\",\"companyName\":\"\",\"eMail\":\"alan@example.com\",\"address\":\"Example Street 3\",\"phoneCountryCode\":\"44\",\"phone\":\"2071234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"SW1A 1AA\",\"country\":\"GB\",\"city\":\"London\",\"state\":\"\",\"discloseFlag\":false,\"contactType\":\"technical\",\"handle\":\"DNA-T-3\"},{\"firstName\":\"Ada\",\"lastName\":\"Lovelace\",\"companyName\":\"Example Ltd\",\"eMail\":\"billing@example.com\",\"address\":\"Example Street 1\",\"phoneCountryCode\":\"90\",\"phone\":\"5551234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"34000\",\"country\":\"TR\",\"city\":\"Istanbul\",\"state\":\"Istanbul\",\"discloseFlag\":false,\"contactType\":\"Reseller\",\"handle\":\"DNA-B-4\"}],\"additionalAttributes\":{\"TRABISDOMAINCATEGORY\":\"1\"}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/info",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "contacts": {
+                "Administrative": {
+                    "ID": "DNA-A-2",
+                    "Status": "Active",
+                    "AuthCode": "",
+                    "FirstName": "Grace",
+                    "LastName": "Hopper",
+                    "Company": "",
+                    "EMail": "grace@example.com",
+                    "Type": "Administrative",
+                    "Address": {
+                        "Line1": "Example Street 2",
+                        "Line2": "",
+                        "Line3": "",
+                        "State": "DC",
+                        "City": "Washington",
+                        "Country": "US",
+                        "ZipCode": "20001"
+                    },
+                    "Phone": {
+                        "Phone": {
+                            "Number": "2025550100",
+                            "CountryCode": "1"
+                        },
+                        "Fax": {
+                            "Number": "2025550101",
+                            "CountryCode": "1"
+                        }
+                    },
+                    "Additional": []
+                },
+                "Registrant": {
+                    "ID": "DNA-R-1",
+                    "Status": "Active",
+                    "AuthCode": "",
+                    "FirstName": "Ada",
+                    "LastName": "Lovelace",
+                    "Company": "Example Ltd",
+                    "EMail": "ada@example.com",
+                    "Type": "Registrant",
+                    "Address": {
+                        "Line1": "Example Street 1",
+                        "Line2": "",
+                        "Line3": "",
+                        "State": "Istanbul",
+                        "City": "Istanbul",
+                        "Country": "TR",
+                        "ZipCode": "34000"
+                    },
+                    "Phone": {
+                        "Phone": {
+                            "Number": "5551234567",
+                            "CountryCode": "90"
+                        },
+                        "Fax": {
+                            "Number": "",
+                            "CountryCode": ""
+                        }
+                    },
+                    "Additional": []
+                },
+                "Technical": {
+                    "ID": "DNA-T-3",
+                    "Status": "Active",
+                    "AuthCode": "",
+                    "FirstName": "Alan",
+                    "LastName": "Turing",
+                    "Company": "",
+                    "EMail": "alan@example.com",
+                    "Type": "Technical",
+                    "Address": {
+                        "Line1": "Example Street 3",
+                        "Line2": "",
+                        "Line3": "",
+                        "State": "",
+                        "City": "London",
+                        "Country": "GB",
+                        "ZipCode": "SW1A 1AA"
+                    },
+                    "Phone": {
+                        "Phone": {
+                            "Number": "2071234567",
+                            "CountryCode": "44"
+                        },
+                        "Fax": {
+                            "Number": "",
+                            "CountryCode": ""
+                        }
+                    },
+                    "Additional": []
+                },
+                "Reseller": {
+                    "ID": "DNA-B-4",
+                    "Status": "Active",
+                    "AuthCode": "",
+                    "FirstName": "Ada",
+                    "LastName": "Lovelace",
+                    "Company": "Example Ltd",
+                    "EMail": "billing@example.com",
+                    "Type": "Reseller",
+                    "Address": {
+                        "Line1": "Example Street 1",
+                        "Line2": "",
+                        "Line3": "",
+                        "State": "Istanbul",
+                        "City": "Istanbul",
+                        "Country": "TR",
+                        "ZipCode": "34000"
+                    },
+                    "Phone": {
+                        "Phone": {
+                            "Number": "5551234567",
+                            "CountryCode": "90"
+                        },
+                        "Fax": {
+                            "Number": "",
+                            "CountryCode": ""
+                        }
+                    },
+                    "Additional": []
+                }
+            }
+        },
+        "result": "OK"
+    },
+    "ignore": []
+}

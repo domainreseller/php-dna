@@ -43,7 +43,7 @@
         "data": {
             "Name": "",
             "Type": "MX",
-            "TTL": 0,
+            "TTL": 3600,
             "Content": "10 mx.example.com"
         }
     },

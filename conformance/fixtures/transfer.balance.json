@@ -34,7 +34,8 @@
         "error": {
             "Code": "API_400",
             "Message": "Insufficient balance.",
-            "Details": "Your balance is not sufficient for this operation."
+            "Details": "Your balance is not sufficient for this operation.",
+            "GatewayCode": "Dna.DepositService:Deposit:10002"
         }
     },
     "ignore": []

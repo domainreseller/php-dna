@@ -29,7 +29,8 @@
         "error": {
             "Code": "API_400",
             "Message": "Host is linked but not marked as linked in entity",
-            "Details": "Dna Host is linked but not marked as linked in entity"
+            "Details": "Dna Host is linked but not marked as linked in entity",
+            "GatewayCode": "Dna.DomainService:Dns:10024"
         }
     },
     "ignore": []

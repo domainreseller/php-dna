@@ -139,7 +139,7 @@ class DomainNameAPI_PHPLibrary
     /**
      * @see DNARest::checkAvailability()
      */
-    public function checkAvailability($domains, $extensions, $period, $command) { return $this->client->checkAvailability($domains, $extensions, $period, $command); }
+    public function checkAvailability($domains, $extensions, $period, $command = 'create') { return $this->client->checkAvailability($domains, $extensions, $period, $command); }
 
     /**
      * @see DNARest::getList()

@@ -37,8 +37,9 @@
         "result": "ERROR",
         "error": {
             "Code": "API_400",
-            "Message": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}",
-            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+            "Message": "The operation could not be completed by the registry (error: Dna.DomainService:Dns:10030). Please try again or contact support.",
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}",
+            "GatewayCode": "Dna.DomainService:Dns:10030"
         }
     },
     "ignore": []

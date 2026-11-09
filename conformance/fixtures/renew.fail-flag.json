@@ -29,9 +29,9 @@
     "output": {
         "result": "ERROR",
         "error": {
-            "Code": "DOMAIN_RENEW",
-            "Message": "Invalid response received from server! Domain renew request could not be completed!",
-            "Details": "The domain renewal request failed to complete"
+            "Code": "RENEW_DOMAIN",
+            "Message": "Domain is not available for registration",
+            "Details": "Domain is not available for registration"
         }
     },
     "ignore": []

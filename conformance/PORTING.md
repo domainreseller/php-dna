@@ -140,9 +140,11 @@ Follow `DNARest::request()` exactly:
   `Could not reach the DomainNameAPI service: the connection timed out. (...)`;
   other transport errors read `Curl error during request: ...`. Use the curl
   errno equivalents (28 timeout, 6 DNS, 7 connect refused, 35/60 TLS, 56
-  reset). As in php-dna, the method's returned envelope carries
-  `API_<errno>` (e.g. `API_28`, via `formatErrorCode`), while
-  `getParsedResponseData()['Code']` holds `CURL_<errno>`.
+  reset). The returned envelope code is `CURL_<errno>` (e.g. `CURL_28`),
+  never `API_<n>`, which is reserved for HTTP statuses.
+- When the gateway sent its own error code (e.g.
+  `Dna.DomainService:Domain:10007`), error envelopes with an `API_<status>`
+  code also carry it as `GatewayCode` (see `setError`).
 
 ## Telemetry
 

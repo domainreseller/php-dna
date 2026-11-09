@@ -1,0 +1,30 @@
+{
+    "id": "validateContact.intl-mismatch",
+    "call": "validateContact",
+    "args": [
+        {
+            "FirstName": "Grace",
+            "LastName": "Hopper",
+            "Phone": "+44 20 7123 4567",
+            "PhoneCountryCode": "90",
+            "Fax": "+1-202-555-0101",
+            "FaxCountryCode": ""
+        }
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "FirstName": "Grace",
+        "LastName": "Hopper",
+        "Phone": "2071234567",
+        "PhoneCountryCode": "44",
+        "Fax": "2025550101",
+        "FaxCountryCode": "1",
+        "AddressLine1": "Addres yok",
+        "City": "ISTANBUL",
+        "Country": "TR",
+        "ZipCode": "34000",
+        "State": "ISTANBUL"
+    },
+    "ignore": []
+}

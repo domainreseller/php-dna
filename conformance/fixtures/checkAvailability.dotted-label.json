@@ -1,0 +1,50 @@
+{
+    "id": "checkAvailability.dotted-label",
+    "call": "checkAvailability",
+    "args": [
+        [
+            "my.company"
+        ],
+        [
+            "com"
+        ],
+        1
+    ],
+    "note": "only the trailing .tld is stripped; default command",
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"infos\":[{\"domainName\":\"my.company.com\",\"tld\":\"COM\",\"status\":\"AVAILABLE\",\"price\":9.5,\"currency\":\"USD\",\"period\":1}]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/bulk-search",
+            "query": [],
+            "body": [
+                {
+                    "domainName": "my.company.com"
+                }
+            ],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": [
+        {
+            "TLD": "com",
+            "DomainName": "my.company",
+            "Status": "available",
+            "Command": "create",
+            "Period": 1,
+            "IsFee": false,
+            "Price": "9.5000",
+            "Currency": "USD",
+            "Reason": null
+        }
+    ],
+    "ignore": []
+}

@@ -29,7 +29,8 @@
         "error": {
             "Code": "API_404",
             "Message": "The domain name you requested could not be found. Please check and try again.",
-            "Details": "The domain could not be found. Please check and try again."
+            "Details": "The domain could not be found. Please check and try again.",
+            "GatewayCode": "Dna.DomainService:Domain:10007"
         }
     },
     "ignore": []

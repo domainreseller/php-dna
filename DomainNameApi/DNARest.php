@@ -96,6 +96,10 @@ class DNARest
     private $tokenExpire;
     private $authenticated = false;
     private $resellerId;
+    /** @var bool the last request failed in transport (curl), not with an HTTP status */
+    private $transportFailed = false;
+    /** @var string the gateway's own error code from the last failed request */
+    private $lastGatewayCode = '';
 
     /**
      * DNARest constructor.
@@ -266,7 +270,8 @@ class DNARest
     private function formatErrorCode($code): string
     {
         if (is_numeric($code)) {
-            return 'API_' . $code ;
+            // A transport failure carries the curl errno, not an HTTP status.
+            return ($this->transportFailed ? 'CURL_' : 'API_') . $code;
         }
         return (string)$code;
     }
@@ -371,6 +376,9 @@ class DNARest
     {
         $this->paceZoneRequest($endpoint);
 
+        $this->transportFailed = false;
+        $this->lastGatewayCode = '';
+
         // Durations are per call. Measuring from construction made every call
         // after the first second of a long-lived client (cron, sync) look slow.
         $this->startAt = microtime(true);
@@ -426,6 +434,7 @@ class DNARest
             // made write calls (nameservers, lock, contacts…) report success
             // while nothing reached the registry.
             $curlErrno    = curl_errno($ch);
+            $this->transportFailed = true;
             $errorMessage = 'Curl error during request: ' . curl_error($ch);
             if ($curlErrno === 28) {
                 $errorMessage = 'Could not reach the DomainNameAPI service: the connection timed out. (' . curl_error($ch) . ')';
@@ -455,7 +464,14 @@ class DNARest
 
                 $errorMessage             = $parsedResponse['message'] ?? ($parsedResponse['error']['message'] ?? $response_body);
                 $errorCode                = $parsedResponse['code'] ?? ($parsedResponse['error']['code'] ?? 'HTTP_' . $response_status);
-                $errorDetails             = $parsedResponse['details'] ?? ($parsedResponse['error']['details'] ?? $response_body);
+                $apiDetails               = $parsedResponse['details'] ?? ($parsedResponse['error']['details'] ?? null);
+                $errorDetails             = $apiDetails ?? $response_body;
+                // The gateway's own code (e.g. Dna.DomainService:Domain:10007)
+                // is kept as GatewayCode next to the API_<status> code.
+                if (is_string($errorCode) && $errorCode !== '' && strpos($errorCode, 'HTTP_') !== 0
+                    && $errorCode !== 'CREDENTIALS') {
+                    $this->lastGatewayCode = $errorCode;
+                }
 
                 // Empty body on an error status (429/502/503/504 from the
                 // gateway, connection reset) leaves $errorMessage == '' — the
@@ -480,7 +496,9 @@ class DNARest
                 // around the error code. (BUG-10124)
                 $isBoilerplate = (bool) preg_match("/Exception of type '[^']*' was thrown/i", (string) $errorMessage);
                 if ($isBoilerplate || (string) $errorMessage === (string) $errorCode) {
-                    $detailsClean = trim(preg_replace('/^Dna\s+/', '', (string) $errorDetails));
+                    // Only the gateway's details field may replace the message;
+                    // the raw response body (JSON) is never user-facing text.
+                    $detailsClean = trim(preg_replace('/^Dna\s+/', '', (string) $apiDetails));
                     if ($detailsClean !== ''
                         && $detailsClean !== (string) $errorMessage
                         && $detailsClean !== (string) $errorCode
@@ -558,19 +576,19 @@ class DNARest
                 $resp['name']   = $response['resellerName'] ?? '';
 
                 // Primary currency USD, secondary TRY
-                $resp['balance']  = (string)($response['usdBalance'] ?? 0);
+                $resp['balance']  = number_format((float)($response['usdBalance'] ?? 0), 2, '.', '');
                 $resp['currency'] = 'USD';
                 $resp['symbol']   = '$';
 
                 // Balances array'i
                 $balances         = [
                     [
-                        'balance'  => (string)($response['usdBalance'] ?? 0),
+                        'balance'  => number_format((float)($response['usdBalance'] ?? 0), 2, '.', ''),
                         'currency' => 'USD',
                         'symbol'   => '$'
                     ],
                     [
-                        'balance'  => (string)($response['tryBalance'] ?? 0),
+                        'balance'  => number_format((float)($response['tryBalance'] ?? 0), 2, '.', ''),
                         'currency' => 'TL',
                         'symbol'   => 'TL'
                     ]
@@ -614,6 +632,20 @@ class DNARest
             $response = $this->request('GET', 'deposit/accounts/me', ['currency' => $currencyName]);
 
             $balanceKey = strtolower($currencyId) . 'Balance';
+            if (!is_array($response) || !array_key_exists($balanceKey, $response)) {
+                // The account only reports USD and TRY balances. Answering
+                // "0.00" for anything else looked like an empty account.
+                return [
+                    'ErrorCode'        => 'BALANCE',
+                    'OperationMessage' => sprintf('No %s balance is reported for this account. Available: USD, TRY.', $currencyName),
+                    'OperationResult'  => 'FAILED',
+                    'Balance'          => '0.00',
+                    'CurrencyId'       => $mapped['id'],
+                    'CurrencyInfo'     => null,
+                    'CurrencyName'     => $mapped['name'],
+                    'CurrencySymbol'   => $mapped['symbol']
+                ];
+            }
 
             return [
                 'ErrorCode'        => 0,
@@ -675,7 +707,13 @@ class DNARest
                     if (!is_array($item)) continue;
                     $tld       = strtolower($item['tld'] ?? substr(strrchr($item['domainName'] ?? '', "."), 1));
                     $domainRaw = $item['domainName'] ?? '';
-                    $domainName = str_replace("." . $tld, '', strtolower($domainRaw));
+                    // Strip only the trailing ".tld": str_replace removed every
+                    // occurrence ("my.company.com" became "mypany").
+                    $lower      = strtolower($domainRaw);
+                    $suffix     = '.' . $tld;
+                    $domainName = ($tld !== '' && substr($lower, -strlen($suffix)) === $suffix)
+                        ? substr($lower, 0, -strlen($suffix))
+                        : $lower;
                     $status     = strtolower($item['status'] ?? '');
                     $isAvailable = in_array($status, ['available', '1', 'true']);
 
@@ -904,7 +942,9 @@ class DNARest
             return [
                 'result' => self::$RESULT_OK,
                 'data'   => [
-                    'NameServers' => $response['nameServers'] ?? $nameServers
+                    // The gateway rarely echoes the list; report the normalised
+                    // list that was actually sent, not the raw input.
+                    'NameServers' => $response['nameServers'] ?? $payload['nameServers']
                 ]
             ];
         } catch (Exception $e) {
@@ -1282,12 +1322,18 @@ class DNARest
             $this->request('POST', $endpoint, $body);
 
             if ($apply) {
-                $this->applyResourceRecords($domainName);
+                // A failed apply leaves the change staged but not live, so the
+                // caller must see the apply error instead of a false OK.
+                $applied = $this->applyResourceRecords($domainName);
+                if (($applied['result'] ?? '') !== self::$RESULT_OK) {
+                    return $applied;
+                }
             }
 
             return [
                 'result' => self::$RESULT_OK,
-                'data'   => ['Name' => $name, 'Type' => $type, 'TTL' => (int) $ttl, 'Content' => $content],
+                // Report what was sent: the upper-cased type and the clamped TTL.
+                'data'   => ['Name' => $name, 'Type' => $body['zoneStruct']['type'], 'TTL' => $body['zoneStruct']['ttl'], 'Content' => $content],
             ];
         } catch (Exception $e) {
             return [
@@ -1326,12 +1372,18 @@ class DNARest
             $this->request('PUT', $endpoint, $body);
 
             if ($apply) {
-                $this->applyResourceRecords($domainName);
+                // A failed apply leaves the change staged but not live, so the
+                // caller must see the apply error instead of a false OK.
+                $applied = $this->applyResourceRecords($domainName);
+                if (($applied['result'] ?? '') !== self::$RESULT_OK) {
+                    return $applied;
+                }
             }
 
             return [
                 'result' => self::$RESULT_OK,
-                'data'   => ['Name' => $name, 'Type' => $type, 'TTL' => (int) $ttl, 'Content' => $content],
+                // Report what was sent: the upper-cased type and the clamped TTL.
+                'data'   => ['Name' => $name, 'Type' => $body['zoneStruct']['type'], 'TTL' => $body['zoneStruct']['ttl'], 'Content' => $content],
             ];
         } catch (Exception $e) {
             return [
@@ -1367,7 +1419,12 @@ class DNARest
             ]);
 
             if ($apply) {
-                $this->applyResourceRecords($domainName);
+                // A failed apply leaves the change staged but not live, so the
+                // caller must see the apply error instead of a false OK.
+                $applied = $this->applyResourceRecords($domainName);
+                if (($applied['result'] ?? '') !== self::$RESULT_OK) {
+                    return $applied;
+                }
             }
 
             return [
@@ -1455,12 +1512,17 @@ class DNARest
             $this->request('POST', $endpoint, $body);
 
             if ($apply) {
-                $this->applyResourceRecords($domainName);
+                // A failed apply leaves the change staged but not live, so the
+                // caller must see the apply error instead of a false OK.
+                $applied = $this->applyResourceRecords($domainName);
+                if (($applied['result'] ?? '') !== self::$RESULT_OK) {
+                    return $applied;
+                }
             }
 
             return [
                 'result' => self::$RESULT_OK,
-                'data'   => ['Name' => $name, 'Type' => strtoupper($type), 'TTL' => (int) $ttl, 'Contents' => $contents],
+                'data'   => ['Name' => $name, 'Type' => $body['zoneStruct']['type'], 'TTL' => $body['zoneStruct']['ttl'], 'Contents' => $contents],
             ];
         } catch (Exception $e) {
             return [
@@ -1799,7 +1861,10 @@ class DNARest
             ];
         } catch (Exception $e) {
             $raw = $this->lastResponse['raw_response'] ?? $e->getMessage();
-            if (stripos((string) $raw, 'not found') !== false || stripos($e->getMessage(), 'not found') !== false) {
+            // Only the gateway's "no forwarding configured" answer means
+            // disabled. Any other "not found" (e.g. the domain itself does not
+            // exist) is a real error.
+            if ($this->isForwardNotSet($e)) {
                 return [
                     'result' => self::$RESULT_OK,
                     'data'   => ['Enabled' => false, 'RedirectAddress' => '', 'ForwardType' => ''],
@@ -1867,14 +1932,31 @@ class DNARest
         try {
             $this->request('DELETE', 'domains/forwards', ['DomainName' => $domainName]);
 
-            return ['result' => self::$RESULT_OK, 'data' => ['DomainName' => $domainName]];
+            return ['result' => self::$RESULT_OK, 'data' => ['DomainName' => $domainName, 'Removed' => true]];
         } catch (Exception $e) {
+            // Nothing configured: deleting is a no-op, same as getForwarding
+            // reporting it as disabled.
+            if ($this->isForwardNotSet($e)) {
+                return ['result' => self::$RESULT_OK, 'data' => ['DomainName' => $domainName, 'Removed' => false]];
+            }
             return [
                 'result' => self::$RESULT_ERROR,
                 'error'  => $this->setError($this->formatErrorCode($e->getCode()) ?: 'DELETE_FORWARD', $e->getMessage(),
                     $this->lastParsedResponse['Details'] ?? ($this->lastResponse['raw_response'] ?? $e->getMessage()))
             ];
         }
+    }
+
+    /**
+     * The gateway answers "Redirect information not found" when a domain has
+     * no forwarding configured.
+     */
+    private function isForwardNotSet(Exception $e): bool
+    {
+        $needle = 'redirect information not found';
+        return stripos($e->getMessage(), $needle) !== false
+            || stripos((string) ($this->lastResponse['raw_response'] ?? ''), $needle) !== false
+            || stripos(json_encode($this->lastResponse ?? []), $needle) !== false;
     }
 
     /**
@@ -1915,28 +1997,43 @@ class DNARest
             $domainInfo = $this->request('GET', 'domains/info', ['DomainName' => $domainName]);
 
             // REST API contactType → module contact key mapping
+            // Matched case-insensitively, with the long and short spellings.
             $typeMap = [
-                'Admin'      => 'Administrative',
-                'Billing'    => 'Billing',
-                'Tech'       => 'Technical',
-                'Registrant' => 'Registrant'
+                'admin'          => 'Administrative',
+                'administrative' => 'Administrative',
+                'billing'        => 'Billing',
+                'tech'           => 'Technical',
+                'technical'      => 'Technical',
+                'registrant'     => 'Registrant',
+                'owner'          => 'Registrant',
             ];
 
             $contacts = [];
             if (isset($domainInfo['contacts']) && is_array($domainInfo['contacts'])) {
                 foreach ($domainInfo['contacts'] as $contactItem) {
-                    $apiType = $contactItem['contactType'] ?? '';
-                    $contactKey = $typeMap[$apiType] ?? ucfirst(strtolower($apiType));
+                    if (!is_array($contactItem)) {
+                        continue;
+                    }
+                    $apiType    = trim((string) ($contactItem['contactType'] ?? ''));
+                    $contactKey = $typeMap[strtolower($apiType)] ?? ucfirst(strtolower($apiType));
+                    if ($contactKey === '') {
+                        continue;
+                    }
                     $contacts[$contactKey] = $this->parseContactInfo(array_merge($contactItem, ['type' => $contactKey]));
                 }
             }
 
-            // Contact key order: Administrative, Billing, Registrant, Technical
+            // Contact key order: Administrative, Billing, Registrant, Technical,
+            // then any other type the registry returned (kept, not dropped).
             $orderedContacts = [];
             foreach (['Administrative', 'Billing', 'Registrant', 'Technical'] as $key) {
                 if (isset($contacts[$key])) {
                     $orderedContacts[$key] = $contacts[$key];
+                    unset($contacts[$key]);
                 }
+            }
+            foreach ($contacts as $key => $contact) {
+                $orderedContacts[$key] = $contact;
             }
 
             return [
@@ -2013,6 +2110,9 @@ class DNARest
             ];
 
             $response = $this->request('POST', 'domains/transfer', $payload);
+            if ($failed = $this->operationFailure($response, 'TRANSFER_DOMAIN')) {
+                return $failed;
+            }
 
             return $this->parseDomainInfo($response);
         } catch (Exception $e) {
@@ -2113,6 +2213,9 @@ class DNARest
         try {
             $payload  = ['domainName' => $domainName, 'period' => $period];
             $response = $this->request('POST', 'domains/renew', $payload);
+            if ($failed = $this->operationFailure($response, 'RENEW_DOMAIN')) {
+                return $failed;
+            }
 
             if ($response["expirationDate"] ?? false) {
                 return [
@@ -2205,6 +2308,9 @@ class DNARest
             ];
 
             $response = $this->request('POST', 'domains/register-with-contacts', $payload);
+            if ($failed = $this->operationFailure($response, 'REGISTER_DOMAIN')) {
+                return $failed;
+            }
 
             return $this->parseDomainInfo($response);
         } catch (Exception $e) {
@@ -2421,17 +2527,21 @@ class DNARest
     public function modifyPrivacyProtectionStatus($domainName, $status, $reason = 'Owner request')
     {
         try {
-            // If reason is empty, use the default value
-            if (empty($reason)) {
-                $reason = self::$DEFAULT_REASON;
-            }
+            // $reason is kept for signature compatibility only: the gateway's
+            // DomainPrivacyInput has no reason field and rejects unknown ones.
 
-            $payload  = ['domainName' => $domainName, 'privacyStatus' => $status===true];
+            // Panels pass 1/"1"/"on"/"true" as often as a real bool; anything
+            // truthy in that sense enables privacy (it used to need === true).
+            $enabled = is_bool($status)
+                ? $status
+                : filter_var(is_string($status) ? trim($status) : $status, FILTER_VALIDATE_BOOLEAN);
+
+            $payload  = ['domainName' => $domainName, 'privacyStatus' => $enabled];
             $response = $this->request('POST', "domains/privacy", $payload);
 
             return [
                 'data'   => [
-                    'PrivacyProtectionStatus' => $status
+                    'PrivacyProtectionStatus' => $enabled
                 ],
                 'result' => self::$RESULT_OK
             ];
@@ -2498,6 +2608,30 @@ class DNARest
             return self::DOMAIN_STATUS_MAP[(int)$value] ?? (string)$value;
         }
         return (string)$value;
+    }
+
+    /**
+     * The register, transfer and renew endpoints can answer HTTP 200 with
+     * {"success": false, "message": "..."}. That is a refusal, not a
+     * success: return the error envelope so the order is not marked done.
+     *
+     * @param mixed  $response
+     * @param string $code
+     * @return array|null Error envelope, or null when the operation succeeded
+     */
+    private function operationFailure($response, string $code)
+    {
+        if (!is_array($response) || !array_key_exists('success', $response) || $response['success'] !== false) {
+            return null;
+        }
+        $message = trim((string) ($response['message'] ?? ''));
+        if ($message === '') {
+            $message = 'The registry did not accept the request.';
+        }
+        return [
+            'result' => self::$RESULT_ERROR,
+            'error'  => $this->setError($code, $message, $message),
+        ];
     }
 
     /**
@@ -2701,6 +2835,14 @@ class DNARest
             }
             if ($cc !== '' && strpos($digits, $cc) === 0 && strlen($digits) > strlen($cc)) {
                 $digits = substr($digits, strlen($cc));
+            } else {
+                // The number carries its own country code ("+1 202...") and it
+                // differs from the given one (often a default 90): the number wins.
+                $own = $this->callingCodePrefix($digits);
+                if ($own !== '' && strlen($digits) > strlen($own)) {
+                    $cc     = $own;
+                    $digits = substr($digits, strlen($own));
+                }
             }
         } elseif ($cc !== '' && strpos($digits, $cc) === 0 && strlen($digits) > 10) {
             // No "+", but the code is repeated at the front: "905323743388"/"90".
@@ -2724,6 +2866,33 @@ class DNARest
         }
 
         return [$digits, $cc];
+    }
+
+    /**
+     * Country calling code at the start of an international number (digits
+     * only, without "+"). E.164 codes are prefix-free: zones 1 and 7 use one
+     * digit, the listed two-digit codes use two, everything else uses three.
+     *
+     * @param string $digits
+     * @return string
+     */
+    private function callingCodePrefix($digits)
+    {
+        $digits = (string) $digits;
+        if ($digits === '' || $digits[0] === '0') {
+            return '';
+        }
+        if ($digits[0] === '1' || $digits[0] === '7') {
+            return $digits[0];
+        }
+        $twoDigit = ['20', '27', '30', '31', '32', '33', '34', '36', '39', '40', '41', '43', '44', '45', '46', '47',
+                     '48', '49', '51', '52', '53', '54', '55', '56', '57', '58', '60', '61', '62', '63', '64', '65',
+                     '66', '81', '82', '84', '86', '90', '91', '92', '93', '94', '95', '98'];
+        $two = substr($digits, 0, 2);
+        if (in_array($two, $twoDigit, true)) {
+            return $two;
+        }
+        return strlen($digits) >= 3 ? substr($digits, 0, 3) : '';
     }
 
     /**
@@ -2811,7 +2980,6 @@ class DNARest
             "LastName"         => "Isimyok",
             "AddressLine1"     => "Addres yok",
             "City"             => "ISTANBUL",
-            "State"            => "ISTANBUL",
             "Country"          => "TR",
             "ZipCode"          => "34000",
             "Phone"            => "5555555555",
@@ -2824,6 +2992,8 @@ class DNARest
                 $contact[$key] = $value;
             }
         }
+        // No State default: a missing state falls back to the city below.
+        $contact["State"] = $contact["State"] ?? '';
 
         // Names: strip what the gateway rejects, then fall back to the default
         // if nothing printable survived (e.g. a name that was only digits).

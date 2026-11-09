@@ -36,11 +36,10 @@
     "output": {
         "result": "OK",
         "data": {
-            "NameServers": {
-                "ns1": "NS1.Example.NET",
-                "ns2": "ns2.example.net",
-                "ns3": ""
-            }
+            "NameServers": [
+                "ns1.example.net",
+                "ns2.example.net"
+            ]
         }
     },
     "ignore": []

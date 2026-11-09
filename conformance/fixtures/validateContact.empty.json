@@ -11,11 +11,11 @@
         "LastName": "Isimyok",
         "AddressLine1": "Addres yok",
         "City": "ISTANBUL",
-        "State": "ISTANBUL",
         "Country": "TR",
         "ZipCode": "34000",
         "Phone": "5555555555",
         "PhoneCountryCode": "90",
+        "State": "ISTANBUL",
         "Fax": "",
         "FaxCountryCode": ""
     },

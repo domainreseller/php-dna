@@ -27,7 +27,8 @@
     "output": {
         "result": "OK",
         "data": {
-            "DomainName": "example.com"
+            "DomainName": "example.com",
+            "Removed": true
         }
     },
     "ignore": []

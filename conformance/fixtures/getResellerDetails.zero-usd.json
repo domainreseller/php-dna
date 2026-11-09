@@ -25,17 +25,17 @@
         "id": "00000000-0000-4000-8000-000000000001",
         "active": true,
         "name": "example-reseller",
-        "balance": "0",
+        "balance": "0.00",
         "currency": "USD",
         "symbol": "$",
         "balances": [
             {
-                "balance": "0",
+                "balance": "0.00",
                 "currency": "USD",
                 "symbol": "$"
             },
             {
-                "balance": "99.999",
+                "balance": "100.00",
                 "currency": "TL",
                 "symbol": "TL"
             }

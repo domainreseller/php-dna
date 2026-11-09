@@ -58,7 +58,7 @@
         "result": "OK",
         "data": {
             "Name": "www",
-            "Type": "a",
+            "Type": "A",
             "TTL": 300,
             "Content": "192.0.2.5"
         }

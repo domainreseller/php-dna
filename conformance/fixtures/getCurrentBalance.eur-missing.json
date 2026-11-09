@@ -25,9 +25,9 @@
         }
     ],
     "output": {
-        "ErrorCode": 0,
-        "OperationMessage": "Command completed succesfully.",
-        "OperationResult": "SUCCESS",
+        "ErrorCode": "BALANCE",
+        "OperationMessage": "No EUR balance is reported for this account. Available: USD, TRY.",
+        "OperationResult": "FAILED",
         "Balance": "0.00",
         "CurrencyId": 3,
         "CurrencyInfo": null,

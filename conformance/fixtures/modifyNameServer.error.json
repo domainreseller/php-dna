@@ -35,7 +35,8 @@
         "error": {
             "Code": "API_400",
             "Message": "Nameserver could not be resolved.",
-            "Details": "ns1.bad"
+            "Details": "ns1.bad",
+            "GatewayCode": "Dna.DomainService:Dns:10010"
         }
     },
     "ignore": []

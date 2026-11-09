@@ -31,7 +31,8 @@
         "error": {
             "Code": "API_400",
             "Message": "Privacy protection is not supported for this TLD.",
-            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10040\",\"message\":\"Privacy protection is not supported for this TLD.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10040\",\"message\":\"Privacy protection is not supported for this TLD.\",\"details\":null,\"data\":[],\"validationErrors\":null}}",
+            "GatewayCode": "Dna.DomainService:Domain:10040"
         }
     },
     "ignore": []

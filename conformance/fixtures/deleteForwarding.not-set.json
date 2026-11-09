@@ -25,11 +25,10 @@
         }
     ],
     "output": {
-        "result": "ERROR",
-        "error": {
-            "Code": "API_404",
-            "Message": "Redirect information not found",
-            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10061\",\"message\":\"Redirect information not found\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        "result": "OK",
+        "data": {
+            "DomainName": "example.com",
+            "Removed": false
         }
     },
     "ignore": []
