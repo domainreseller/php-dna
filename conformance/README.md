@@ -88,7 +88,8 @@ tolerate in its comparator:
 
 ## Coverage
 
-126 fixtures over 45 public methods: success, gateway errors (400/404/429/500,
+126 fixtures over the 38 methods that talk to the gateway or are pure
+utilities (diagnostics and settings are left to each port's unit tests): success, gateway errors (400/404/429/500,
 empty bodies, HTML bodies, 302 credential redirects, ABP boilerplate
 messages, validation error lists), and the pure utilities
 (`isTrTLD`, `validateContact`). Transport failures (timeouts, DNS errors)
