@@ -1,0 +1,37 @@
+{
+    "id": "modifyPrivacyProtectionStatus.off-reason",
+    "call": "modifyPrivacyProtectionStatus",
+    "args": [
+        "example.com",
+        false,
+        "Customer asked"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/privacy",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "privacyStatus": false
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "PrivacyProtectionStatus": false
+        },
+        "result": "OK"
+    },
+    "ignore": []
+}

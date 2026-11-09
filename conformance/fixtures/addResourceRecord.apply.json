@@ -1,0 +1,67 @@
+{
+    "id": "addResourceRecord.apply",
+    "call": "addResourceRecord",
+    "args": [
+        "example.com",
+        "www.example.com",
+        "a",
+        "192.0.2.5",
+        300,
+        true
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        },
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": {
+                "zoneStruct": {
+                    "name": "www",
+                    "ttl": 300,
+                    "type": "A",
+                    "contents": [
+                        "192.0.2.5"
+                    ]
+                }
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        },
+        {
+            "method": "POST",
+            "path": "domains/zones/apply",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": [],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "Name": "www",
+            "Type": "a",
+            "TTL": 300,
+            "Content": "192.0.2.5"
+        }
+    },
+    "ignore": []
+}

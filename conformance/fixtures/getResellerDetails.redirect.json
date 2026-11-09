@@ -1,0 +1,33 @@
+{
+    "id": "getResellerDetails.redirect",
+    "call": "getResellerDetails",
+    "args": [],
+    "note": "302/301 means bad credentials",
+    "responses": [
+        {
+            "status": 302,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "deposit/accounts/me",
+            "query": [],
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_302",
+            "Message": "Invalid API credentials",
+            "Details": "Authentication failed. Check your API key and reseller ID."
+        }
+    },
+    "ignore": []
+}

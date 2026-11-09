@@ -1,0 +1,45 @@
+{
+    "id": "checkAvailability.429",
+    "call": "checkAvailability",
+    "args": [
+        [
+            "x"
+        ],
+        [
+            "com"
+        ],
+        1,
+        "create"
+    ],
+    "responses": [
+        {
+            "status": 429,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/bulk-search",
+            "query": [],
+            "body": [
+                {
+                    "domainName": "x.com"
+                }
+            ],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_429",
+            "Message": "HTTP 429 - Too Many Requests",
+            "Details": "HTTP 429 - Too Many Requests"
+        }
+    },
+    "ignore": []
+}

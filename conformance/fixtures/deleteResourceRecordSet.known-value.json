@@ -1,0 +1,43 @@
+{
+    "id": "deleteResourceRecordSet.known-value",
+    "call": "deleteResourceRecordSet",
+    "args": [
+        "example.com",
+        "gone",
+        "A",
+        false,
+        "192.0.2.99"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "[]"
+        }
+    ],
+    "requests": [
+        {
+            "method": "DELETE",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com",
+                "Name": "gone.example.com.",
+                "Record": "192.0.2.99",
+                "RecordType": "A"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "Name": "gone.example.com.",
+            "Type": "A",
+            "Content": "192.0.2.99"
+        }
+    },
+    "ignore": []
+}

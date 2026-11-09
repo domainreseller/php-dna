@@ -1,0 +1,41 @@
+{
+    "id": "transfer.balance",
+    "call": "transfer",
+    "args": [
+        "example.com",
+        "Ab1!xyZ9",
+        1
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DepositService:Deposit:10002\",\"message\":\"Insufficient balance.\",\"details\":\"Your balance is not sufficient for this operation.\",\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/transfer",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "authCode": "Ab1!xyZ9",
+                "period": 1,
+                "contacts": []
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Insufficient balance.",
+            "Details": "Your balance is not sufficient for this operation."
+        }
+    },
+    "ignore": []
+}

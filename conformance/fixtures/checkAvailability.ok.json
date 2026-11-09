@@ -1,0 +1,101 @@
+{
+    "id": "checkAvailability.ok",
+    "call": "checkAvailability",
+    "args": [
+        [
+            "dnaprobexyz123",
+            "google",
+            "premium"
+        ],
+        [
+            "com",
+            ".net"
+        ],
+        1,
+        "create"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"operationMessage\":\"Command completed successfully\",\"code\":\"1000\",\"reason\":null,\"success\":true,\"infos\":[{\"domainName\":\"dnaprobexyz123.com\",\"tld\":\"COM\",\"isPremium\":false,\"isDocumentRequired\":false,\"currency\":\"USD\",\"period\":1,\"price\":11.99,\"reason\":null,\"status\":\"AVAILABLE\"},{\"domainName\":\"dnaprobexyz123.net\",\"tld\":\"NET\",\"isPremium\":false,\"isDocumentRequired\":false,\"currency\":\"USD\",\"period\":1,\"price\":13.99,\"reason\":null,\"status\":\"AVAILABLE\"},{\"domainName\":\"google.com\",\"tld\":\"COM\",\"isPremium\":false,\"isDocumentRequired\":false,\"currency\":\"USD\",\"period\":1,\"price\":11.99,\"reason\":\"Domain exists\",\"status\":\"NOTAVAILABLE\"},{\"domainName\":\"premium.net\",\"tld\":\"NET\",\"isPremium\":true,\"isDocumentRequired\":false,\"currency\":\"USD\",\"period\":1,\"price\":2500,\"reason\":null,\"status\":\"AVAILABLE\"}]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/bulk-search",
+            "query": [],
+            "body": [
+                {
+                    "domainName": "dnaprobexyz123.com"
+                },
+                {
+                    "domainName": "dnaprobexyz123.net"
+                },
+                {
+                    "domainName": "google.com"
+                },
+                {
+                    "domainName": "google.net"
+                },
+                {
+                    "domainName": "premium.com"
+                },
+                {
+                    "domainName": "premium.net"
+                }
+            ],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": [
+        {
+            "TLD": "com",
+            "DomainName": "dnaprobexyz123",
+            "Status": "available",
+            "Command": "create",
+            "Period": 1,
+            "IsFee": false,
+            "Price": "11.9900",
+            "Currency": "USD",
+            "Reason": null
+        },
+        {
+            "TLD": "net",
+            "DomainName": "dnaprobexyz123",
+            "Status": "available",
+            "Command": "create",
+            "Period": 1,
+            "IsFee": false,
+            "Price": "13.9900",
+            "Currency": "USD",
+            "Reason": null
+        },
+        {
+            "TLD": "com",
+            "DomainName": "google",
+            "Status": "notavailable",
+            "Command": "create",
+            "Period": 1,
+            "IsFee": false,
+            "Price": "11.9900",
+            "Currency": "USD",
+            "Reason": "Domain exists"
+        },
+        {
+            "TLD": "net",
+            "DomainName": "premium",
+            "Status": "available",
+            "Command": "create",
+            "Period": 1,
+            "IsFee": true,
+            "Price": "2500.0000",
+            "Currency": "USD",
+            "Reason": null
+        }
+    ],
+    "ignore": []
+}

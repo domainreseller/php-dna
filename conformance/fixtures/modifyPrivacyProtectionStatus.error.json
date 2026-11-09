@@ -1,0 +1,38 @@
+{
+    "id": "modifyPrivacyProtectionStatus.error",
+    "call": "modifyPrivacyProtectionStatus",
+    "args": [
+        "example.com",
+        true
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10040\",\"message\":\"Privacy protection is not supported for this TLD.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/privacy",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "privacyStatus": true
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Privacy protection is not supported for this TLD.",
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10040\",\"message\":\"Privacy protection is not supported for this TLD.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    },
+    "ignore": []
+}

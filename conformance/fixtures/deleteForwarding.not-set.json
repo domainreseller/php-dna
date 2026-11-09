@@ -1,0 +1,36 @@
+{
+    "id": "deleteForwarding.not-set",
+    "call": "deleteForwarding",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 404,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10061\",\"message\":\"Redirect information not found\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "DELETE",
+            "path": "domains/forwards",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_404",
+            "Message": "Redirect information not found",
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Domain:10061\",\"message\":\"Redirect information not found\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    },
+    "ignore": []
+}

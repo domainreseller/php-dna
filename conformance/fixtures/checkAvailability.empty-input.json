@@ -1,0 +1,23 @@
+{
+    "id": "checkAvailability.empty-input",
+    "call": "checkAvailability",
+    "args": [
+        [],
+        [
+            "com"
+        ],
+        1,
+        "create"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "AVAILABILITY",
+            "Message": "Domain names not found.",
+            "Details": "No domain names provided for availability check"
+        }
+    },
+    "ignore": []
+}

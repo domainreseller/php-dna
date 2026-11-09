@@ -1,0 +1,38 @@
+{
+    "id": "getCurrentBalance.try-lowercase",
+    "call": "getCurrentBalance",
+    "args": [
+        "try"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"resellerName\":\"example-reseller\",\"resellerGroupName\":\"Reseller\",\"tryBalance\":1250.5,\"usdBalance\":601.64}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "deposit/accounts/me",
+            "query": {
+                "currency": "TRY"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "ErrorCode": 0,
+        "OperationMessage": "Command completed succesfully.",
+        "OperationResult": "SUCCESS",
+        "Balance": "1250.50",
+        "CurrencyId": 1,
+        "CurrencyInfo": null,
+        "CurrencyName": "TL",
+        "CurrencySymbol": "TL"
+    },
+    "ignore": []
+}

@@ -1,0 +1,48 @@
+{
+    "id": "checkTransfer.locked",
+    "call": "checkTransfer",
+    "args": [
+        "example.com",
+        "wrong"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"messageKey\":\"TransferLocked\",\"message\":\"Domain is locked\",\"authCodeIsRequired\":true,\"authCodeIsValid\":false,\"userTransferRequired\":false,\"transferLock\":true,\"transferAvailabilityStatus\":false,\"domainStatuses\":[\"clientTransferProhibited\"],\"isPremium\":true,\"premiumPrice\":120.5,\"premiumCurrency\":\"USD\"}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/transfers/check",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "authCode": "wrong"
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "data": {
+            "TransferAvailabilityStatus": false,
+            "AuthCodeIsRequired": true,
+            "AuthCodeIsValid": false,
+            "UserTransferRequired": false,
+            "TransferLock": true,
+            "Message": "Domain is locked",
+            "MessageKey": "TransferLocked",
+            "Additional": []
+        },
+        "error": {
+            "Code": "TRANSFER_NOT_AVAILABLE",
+            "Message": "Domain is locked",
+            "Details": "TransferLocked"
+        }
+    },
+    "ignore": []
+}

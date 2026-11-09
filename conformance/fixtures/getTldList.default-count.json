@@ -1,0 +1,31 @@
+{
+    "id": "getTldList.default-count",
+    "call": "getTldList",
+    "args": [],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"totalCount\":0,\"items\":[]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "products/tlds",
+            "query": {
+                "MaxResultCount": "20",
+                "SkipCount": "0"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": [],
+        "result": "OK"
+    },
+    "ignore": []
+}

@@ -1,0 +1,38 @@
+{
+    "id": "getList.no-items-key",
+    "call": "getList",
+    "args": [
+        {
+            "MaxResultCount": 5
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"totalCount\":7}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains",
+            "query": {
+                "MaxResultCount": "5",
+                "SkipCount": "0"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "Domains": []
+        },
+        "result": "OK",
+        "TotalCount": 7
+    },
+    "ignore": []
+}

@@ -1,0 +1,34 @@
+{
+    "id": "disableTheftProtectionLock.ok",
+    "call": "disableTheftProtectionLock",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/unlock",
+            "query": [],
+            "body": {
+                "domainName": "example.com"
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "LockStatus": false
+        }
+    },
+    "ignore": []
+}

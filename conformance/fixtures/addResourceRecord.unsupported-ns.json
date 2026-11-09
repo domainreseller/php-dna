@@ -1,0 +1,21 @@
+{
+    "id": "addResourceRecord.unsupported-ns",
+    "call": "addResourceRecord",
+    "args": [
+        "example.com",
+        "sub",
+        "NS",
+        "ns1.example.net"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "ADD_ZONE",
+            "Message": "Record type \"NS\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT.",
+            "Details": "Record type \"NS\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT."
+        }
+    },
+    "ignore": []
+}

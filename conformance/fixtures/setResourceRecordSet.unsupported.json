@@ -1,0 +1,23 @@
+{
+    "id": "setResourceRecordSet.unsupported",
+    "call": "setResourceRecordSet",
+    "args": [
+        "example.com",
+        "api",
+        "NS",
+        [
+            "ns1.example.net"
+        ]
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "SET_ZONE",
+            "Message": "Record type \"NS\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT.",
+            "Details": "Record type \"NS\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT."
+        }
+    },
+    "ignore": []
+}

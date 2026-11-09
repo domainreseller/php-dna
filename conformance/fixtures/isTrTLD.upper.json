@@ -1,0 +1,11 @@
+{
+    "id": "isTrTLD.upper",
+    "call": "isTrTLD",
+    "args": [
+        "EXAMPLE.TR"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": true,
+    "ignore": []
+}

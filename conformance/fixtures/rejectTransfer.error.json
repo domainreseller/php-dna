@@ -1,0 +1,36 @@
+{
+    "id": "rejectTransfer.error",
+    "call": "rejectTransfer",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10024\",\"message\":\"Exception of type 'Volo.Abp.BusinessException' was thrown.\",\"details\":\"Dna Host is linked but not marked as linked in entity\",\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/transfers/reject",
+            "query": [],
+            "body": {
+                "domainName": "example.com"
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Host is linked but not marked as linked in entity",
+            "Details": "Dna Host is linked but not marked as linked in entity"
+        }
+    },
+    "ignore": []
+}

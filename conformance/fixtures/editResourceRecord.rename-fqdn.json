@@ -1,0 +1,53 @@
+{
+    "id": "editResourceRecord.rename-fqdn",
+    "call": "editResourceRecord",
+    "args": [
+        "example.com",
+        "old.example.com.",
+        "new.example.com",
+        "CNAME",
+        "example.com.",
+        3600,
+        false
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "PUT",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com",
+                "recordName": "old.example.com."
+            },
+            "body": {
+                "zoneStruct": {
+                    "name": "new",
+                    "ttl": 3600,
+                    "type": "CNAME",
+                    "contents": [
+                        "example.com."
+                    ]
+                }
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "Name": "new",
+            "Type": "CNAME",
+            "TTL": 3600,
+            "Content": "example.com."
+        }
+    },
+    "ignore": []
+}

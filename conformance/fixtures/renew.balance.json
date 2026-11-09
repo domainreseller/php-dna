@@ -1,0 +1,38 @@
+{
+    "id": "renew.balance",
+    "call": "renew",
+    "args": [
+        "example.com",
+        1
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DepositService:Deposit:10002\",\"message\":\"Insufficient balance.\",\"details\":\"Your balance is not sufficient for this operation.\",\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/renew",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "period": 1
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Insufficient balance.",
+            "Details": "Your balance is not sufficient for this operation."
+        }
+    },
+    "ignore": []
+}

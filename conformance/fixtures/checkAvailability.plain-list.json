@@ -1,0 +1,50 @@
+{
+    "id": "checkAvailability.plain-list",
+    "call": "checkAvailability",
+    "args": [
+        [
+            "a"
+        ],
+        [
+            "com"
+        ],
+        2,
+        "transfer"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "[{\"domainName\":\"a.com\",\"status\":\"available\"}]"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/bulk-search",
+            "query": [],
+            "body": [
+                {
+                    "domainName": "a.com"
+                }
+            ],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": [
+        {
+            "TLD": "com",
+            "DomainName": "a",
+            "Status": "available",
+            "Command": "transfer",
+            "Period": 2,
+            "IsFee": false,
+            "Price": null,
+            "Currency": null,
+            "Reason": null
+        }
+    ],
+    "ignore": []
+}

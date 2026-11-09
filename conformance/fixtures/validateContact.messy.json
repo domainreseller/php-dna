@@ -1,0 +1,29 @@
+{
+    "id": "validateContact.messy",
+    "call": "validateContact",
+    "args": [
+        {
+            "FirstName": " Jo ",
+            "Phone": "+1 (202) 555-0100",
+            "Country": "Turkey",
+            "City": "",
+            "Fax": "0090 212 123 45 67"
+        }
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "FirstName": "Jo",
+        "Phone": "12025550100",
+        "Country": "TR",
+        "City": "ISTANBUL",
+        "Fax": "2121234567",
+        "LastName": "Isimyok",
+        "AddressLine1": "Addres yok",
+        "State": "ISTANBUL",
+        "ZipCode": "34000",
+        "PhoneCountryCode": "90",
+        "FaxCountryCode": "90"
+    },
+    "ignore": []
+}

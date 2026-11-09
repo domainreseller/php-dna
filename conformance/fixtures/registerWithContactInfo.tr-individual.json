@@ -1,0 +1,235 @@
+{
+    "id": "registerWithContactInfo.tr-individual",
+    "call": "registerWithContactInfo",
+    "args": [
+        "example.com.tr",
+        1,
+        {
+            "Administrative": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Billing": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Technical": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Registrant": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            }
+        },
+        [
+            "ns1.example.net",
+            "ns2.example.net"
+        ],
+        true,
+        false,
+        {
+            "TRABISDOMAINCATEGORY": 1,
+            "TRABISCITIZIENID": "11111111111",
+            "TRABISNAMESURNAME": "Ahmet Yilmaz",
+            "TRABISCOUNTRYID": "215",
+            "TRABISCITYID": "34",
+            "TRABISCOUNTRYNAME": "Türkiye",
+            "TRABISCITYNAME": "Istanbul"
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"success\":true,\"message\":\"Command completed successfully\",\"domainId\":\"00000000-0000-4000-8000-0000000000aa\",\"status\":\"Active\",\"expirationDate\":\"2027-11-09T12:00:00\"}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/register-with-contacts",
+            "query": [],
+            "body": {
+                "domainName": "example.com.tr",
+                "period": 1,
+                "nameServers": [
+                    "ns1.example.net",
+                    "ns2.example.net"
+                ],
+                "isLocked": true,
+                "privacyEnabled": false,
+                "contacts": [
+                    {
+                        "contactType": "Admin",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Billing",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Tech",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Registrant",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    }
+                ],
+                "tldAttributes": {
+                    "TRABISDOMAINCATEGORY": "Owner",
+                    "TRABISCITIZENID": "11111111111"
+                }
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "ID": 0,
+            "Status": "Active",
+            "DomainName": "",
+            "AuthCode": "",
+            "LockStatus": "false",
+            "PrivacyProtectionStatus": "false",
+            "IsChildNameServer": "false",
+            "Contacts": {
+                "Billing": {
+                    "ID": 0
+                },
+                "Technical": {
+                    "ID": 0
+                },
+                "Administrative": {
+                    "ID": 0
+                },
+                "Registrant": {
+                    "ID": 0
+                }
+            },
+            "Dates": {
+                "Start": "",
+                "Expiration": "2027-11-09T12:00:00",
+                "RemainingDays": 366
+            },
+            "NameServers": [],
+            "Additional": [],
+            "ChildNameServers": []
+        },
+        "result": "OK"
+    },
+    "ignore": [
+        "data.Dates.RemainingDays"
+    ]
+}

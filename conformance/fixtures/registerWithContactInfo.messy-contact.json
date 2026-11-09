@@ -1,0 +1,245 @@
+{
+    "id": "registerWithContactInfo.messy-contact",
+    "call": "registerWithContactInfo",
+    "args": [
+        "example.net",
+        1,
+        {
+            "Registrant": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Administrative": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Technical": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Billing": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            }
+        },
+        [
+            "ns1.example.net"
+        ],
+        true,
+        true
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"success\":true,\"message\":\"Command completed successfully\",\"domainId\":\"00000000-0000-4000-8000-0000000000aa\",\"status\":\"Active\",\"expirationDate\":\"2027-11-09T12:00:00\"}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/register-with-contacts",
+            "query": [],
+            "body": {
+                "domainName": "example.net",
+                "period": 1,
+                "nameServers": [
+                    "ns1.example.net"
+                ],
+                "isLocked": true,
+                "privacyEnabled": true,
+                "contacts": [
+                    {
+                        "contactType": "Registrant",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Admin",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Tech",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Billing",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    }
+                ],
+                "tldAttributes": []
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "ID": 0,
+            "Status": "Active",
+            "DomainName": "",
+            "AuthCode": "",
+            "LockStatus": "false",
+            "PrivacyProtectionStatus": "false",
+            "IsChildNameServer": "false",
+            "Contacts": {
+                "Billing": {
+                    "ID": 0
+                },
+                "Technical": {
+                    "ID": 0
+                },
+                "Administrative": {
+                    "ID": 0
+                },
+                "Registrant": {
+                    "ID": 0
+                }
+            },
+            "Dates": {
+                "Start": "",
+                "Expiration": "2027-11-09T12:00:00",
+                "RemainingDays": 366
+            },
+            "NameServers": [],
+            "Additional": [],
+            "ChildNameServers": []
+        },
+        "result": "OK"
+    },
+    "ignore": [
+        "data.Dates.RemainingDays"
+    ]
+}

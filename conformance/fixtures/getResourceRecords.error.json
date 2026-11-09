@@ -1,0 +1,36 @@
+{
+    "id": "getResourceRecords.error",
+    "call": "getResourceRecords",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 429,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_429",
+            "Message": "HTTP 429 - Too Many Requests",
+            "Details": "HTTP 429 - Too Many Requests"
+        }
+    },
+    "ignore": []
+}

@@ -1,0 +1,11 @@
+{
+    "id": "isTrTLD.tricky",
+    "call": "isTrTLD",
+    "args": [
+        "example.trade"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": false,
+    "ignore": []
+}

@@ -1,0 +1,21 @@
+{
+    "id": "addResourceRecord.unsupported-spf",
+    "call": "addResourceRecord",
+    "args": [
+        "example.com",
+        "sub",
+        "spf",
+        "v=spf1"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "ADD_ZONE",
+            "Message": "Record type \"SPF\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT.",
+            "Details": "Record type \"SPF\" is not supported by the DNS zone API. Supported types: A, AAAA, ALIAS, CAA, CNAME, DS, MX, NAPTR, PTR, SRV, TLSA, TXT."
+        }
+    },
+    "ignore": []
+}

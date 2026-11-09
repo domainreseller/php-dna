@@ -1,0 +1,36 @@
+{
+    "id": "getDetails.null-body",
+    "call": "getDetails",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "null"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/info",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "RESPONSE",
+            "Message": "Invalid response received from server! Response is empty.",
+            "Details": "The API response is empty or null"
+        }
+    },
+    "ignore": []
+}

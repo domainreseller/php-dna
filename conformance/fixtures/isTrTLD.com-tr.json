@@ -1,0 +1,11 @@
+{
+    "id": "isTrTLD.com-tr",
+    "call": "isTrTLD",
+    "args": [
+        "example.com.tr"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": true,
+    "ignore": []
+}

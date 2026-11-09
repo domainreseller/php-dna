@@ -1,0 +1,42 @@
+{
+    "id": "modifyNameServer.error",
+    "call": "modifyNameServer",
+    "args": [
+        "example.com",
+        [
+            "ns1.bad"
+        ]
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10010\",\"message\":\"Nameserver could not be resolved.\",\"details\":\"ns1.bad\",\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "PUT",
+            "path": "domains/dns/name-server",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "nameServers": [
+                    "ns1.bad"
+                ]
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Nameserver could not be resolved.",
+            "Details": "ns1.bad"
+        }
+    },
+    "ignore": []
+}

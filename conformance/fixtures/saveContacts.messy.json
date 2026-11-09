@@ -1,0 +1,202 @@
+{
+    "id": "saveContacts.messy",
+    "call": "saveContacts",
+    "args": [
+        "example.com",
+        {
+            "Registrant": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Administrative": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Technical": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            },
+            "Billing": {
+                "FirstName": "  Jane 3rd ",
+                "LastName": "",
+                "Company": "ACME",
+                "EMail": "jane@example.com",
+                "Address": {
+                    "Line1": "Main St 5",
+                    "Line2": "Suite 9",
+                    "City": "",
+                    "State": "",
+                    "Country": "Türkiye",
+                    "ZipCode": ""
+                },
+                "Phone": {
+                    "Phone": {
+                        "Number": "+90 (532) 374 33 88",
+                        "CountryCode": ""
+                    },
+                    "Fax": {
+                        "Number": "",
+                        "CountryCode": ""
+                    }
+                }
+            }
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "PUT",
+            "path": "domains/contacts/update",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "contacts": [
+                    {
+                        "contactType": "Registrant",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Admin",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Tech",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Billing",
+                        "firstName": "Jane rd",
+                        "lastName": "Jane rd",
+                        "companyName": "ACME",
+                        "eMail": "jane@example.com",
+                        "address": "Main St 5 Suite 9",
+                        "city": "ISTANBUL",
+                        "state": "ISTANBUL",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5323743388",
+                        "faxCountryCode": "",
+                        "fax": "",
+                        "isHidden": false
+                    }
+                ]
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "contacts": []
+        }
+    },
+    "ignore": []
+}

@@ -1,0 +1,43 @@
+{
+    "id": "checkTransfer.ok",
+    "call": "checkTransfer",
+    "args": [
+        "example.com",
+        "Ab1!xyZ9"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"messageKey\":\"TransferAvailable\",\"message\":\"Domain can be transferred\",\"authCodeIsRequired\":true,\"authCodeIsValid\":true,\"userTransferRequired\":false,\"transferLock\":false,\"transferAvailabilityStatus\":true,\"domainStatuses\":[\"ok\"],\"additionalAttributes\":[],\"isPremium\":false,\"premiumPrice\":0,\"premiumCurrency\":null}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/transfers/check",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "authCode": "Ab1!xyZ9"
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "TransferAvailabilityStatus": true,
+            "AuthCodeIsRequired": true,
+            "AuthCodeIsValid": true,
+            "UserTransferRequired": false,
+            "TransferLock": false,
+            "Message": "Domain can be transferred",
+            "MessageKey": "TransferAvailable",
+            "Additional": []
+        }
+    },
+    "ignore": []
+}

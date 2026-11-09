@@ -1,0 +1,32 @@
+{
+    "id": "getResellerDetails.html-502",
+    "call": "getResellerDetails",
+    "args": [],
+    "responses": [
+        {
+            "status": 502,
+            "body": "<html><body>502 Bad Gateway</body></html>"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "deposit/accounts/me",
+            "query": [],
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_502",
+            "Message": "<html><body>502 Bad Gateway</body></html>",
+            "Details": "<html><body>502 Bad Gateway</body></html>"
+        }
+    },
+    "ignore": []
+}

@@ -1,0 +1,47 @@
+{
+    "id": "modifyNameServer.assoc",
+    "call": "modifyNameServer",
+    "args": [
+        "example.com",
+        {
+            "ns1": "NS1.Example.NET",
+            "ns2": "ns2.example.net",
+            "ns3": ""
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "PUT",
+            "path": "domains/dns/name-server",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "nameServers": [
+                    "ns1.example.net",
+                    "ns2.example.net"
+                ]
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "NameServers": {
+                "ns1": "NS1.Example.NET",
+                "ns2": "ns2.example.net",
+                "ns3": ""
+            }
+        }
+    },
+    "ignore": []
+}

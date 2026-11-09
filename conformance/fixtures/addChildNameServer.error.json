@@ -1,0 +1,45 @@
+{
+    "id": "addChildNameServer.error",
+    "call": "addChildNameServer",
+    "args": [
+        "example.com",
+        "ns1.example.com",
+        "192.0.2.10"
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/dns/host",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "hostName": "ns1.example.com",
+                "ipAddresses": [
+                    {
+                        "ipAddress": "192.0.2.10",
+                        "ipVersion": "v4"
+                    }
+                ]
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}",
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:Dns:10030\",\"message\":\"Dna.DomainService:Dns:10030\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    },
+    "ignore": []
+}

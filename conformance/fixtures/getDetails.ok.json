@@ -1,0 +1,76 @@
+{
+    "id": "getDetails.ok",
+    "call": "getDetails",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"domainName\":\"example.com\",\"domainNameIdn\":\"example.com\",\"isIdnName\":false,\"startDate\":\"2024-03-15T10:20:30\",\"expirationDate\":\"2027-03-15T10:20:30\",\"transferDate\":null,\"updatedDate\":\"2026-10-01T08:00:00\",\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"renewalMode\":\"Manual\",\"authCode\":\"Ab1!xyZ9\",\"lockStatus\":true,\"privacyProtectionStatus\":false,\"remainingDay\":126,\"statusCode\":\"clientTransferProhibited\",\"objectId\":\"123456_DOMAIN_COM-VRSN\",\"rgpStatues\":null,\"status\":\"Active\",\"statusReason\":null,\"isForwarded\":false,\"useTrusteeContact\":false,\"id\":4321,\"nameservers\":[\"ns1.example.net\",\"ns2.example.net\"],\"hosts\":[{\"name\":\"ns1.example.com\",\"ipAddresses\":[{\"ipAddress\":\"192.0.2.10\"},{\"ipAddress\":\"192.0.2.11\"}]},{\"name\":\"ns2.example.com\",\"ipAddresses\":[]}],\"contacts\":[{\"firstName\":\"Ada\",\"lastName\":\"Lovelace\",\"companyName\":\"Example Ltd\",\"eMail\":\"ada@example.com\",\"address\":\"Example Street 1\",\"phoneCountryCode\":\"90\",\"phone\":\"5551234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"34000\",\"country\":\"TR\",\"city\":\"Istanbul\",\"state\":\"Istanbul\",\"discloseFlag\":false,\"contactType\":\"Registrant\",\"handle\":\"DNA-R-1\"},{\"firstName\":\"Grace\",\"lastName\":\"Hopper\",\"companyName\":\"\",\"eMail\":\"grace@example.com\",\"address\":\"Example Street 2\",\"phoneCountryCode\":\"1\",\"phone\":\"2025550100\",\"faxCountryCode\":\"1\",\"fax\":\"2025550101\",\"postalCode\":\"20001\",\"country\":\"US\",\"city\":\"Washington\",\"state\":\"DC\",\"discloseFlag\":true,\"contactType\":\"Admin\",\"handle\":\"DNA-A-2\"},{\"firstName\":\"Alan\",\"lastName\":\"Turing\",\"companyName\":\"\",\"eMail\":\"alan@example.com\",\"address\":\"Example Street 3\",\"phoneCountryCode\":\"44\",\"phone\":\"2071234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"SW1A 1AA\",\"country\":\"GB\",\"city\":\"London\",\"state\":\"\",\"discloseFlag\":false,\"contactType\":\"Tech\",\"handle\":\"DNA-T-3\"},{\"firstName\":\"Ada\",\"lastName\":\"Lovelace\",\"companyName\":\"Example Ltd\",\"eMail\":\"billing@example.com\",\"address\":\"Example Street 1\",\"phoneCountryCode\":\"90\",\"phone\":\"5551234567\",\"faxCountryCode\":\"\",\"fax\":\"\",\"postalCode\":\"34000\",\"country\":\"TR\",\"city\":\"Istanbul\",\"state\":\"Istanbul\",\"discloseFlag\":false,\"contactType\":\"Billing\",\"handle\":\"DNA-B-4\"}],\"additionalAttributes\":{\"TRABISDOMAINCATEGORY\":\"1\"}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/info",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "ID": 4321,
+            "Status": "Active",
+            "DomainName": "example.com",
+            "AuthCode": "Ab1!xyZ9",
+            "LockStatus": "true",
+            "PrivacyProtectionStatus": "false",
+            "IsChildNameServer": "true",
+            "Contacts": {
+                "Billing": {
+                    "ID": "DNA-B-4"
+                },
+                "Technical": {
+                    "ID": "DNA-T-3"
+                },
+                "Administrative": {
+                    "ID": "DNA-A-2"
+                },
+                "Registrant": {
+                    "ID": "DNA-R-1"
+                }
+            },
+            "Dates": {
+                "Start": "2024-03-15T10:20:30",
+                "Expiration": "2027-03-15T10:20:30",
+                "RemainingDays": 126
+            },
+            "NameServers": [
+                "ns1.example.net",
+                "ns2.example.net"
+            ],
+            "Additional": {
+                "TRABISDOMAINCATEGORY": "1"
+            },
+            "ChildNameServers": [
+                {
+                    "ns": "ns1.example.com",
+                    "ip": "192.0.2.11"
+                },
+                {
+                    "ns": "ns2.example.com",
+                    "ip": ""
+                }
+            ]
+        },
+        "result": "OK"
+    },
+    "ignore": []
+}

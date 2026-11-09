@@ -1,0 +1,59 @@
+{
+    "id": "deleteResourceRecord.ok",
+    "call": "deleteResourceRecord",
+    "args": [
+        "example.com",
+        "www",
+        "192.0.2.5",
+        "A",
+        true
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        },
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "DELETE",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com",
+                "Name": "www",
+                "Record": "192.0.2.5",
+                "RecordType": "A"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        },
+        {
+            "method": "POST",
+            "path": "domains/zones/apply",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": [],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "Name": "www",
+            "Type": "A",
+            "Content": "192.0.2.5"
+        }
+    },
+    "ignore": []
+}

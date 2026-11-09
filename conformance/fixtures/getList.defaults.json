@@ -1,0 +1,131 @@
+{
+    "id": "getList.defaults",
+    "call": "getList",
+    "args": [],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"totalCount\":3,\"items\":[{\"id\":11,\"domainName\":\"example.com\",\"startDate\":\"2024-03-15T10:20:30\",\"expirationDate\":\"2027-03-15T10:20:30\",\"lockStatus\":true,\"privacyProtectionStatus\":true,\"status\":0,\"statusCode\":\"ok\",\"remainingDay\":126,\"nameServers\":[\"ns1.example.net\",\"ns2.example.net\"]},{\"id\":12,\"domainName\":\"example.net\",\"startDate\":\"2023-01-01T00:00:00\",\"expirationDate\":\"2026-01-01T00:00:00\",\"lockStatus\":false,\"privacyProtectionStatus\":false,\"status\":8,\"statusCode\":\"\",\"remainingDay\":0},{\"id\":13,\"domainName\":\"example.org\",\"startDate\":null,\"expirationDate\":null,\"status\":1,\"statusCode\":\"2\",\"statusText\":\"WaitingForRegistration\"}]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains",
+            "query": {
+                "MaxResultCount": "200",
+                "SkipCount": "0"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "Domains": [
+                {
+                    "ID": 11,
+                    "Status": "ok",
+                    "DomainName": "example.com",
+                    "AuthCode": "",
+                    "LockStatus": "true",
+                    "PrivacyProtectionStatus": "true",
+                    "IsChildNameServer": "false",
+                    "Contacts": {
+                        "Billing": {
+                            "ID": ""
+                        },
+                        "Technical": {
+                            "ID": ""
+                        },
+                        "Administrative": {
+                            "ID": ""
+                        },
+                        "Registrant": {
+                            "ID": ""
+                        }
+                    },
+                    "Dates": {
+                        "Start": "2024-03-15T10:20:30",
+                        "Expiration": "2027-03-15T10:20:30",
+                        "RemainingDays": 126
+                    },
+                    "NameServers": [
+                        "ns1.example.net",
+                        "ns2.example.net"
+                    ],
+                    "Additional": [],
+                    "ChildNameServers": []
+                },
+                {
+                    "ID": 12,
+                    "Status": "Deleted",
+                    "DomainName": "example.net",
+                    "AuthCode": "",
+                    "LockStatus": "false",
+                    "PrivacyProtectionStatus": "false",
+                    "IsChildNameServer": "false",
+                    "Contacts": {
+                        "Billing": {
+                            "ID": ""
+                        },
+                        "Technical": {
+                            "ID": ""
+                        },
+                        "Administrative": {
+                            "ID": ""
+                        },
+                        "Registrant": {
+                            "ID": ""
+                        }
+                    },
+                    "Dates": {
+                        "Start": "2023-01-01T00:00:00",
+                        "Expiration": "2026-01-01T00:00:00",
+                        "RemainingDays": 0
+                    },
+                    "NameServers": [],
+                    "Additional": [],
+                    "ChildNameServers": []
+                },
+                {
+                    "ID": 13,
+                    "Status": "WaitingForRegistration",
+                    "DomainName": "example.org",
+                    "AuthCode": "",
+                    "LockStatus": "false",
+                    "PrivacyProtectionStatus": "false",
+                    "IsChildNameServer": "false",
+                    "Contacts": {
+                        "Billing": {
+                            "ID": ""
+                        },
+                        "Technical": {
+                            "ID": ""
+                        },
+                        "Administrative": {
+                            "ID": ""
+                        },
+                        "Registrant": {
+                            "ID": ""
+                        }
+                    },
+                    "Dates": {
+                        "Start": "",
+                        "Expiration": "",
+                        "RemainingDays": 0
+                    },
+                    "NameServers": [],
+                    "Additional": [],
+                    "ChildNameServers": []
+                }
+            ]
+        },
+        "result": "OK",
+        "TotalCount": 3
+    },
+    "ignore": []
+}

@@ -1,0 +1,44 @@
+{
+    "id": "getList.paging",
+    "call": "getList",
+    "args": [
+        {
+            "PageSize": 50,
+            "PageNumber": 2,
+            "OrderColumn": "ExpirationDate",
+            "OrderDirection": "desc",
+            "DomainName": "exa"
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"totalCount\":0,\"items\":[]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains",
+            "query": {
+                "MaxResultCount": "50",
+                "SkipCount": "100",
+                "DomainName": "exa",
+                "Sorting": "ExpirationDate DESC"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "Domains": []
+        },
+        "result": "OK",
+        "TotalCount": 0
+    },
+    "ignore": []
+}

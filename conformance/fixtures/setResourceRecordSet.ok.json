@@ -1,0 +1,74 @@
+{
+    "id": "setResourceRecordSet.ok",
+    "call": "setResourceRecordSet",
+    "args": [
+        "example.com",
+        "@",
+        "MX",
+        [
+            "10 mx1.example.com",
+            "20 mx2.example.com"
+        ],
+        3600,
+        true
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "[{\"name\":\"example.com.\",\"ttl\":3600,\"type\":\"A\",\"changeType\":null,\"records\":[{\"content\":\"192.0.2.1\",\"disabled\":false}]},{\"name\":\"www.example.com.\",\"ttl\":300,\"type\":\"CNAME\",\"records\":[{\"content\":\"example.com.\",\"disabled\":false}]},{\"name\":\"example.com.\",\"ttl\":3600,\"type\":\"MX\",\"records\":[{\"content\":\"10 mx1.example.com.\",\"disabled\":false},{\"content\":\"20 mx2.example.com.\",\"disabled\":true}]},{\"name\":\"example.com.\",\"ttl\":3600,\"type\":\"TXT\",\"records\":[{\"content\":\"\\\"v=spf1 include:_spf.example.net ~all\\\"\"}]},{\"name\":\"empty.example.com.\",\"ttl\":60,\"type\":\"AAAA\",\"records\":[]}]"
+        },
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": {
+                "zoneStruct": {
+                    "name": "",
+                    "ttl": 3600,
+                    "type": "MX",
+                    "contents": [
+                        "10 mx1.example.com",
+                        "20 mx2.example.com"
+                    ]
+                }
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        },
+        {
+            "method": "POST",
+            "path": "domains/zones/apply",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": [],
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "Name": "",
+            "Type": "MX",
+            "TTL": 3600,
+            "Contents": [
+                "10 mx1.example.com",
+                "20 mx2.example.com"
+            ]
+        }
+    },
+    "ignore": []
+}

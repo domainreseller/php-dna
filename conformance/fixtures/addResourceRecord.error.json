@@ -1,0 +1,48 @@
+{
+    "id": "addResourceRecord.error",
+    "call": "addResourceRecord",
+    "args": [
+        "example.com",
+        "www",
+        "A",
+        "192.0.2.5"
+    ],
+    "responses": [
+        {
+            "status": 400,
+            "body": "{\"error\":{\"code\":null,\"message\":\"Validation failed. Please check the provided information.\",\"details\":\"The following errors were detected during validation.\",\"data\":[],\"validationErrors\":[{\"message\":\"The DomainName field is required.\",\"members\":[\"$.domainName\"]}]}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/zones",
+            "query": {
+                "domainName": "example.com"
+            },
+            "body": {
+                "zoneStruct": {
+                    "name": "www",
+                    "ttl": 3600,
+                    "type": "A",
+                    "contents": [
+                        "192.0.2.5"
+                    ]
+                }
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_400",
+            "Message": "Validation failed. Please check the provided information.",
+            "Details": "DomainName - The DomainName field is required."
+        }
+    },
+    "ignore": []
+}

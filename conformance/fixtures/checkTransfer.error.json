@@ -1,0 +1,38 @@
+{
+    "id": "checkTransfer.error",
+    "call": "checkTransfer",
+    "args": [
+        "google.com",
+        "abc123"
+    ],
+    "responses": [
+        {
+            "status": 500,
+            "body": "{\"error\":{\"code\":\"Dna.DomainService:General:10001\",\"message\":\"An internal error has occurred. Please contact the system administrator.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "path": "domains/transfers/check",
+            "query": [],
+            "body": {
+                "domainName": "google.com",
+                "authCode": "abc123"
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_500",
+            "Message": "An internal error has occurred. Please contact the system administrator.",
+            "Details": "{\"error\":{\"code\":\"Dna.DomainService:General:10001\",\"message\":\"An internal error has occurred. Please contact the system administrator.\",\"details\":null,\"data\":[],\"validationErrors\":null}}"
+        }
+    },
+    "ignore": []
+}

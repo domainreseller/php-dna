@@ -1,0 +1,20 @@
+{
+    "id": "setForwarding.invalid-type",
+    "call": "setForwarding",
+    "args": [
+        "example.com",
+        "https://www.example.org",
+        "Permanent"
+    ],
+    "responses": [],
+    "requests": [],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "SET_FORWARD",
+            "Message": "Forward type \"Permanent\" is not supported. Supported types: Standard, Frame.",
+            "Details": "Forward type \"Permanent\" is not supported. Supported types: Standard, Frame."
+        }
+    },
+    "ignore": []
+}

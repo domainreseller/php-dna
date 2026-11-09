@@ -1,0 +1,99 @@
+{
+    "id": "getTldList.ok",
+    "call": "getTldList",
+    "args": [
+        3
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"totalCount\":698,\"items\":[{\"name\":\"aero\",\"minRegistrationPeriod\":1,\"maxRegistrationPeriod\":10,\"registrationPeriods\":[1,2,3],\"renewalPeriods\":[1,2,3],\"isSupportTransfer\":true,\"isRequireDocument\":false,\"availableInTestEnvironment\":true,\"prices\":[{\"priceGroup\":\"Reseller\",\"register\":[{\"period\":1,\"price\":44.99,\"currency\":\"USD\"},{\"period\":2,\"price\":94.91,\"currency\":\"USD\"},{\"period\":3,\"price\":144.83,\"currency\":\"USD\"}],\"renew\":[{\"period\":1,\"price\":49.92,\"currency\":\"USD\"},{\"period\":2,\"price\":99.84,\"currency\":\"USD\"}],\"transfer\":[{\"period\":1,\"price\":44.99,\"currency\":\"USD\"}]}]},{\"name\":\"com.tr\",\"minRegistrationPeriod\":1,\"maxRegistrationPeriod\":10,\"registrationPeriods\":[1,2,3],\"renewalPeriods\":[1,2,3],\"isSupportTransfer\":true,\"isRequireDocument\":false,\"availableInTestEnvironment\":true,\"prices\":[{\"priceGroup\":\"Reseller\",\"register\":[{\"period\":2,\"price\":30,\"currency\":\"USD\"},{\"period\":1,\"price\":15.5,\"currency\":\"TRY\"}],\"renew\":[{\"period\":1,\"price\":15.5,\"currency\":\"TRY\"}],\"transfer\":[{\"period\":0,\"price\":0,\"currency\":\"USD\"}]}],\"constraints\":{\"maxLenght\":50,\"minLength\":2},\"status\":\"Passive\"},{\"name\":\"xyz\",\"prices\":[]}]}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "products/tlds",
+            "query": {
+                "MaxResultCount": "3",
+                "SkipCount": "0"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": [
+            {
+                "id": 1,
+                "status": "Active",
+                "maxchar": 63,
+                "maxperiod": 10,
+                "minchar": 1,
+                "minperiod": 1,
+                "tld": "aero",
+                "pricing": {
+                    "registration": {
+                        "1": "44.9900",
+                        "2": "94.9100",
+                        "3": "144.8300"
+                    },
+                    "renew": {
+                        "1": "49.9200",
+                        "2": "99.8400"
+                    },
+                    "transfer": {
+                        "1": "44.9900"
+                    }
+                },
+                "currencies": {
+                    "registration": "USD",
+                    "renew": "USD",
+                    "transfer": "USD"
+                }
+            },
+            {
+                "id": 2,
+                "status": "Passive",
+                "maxchar": 50,
+                "maxperiod": 10,
+                "minchar": 2,
+                "minperiod": 1,
+                "tld": "com.tr",
+                "pricing": {
+                    "registration": {
+                        "1": "15.5000",
+                        "2": "30.0000"
+                    },
+                    "renew": {
+                        "1": "15.5000"
+                    },
+                    "transfer": {
+                        "1": "0.0000"
+                    }
+                },
+                "currencies": {
+                    "registration": "TRY",
+                    "renew": "TRY",
+                    "transfer": "USD"
+                }
+            },
+            {
+                "id": 3,
+                "status": "Active",
+                "maxchar": 63,
+                "maxperiod": 10,
+                "minchar": 1,
+                "minperiod": 1,
+                "tld": "xyz",
+                "pricing": [],
+                "currencies": []
+            }
+        ],
+        "result": "OK"
+    },
+    "ignore": []
+}

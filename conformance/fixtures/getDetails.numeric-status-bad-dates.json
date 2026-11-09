@@ -1,0 +1,67 @@
+{
+    "id": "getDetails.numeric-status-bad-dates",
+    "call": "getDetails",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"domainName\":\"example.com\",\"domainNameIdn\":\"example.com\",\"isIdnName\":false,\"startDate\":\"0001-01-01T00:00:00\",\"expirationDate\":\"not-a-date\",\"transferDate\":null,\"updatedDate\":\"2026-10-01T08:00:00\",\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"renewalMode\":\"Manual\",\"authCode\":\"Ab1!xyZ9\",\"lockStatus\":true,\"privacyProtectionStatus\":false,\"remainingDay\":null,\"statusCode\":\"clientTransferProhibited\",\"objectId\":\"123456_DOMAIN_COM-VRSN\",\"rgpStatues\":null,\"status\":3,\"statusReason\":null,\"isForwarded\":false,\"useTrusteeContact\":false,\"id\":4321,\"nameservers\":[\"ns1.example.net\",\"ns2.example.net\"],\"hosts\":[],\"contacts\":[],\"additionalAttributes\":null}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/info",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "ID": 4321,
+            "Status": "WaitingForIncomingTransfer",
+            "DomainName": "example.com",
+            "AuthCode": "Ab1!xyZ9",
+            "LockStatus": "true",
+            "PrivacyProtectionStatus": "false",
+            "IsChildNameServer": "false",
+            "Contacts": {
+                "Billing": {
+                    "ID": 0
+                },
+                "Technical": {
+                    "ID": 0
+                },
+                "Administrative": {
+                    "ID": 0
+                },
+                "Registrant": {
+                    "ID": 0
+                }
+            },
+            "Dates": {
+                "Start": "0001-01-01T00:00:00",
+                "Expiration": "",
+                "RemainingDays": 0
+            },
+            "NameServers": [
+                "ns1.example.net",
+                "ns2.example.net"
+            ],
+            "Additional": [],
+            "ChildNameServers": []
+        },
+        "result": "OK"
+    },
+    "ignore": [
+        "data.Dates.RemainingDays"
+    ]
+}

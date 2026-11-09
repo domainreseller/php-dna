@@ -1,0 +1,34 @@
+{
+    "id": "getContacts.no-contacts",
+    "call": "getContacts",
+    "args": [
+        "example.com"
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": "{\"domainName\":\"example.com\",\"domainNameIdn\":\"example.com\",\"isIdnName\":false,\"startDate\":\"2024-03-15T10:20:30\",\"expirationDate\":\"2027-03-15T10:20:30\",\"transferDate\":null,\"updatedDate\":\"2026-10-01T08:00:00\",\"resellerId\":\"00000000-0000-4000-8000-000000000001\",\"renewalMode\":\"Manual\",\"authCode\":\"Ab1!xyZ9\",\"lockStatus\":true,\"privacyProtectionStatus\":false,\"remainingDay\":126,\"statusCode\":\"clientTransferProhibited\",\"objectId\":\"123456_DOMAIN_COM-VRSN\",\"rgpStatues\":null,\"status\":\"Active\",\"statusReason\":null,\"isForwarded\":false,\"useTrusteeContact\":false,\"id\":4321,\"nameservers\":[\"ns1.example.net\",\"ns2.example.net\"],\"hosts\":[{\"name\":\"ns1.example.com\",\"ipAddresses\":[{\"ipAddress\":\"192.0.2.10\"},{\"ipAddress\":\"192.0.2.11\"}]},{\"name\":\"ns2.example.com\",\"ipAddresses\":[]}],\"contacts\":[],\"additionalAttributes\":{\"TRABISDOMAINCATEGORY\":\"1\"}}"
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "domains/info",
+            "query": {
+                "DomainName": "example.com"
+            },
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "data": {
+            "contacts": []
+        },
+        "result": "OK"
+    },
+    "ignore": []
+}

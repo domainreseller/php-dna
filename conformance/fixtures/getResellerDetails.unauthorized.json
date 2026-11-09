@@ -1,0 +1,32 @@
+{
+    "id": "getResellerDetails.unauthorized",
+    "call": "getResellerDetails",
+    "args": [],
+    "responses": [
+        {
+            "status": 401,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "GET",
+            "path": "deposit/accounts/me",
+            "query": [],
+            "body": null,
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "ERROR",
+        "error": {
+            "Code": "API_401",
+            "Message": "HTTP 401 - Unauthorized",
+            "Details": "HTTP 401 - Unauthorized"
+        }
+    },
+    "ignore": []
+}

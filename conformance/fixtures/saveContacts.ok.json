@@ -1,0 +1,178 @@
+{
+    "id": "saveContacts.ok",
+    "call": "saveContacts",
+    "args": [
+        "example.com",
+        {
+            "Administrative": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Billing": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Technical": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            },
+            "Registrant": {
+                "FirstName": "Ahmet",
+                "LastName": "Yilmaz",
+                "Company": "",
+                "EMail": "ahmet.yilmaz@example.com",
+                "AddressLine1": "Ornek Sokak No: 123",
+                "AddressLine2": "Daire 4",
+                "AddressLine3": "",
+                "City": "Istanbul",
+                "Country": "TR",
+                "Fax": "2121234567",
+                "FaxCountryCode": "90",
+                "Phone": "5551234567",
+                "PhoneCountryCode": 90,
+                "Type": "Contact",
+                "ZipCode": "34000",
+                "State": "Istanbul"
+            }
+        }
+    ],
+    "responses": [
+        {
+            "status": 200,
+            "body": ""
+        }
+    ],
+    "requests": [
+        {
+            "method": "PUT",
+            "path": "domains/contacts/update",
+            "query": [],
+            "body": {
+                "domainName": "example.com",
+                "contacts": [
+                    {
+                        "contactType": "Admin",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Billing",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Tech",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    },
+                    {
+                        "contactType": "Registrant",
+                        "firstName": "Ahmet",
+                        "lastName": "Yilmaz",
+                        "companyName": "",
+                        "eMail": "ahmet.yilmaz@example.com",
+                        "address": "Ornek Sokak No: 123 Daire 4",
+                        "city": "Istanbul",
+                        "state": "Istanbul",
+                        "country": "TR",
+                        "postalCode": "34000",
+                        "phoneCountryCode": "90",
+                        "phone": "5551234567",
+                        "faxCountryCode": "90",
+                        "fax": "2121234567",
+                        "isHidden": false
+                    }
+                ]
+            },
+            "headers": {
+                "X-API-KEY": "conformance-api-key",
+                "__reseller": "00000000-0000-4000-8000-000000000001"
+            }
+        }
+    ],
+    "output": {
+        "result": "OK",
+        "data": {
+            "contacts": []
+        }
+    },
+    "ignore": []
+}
