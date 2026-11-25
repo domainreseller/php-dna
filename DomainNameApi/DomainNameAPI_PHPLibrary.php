@@ -276,21 +276,6 @@ class DomainNameAPI_PHPLibrary
     public function transfer($domainName, $eppCode, $period) { return $this->client->transfer($domainName, $eppCode, $period); }
 
     /**
-     * @see DNARest::cancelTransfer()
-     */
-    public function cancelTransfer($domainName) { return $this->client->cancelTransfer($domainName); }
-
-    /**
-     * @see DNARest::approveTransfer()
-     */
-    public function approveTransfer($domainName) { return $this->client->approveTransfer($domainName); }
-
-    /**
-     * @see DNARest::rejectTransfer()
-     */
-    public function rejectTransfer($domainName) { return $this->client->rejectTransfer($domainName); }
-
-    /**
      * @see DNARest::renew()
      */
     public function renew($domainName, $period) { return $this->client->renew($domainName, $period); }

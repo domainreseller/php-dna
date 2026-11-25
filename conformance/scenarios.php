@@ -263,12 +263,6 @@ $add('transfer.ok', 'transfer', ['example.com', 'Ab1!xyZ9', 1], [$ok($opOk)]);
 $add('transfer.with-contacts', 'transfer', ['example.com', 'Ab1!xyZ9', 2, $contacts], [$ok($opOk)]);
 $add('transfer.fail-flag', 'transfer', ['example.com', 'bad', 1], [$ok($opFail)]);
 $add('transfer.balance', 'transfer', ['example.com', 'Ab1!xyZ9', 1], [$balance]);
-$add('cancelTransfer.ok', 'cancelTransfer', ['example.com'], [$ok('')]);
-$add('cancelTransfer.error', 'cancelTransfer', ['example.com'], [$notFound]);
-$add('approveTransfer.ok', 'approveTransfer', ['example.com'], [$ok('')]);
-$add('approveTransfer.error', 'approveTransfer', ['example.com'], [$internal]);
-$add('rejectTransfer.ok', 'rejectTransfer', ['example.com'], [$ok('')]);
-$add('rejectTransfer.error', 'rejectTransfer', ['example.com'], [$boiler]);
 $add('checkTransfer.ok', 'checkTransfer', ['example.com', 'Ab1!xyZ9'], [$ok(['messageKey' => 'TransferAvailable', 'message' => 'Domain can be transferred', 'authCodeIsRequired' => true,
     'authCodeIsValid' => true, 'userTransferRequired' => false, 'transferLock' => false, 'transferAvailabilityStatus' => true,
     'domainStatuses' => ['ok'], 'additionalAttributes' => [], 'isPremium' => false, 'premiumPrice' => 0, 'premiumCurrency' => null])]);
