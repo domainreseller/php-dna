@@ -40,8 +40,8 @@ Domain: `getDetails(domain)`, `syncFromRegistry(domain)`, `getContacts(domain)`,
 Child nameservers: `addChildNameServer(domain, nameServer, ip)`,
 `deleteChildNameServer(domain, nameServer)`, `modifyChildNameServer(domain, nameServer, ip)`
 
-Transfers: `transfer(domain, eppCode, period, contacts={})`, `cancelTransfer(domain)`,
-`approveTransfer(domain)`, `rejectTransfer(domain)`, `checkTransfer(domain, authCode)`
+Transfers: `transfer(domain, eppCode, period, contacts={})`, `checkTransfer(domain, authCode)`
+(the cancel/approve/reject transfer endpoints were retired by the gateway and are not part of the API)
 
 DNS zone: `getResourceRecords(domain)`,
 `addResourceRecord(domain, name, type, content, ttl=3600, apply=true)`,
